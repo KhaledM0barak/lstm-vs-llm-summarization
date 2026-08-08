@@ -2,9 +2,15 @@
 
 *System report — 5 pages excluding references and appendices.*
 
-> **Status:** sections 1–3 and 8 are final. Sections 4–7 are filled from
-> `results/results.md`, `results/qualitative.md`, and the `train_summary.json` /
-> `.meta.json` files once all runs complete. Placeholders are marked `[[FILL]]`.
+> **Status.** Sections 1–3, 6.3, 6.5, and 8 are final — they do not depend on run
+> outcomes. Sections 4, 5, 6.1, 6.2, 6.4, and 7 are filled from measured results
+> and are marked `[[FILL]]` until the runs complete.
+>
+> **Do not hand-type numbers into this report.** Run
+> `python scripts/collect_results.py`; it reads the run artifacts and writes
+> `reports/tables.md` with every table already formatted, plus
+> `reports/report_data.json`. Anything it cannot find is listed as missing rather
+> than guessed, so no number here can be one that no script produced.
 
 ---
 
@@ -78,7 +84,7 @@ covering **98.17%** of training tokens (**1.83% OOV**). Sources are truncated to
 
 **Training.** Teacher forcing; label-smoothed cross-entropy (0.1); Adam at
 lr 1e-3; gradient clipping at 5.0; `ReduceLROnPlateau` (factor 0.5); early
-stopping on validation loss with patience 2; max 6 epochs; batch size 64 with
+stopping on validation loss with patience 2; max 5 epochs; batch size 64 with
 length-bucketed batching to limit padding waste.
 
 **Decoding.** Beam search (beam 4) with the GNMT length penalty and
@@ -86,12 +92,45 @@ repeated-trigram blocking; `<pad>` and `<unk>` are suppressed at inference, sinc
 an `<unk>` in a generated summary is a pure error. Greedy and no-blocking
 variants are reported as decoding ablations.
 
-**Two implementation details that mattered.** (i) Padding is masked before the
-attention softmax; without it the decoder places probability mass on `<pad>` for
-every short article batched with long ones. (ii) The vocabulary projection is
-applied in time-chunks rather than to the full `(B, T, V)` tensor — materializing
-it at batch 64 costs 1.28 GB in fp32 before the loss function copies it, which
-drove the 24 GB machine into swap and cut throughput roughly 5×.
+**Three implementation details that mattered.** Each was found by measurement,
+and two of them were the difference between a run that finishes and one that does
+not.
+
+1. *Attention masking.* Padding is masked before the attention softmax. Without
+   it the decoder places probability mass on `<pad>` for every short article
+   batched with long ones — silently corrupting the context vector rather than
+   raising an error.
+
+2. *Chunked vocabulary projection.* Projecting decoder states to the 50k
+   vocabulary in one matmul materializes a `(B, T, V)` tensor: 1.28 GB in fp32 at
+   batch 64 and 100 steps, which a masked-index loss then copies twice more. Peak
+   memory drove the 24 GB machine 9.5 GB into swap and degraded throughput from
+   1.1 s/batch to 3.2 s/batch and worsening. Applying the projection in 16-step
+   chunks with `F.cross_entropy` (native label smoothing, `ignore_index`) holds
+   peak RSS at 1.15 GB.
+
+3. *Padded-shape quantization.* This was the dominant cost and the least
+   obvious. PyTorch's Metal (MPS) backend compiles a kernel per distinct tensor
+   shape, and length-bucketed batching produces a near-unique
+   `(batch, src_len, tgt_len)` triple almost every step. Training was therefore
+   spending most of its time in shader compilation — `MTLCompilerService` pinning
+   two cores — rather than in arithmetic. Rounding padded lengths up to multiples
+   of 64 (source) and 16 (target), and dropping each pool's ragged final batch to
+   fix the batch dimension, collapses thousands of shapes into a few dozen that
+   compile once and are reused:
+
+   | Configuration | Before | After | Speedup |
+   |---|---|---|---|
+   | Bahdanau + input feeding | 2537 s | 73.7 s | 34× |
+   | Multiplicative attention, batched | 2695 s | 49.1 s | 55× |
+
+   *(one epoch over 3,840 examples, batch 64, identical hardware)*
+
+   The cost is under 2% of training examples per epoch and a little extra
+   padding. This is a hardware-specific accelerator detail rather than anything
+   about summarization, but it is the single change that made the experiment
+   feasible on the available machine, and it is the kind of finding that only
+   appears if throughput is actually measured rather than assumed.
 
 ### 2.2 LLM baseline
 

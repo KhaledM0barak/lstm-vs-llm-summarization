@@ -1,0 +1,44 @@
+{
+  "dataset": {
+    "dataset": "abisee/cnn_dailymail",
+    "config": "3.0.0",
+    "license": "Apache-2.0",
+    "citation": "Hermann et al. (2015), 'Teaching Machines to Read and Comprehend'; See et al. (2017), 'Get To The Point: Summarization with Pointer-Generator Networks'",
+    "seed": 1234,
+    "official_split_sizes": {
+      "train": 287113,
+      "validation": 13368,
+      "test": 11490
+    },
+    "splits": {
+      "train": {
+        "n": 79996,
+        "mean_src_tokens": 785.0,
+        "mean_tgt_tokens": 55.0
+      },
+      "validation": {
+        "n": 3000,
+        "mean_src_tokens": 764.1,
+        "mean_tgt_tokens": 61.7
+      },
+      "test": {
+        "n": 11490,
+        "mean_src_tokens": 773.0,
+        "mean_tgt_tokens": 58.0
+      },
+      "test_llm": {
+        "n": 500,
+        "mean_src_tokens": 747.4,
+        "mean_tgt_tokens": 58.2
+      }
+    }
+  },
+  "vocab": {
+    "vocab_size": 50000,
+    "distinct_tokens_in_train": 393066,
+    "train_token_count": 67196659,
+    "token_coverage": 0.9816876163441399,
+    "oov_token_rate_train": 0.01831
+  },
+  "training": {}
+}
