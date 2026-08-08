@@ -1,0 +1,33 @@
+# Ablation: unidirectional encoder.
+# Isolates what the backward pass contributes; the decoder still has full
+# attention over the encoder states.
+run_name: unidirectional
+out_dir: runs/unidirectional
+
+train_file: data/processed/train.jsonl
+val_file: data/processed/validation.jsonl
+vocab_file: data/processed/vocab.json
+
+seed: 1234
+
+max_src_len: 400
+max_tgt_len: 100
+
+emb_dim: 256
+hidden_size: 256
+enc_layers: 1
+dec_layers: 1
+bidirectional: false     # <- the ablated component
+attention: bahdanau
+attn_size: 256
+dropout: 0.3
+input_feeding: true
+tie_embeddings: true
+
+batch_size: 64
+lr: 0.001
+lr_decay: 0.5
+epochs: 6
+patience: 2
+clip: 5.0
+label_smoothing: 0.1

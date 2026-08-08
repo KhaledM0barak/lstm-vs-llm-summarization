@@ -1,0 +1,33 @@
+# Ablation: remove attention entirely.
+# The decoder sees only a fixed pooled encoder representation, which is the
+# classic fixed-vector bottleneck. Everything else matches configs/base.yaml.
+run_name: no_attention
+out_dir: runs/no_attention
+
+train_file: data/processed/train.jsonl
+val_file: data/processed/validation.jsonl
+vocab_file: data/processed/vocab.json
+
+seed: 1234
+
+max_src_len: 400
+max_tgt_len: 100
+
+emb_dim: 256
+hidden_size: 256
+enc_layers: 1
+dec_layers: 1
+bidirectional: true
+attention: none          # <- the ablated component
+attn_size: 256
+dropout: 0.3
+input_feeding: true
+tie_embeddings: true
+
+batch_size: 64
+lr: 0.001
+lr_decay: 0.5
+epochs: 6
+patience: 2
+clip: 5.0
+label_smoothing: 0.1

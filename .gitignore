@@ -1,0 +1,27 @@
+# Secrets — never commit
+.env
+
+# Virtualenv
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Data: regenerate with `python -m src.data.prepare` (see README).
+# CNN/DailyMail is Apache-2.0 but ~400 MB processed; not redistributed here.
+data/
+!data/.gitkeep
+
+# Model checkpoints (~60 MB each). Training logs and metrics ARE committed.
+runs/**/*.pt
+*.log
+
+# HuggingFace cache
+.cache/
+
+# OS
+.DS_Store

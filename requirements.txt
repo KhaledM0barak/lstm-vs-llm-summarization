@@ -1,0 +1,26 @@
+# Pinned to the exact versions used to produce the reported results.
+# Python 3.13.1, macOS 15 (Apple silicon). See README for setup.
+
+# Model
+torch==2.13.0
+
+# Data
+datasets==5.0.1
+pyarrow==25.0.0
+numpy==2.5.1
+pandas==3.0.5
+
+# Evaluation
+rouge-score==0.1.2
+absl-py==2.5.0          # required by rouge-score
+nltk==3.10.2            # required by rouge-score
+scipy==1.18.0
+
+# LLM baseline
+anthropic==0.121.0
+python-dotenv==1.2.2
+
+# Plumbing
+PyYAML==6.0.3
+tqdm==4.70.0
+matplotlib==3.11.1

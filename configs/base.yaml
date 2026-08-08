@@ -1,0 +1,38 @@
+# Main model: BiLSTM encoder + Bahdanau attention + LSTM decoder with input feeding.
+run_name: base
+out_dir: runs/base
+
+train_file: data/processed/train.jsonl
+val_file: data/processed/validation.jsonl
+vocab_file: data/processed/vocab.json
+
+seed: 1234
+
+# Sequence limits. 400 source tokens follows See et al. (2017); mean article
+# length is ~785 tokens, so this truncates most articles, which is itself part of
+# the story the report tells about recurrent encoders on long inputs.
+max_src_len: 400
+max_tgt_len: 100
+
+# Architecture
+emb_dim: 256
+hidden_size: 256
+enc_layers: 1
+dec_layers: 1
+bidirectional: true
+attention: bahdanau
+attn_size: 256
+dropout: 0.3
+input_feeding: true
+tie_embeddings: true
+
+# Optimization
+# batch_size 64 measured ~25% faster per example than 32 on the M4 Pro GPU;
+# with length-bucketed batches the padding waste stays low at this size.
+batch_size: 64
+lr: 0.001
+lr_decay: 0.5
+epochs: 6
+patience: 2
+clip: 5.0
+label_smoothing: 0.1
