@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from src.data.vocab import BOS_ID, EOS_ID, PAD_ID, UNK_ID
 from src.models.decoder import Decoder
@@ -72,9 +73,53 @@ class Seq2Seq(nn.Module):
             )
 
     def forward(self, batch: dict) -> torch.Tensor:
+        """Returns the decoder's attentional vectors (B, T, H), not logits.
+
+        See `Decoder.forward` for why the vocabulary projection is deferred.
+        """
         memory, state = self.encoder(batch["src"], batch["src_len"])
-        logits, _ = self.decoder(batch["tgt_in"], state, memory, batch["src_mask"])
-        return logits
+        h_tilde, _ = self.decoder(batch["tgt_in"], state, memory, batch["src_mask"])
+        return h_tilde
+
+    def loss_from_states(
+        self,
+        h_tilde: torch.Tensor,          # (B, T, H)
+        target: torch.Tensor,           # (B, T)
+        label_smoothing: float = 0.1,
+        chunk: int = 16,
+    ) -> tuple[torch.Tensor, torch.Tensor, int]:
+        """Project to the vocabulary and compute the loss in time-chunks.
+
+        Returns (smoothed_loss_sum, nll_sum, n_target_tokens). Chunking bounds the
+        peak size of the (chunk, V) logits tensor; `F.cross_entropy` handles
+        padding via `ignore_index` and applies label smoothing natively, so no
+        intermediate mask-indexed copies of the logits are ever materialized.
+
+        Label smoothing matters more than usual here: with a 50k vocabulary and
+        only ~80k training pairs, an unsmoothed objective drives the model toward
+        overconfident predictions on frequent tokens and worsens the repetition
+        failure mode.
+        """
+        total_tokens = int(target.ne(PAD_ID).sum())
+        loss_sum = h_tilde.new_zeros(())
+        nll_sum = h_tilde.new_zeros(())
+
+        for start in range(0, h_tilde.size(1), chunk):
+            h_chunk = h_tilde[:, start : start + chunk]
+            t_chunk = target[:, start : start + chunk].reshape(-1)
+            logits = self.decoder.project(h_chunk).reshape(-1, self.cfg.vocab_size)
+
+            loss_sum = loss_sum + F.cross_entropy(
+                logits, t_chunk,
+                ignore_index=PAD_ID,
+                label_smoothing=label_smoothing,
+                reduction="sum",
+            )
+            nll_sum = nll_sum + F.cross_entropy(
+                logits, t_chunk, ignore_index=PAD_ID, reduction="sum"
+            ).detach()
+
+        return loss_sum, nll_sum, total_tokens
 
     def num_parameters(self) -> dict:
         total = sum(p.numel() for p in self.parameters())

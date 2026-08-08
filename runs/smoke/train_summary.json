@@ -9,7 +9,7 @@
     "seed": 1234,
     "max_src_len": 400,
     "max_tgt_len": 100,
-    "train_size": 1280,
+    "train_size": 1920,
     "val_size": 64,
     "emb_dim": 256,
     "hidden_size": 256,
@@ -59,20 +59,20 @@
     "gpu": "Apple Silicon GPU (Metal / MPS)"
   },
   "device": "mps",
-  "train_examples": 1280,
+  "train_examples": 1920,
   "val_examples": 64,
-  "total_train_seconds": 25.3,
-  "total_train_hours": 0.007,
-  "best_val_loss": 7.9584,
+  "total_train_seconds": 33.7,
+  "total_train_hours": 0.009,
+  "best_val_loss": 7.8891,
   "history": [
     {
       "epoch": 1,
-      "train_loss": 9.2169,
-      "val_loss": 7.9584,
-      "val_nll": 7.4377,
-      "val_ppl": 1698.81,
+      "train_loss": 8.8523,
+      "val_loss": 7.8891,
+      "val_nll": 7.3766,
+      "val_ppl": 1598.17,
       "lr": 0.001,
-      "epoch_seconds": 25.3
+      "epoch_seconds": 33.6
     }
   ]
 }

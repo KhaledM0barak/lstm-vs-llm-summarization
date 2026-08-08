@@ -16,13 +16,12 @@ from dataclasses import asdict
 from pathlib import Path
 
 import torch
-import torch.nn as nn
 import yaml
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from src.data.dataset import BucketBatchSampler, SummarizationDataset, collate_batch
-from src.data.vocab import PAD_ID, Vocab
+from src.data.vocab import Vocab
 from src.models.seq2seq import ModelConfig, Seq2Seq
 from src.utils.device import get_device, hardware_summary
 from src.utils.seed import set_seed
@@ -37,55 +36,26 @@ def load_config(path: str, overrides: list[str] | None = None) -> dict:
     return cfg
 
 
-class LabelSmoothedCrossEntropy(nn.Module):
-    """Cross entropy with label smoothing, ignoring padded target positions.
-
-    Smoothing matters more than usual here: with a 50k vocabulary and only ~80k
-    training pairs, an unsmoothed objective drives the model to overconfident
-    predictions on frequent tokens and worsens the repetition failure mode.
-    """
-
-    def __init__(self, smoothing: float = 0.1, ignore_index: int = PAD_ID) -> None:
-        super().__init__()
-        self.smoothing = smoothing
-        self.ignore_index = ignore_index
-
-    def forward(self, logits: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-        vocab_size = logits.size(-1)
-        logits = logits.reshape(-1, vocab_size)
-        target = target.reshape(-1)
-
-        keep = target.ne(self.ignore_index)
-        logits, target = logits[keep], target[keep]
-        if target.numel() == 0:
-            return logits.sum() * 0.0
-
-        logprobs = torch.log_softmax(logits, dim=-1)
-        nll = -logprobs.gather(1, target.unsqueeze(1)).squeeze(1)
-        smooth = -logprobs.mean(dim=-1)
-        loss = (1.0 - self.smoothing) * nll + self.smoothing * smooth
-        return loss.mean()
-
-
 @torch.no_grad()
-def evaluate_loss(model: Seq2Seq, loader: DataLoader, criterion, device) -> dict:
+def evaluate_loss(model: Seq2Seq, loader: DataLoader, label_smoothing: float, device) -> dict:
     model.eval()
     total_loss, total_nll, total_tokens = 0.0, 0.0, 0
-    nll_fn = nn.CrossEntropyLoss(ignore_index=PAD_ID, reduction="sum")
 
     for batch in loader:
         batch = {k: v.to(device) for k, v in batch.items()}
-        logits = model(batch)
-        loss = criterion(logits, batch["tgt_out"])
-        ntok = int(batch["tgt_mask"].sum())
-        total_loss += float(loss) * ntok
-        total_nll += float(nll_fn(logits.reshape(-1, logits.size(-1)), batch["tgt_out"].reshape(-1)))
+        h_tilde = model(batch)
+        loss_sum, nll_sum, ntok = model.loss_from_states(
+            h_tilde, batch["tgt_out"], label_smoothing
+        )
+        total_loss += float(loss_sum)
+        total_nll += float(nll_sum)
         total_tokens += ntok
 
+    mean_nll = total_nll / max(total_tokens, 1)
     return {
         "loss": total_loss / max(total_tokens, 1),
-        "nll": total_nll / max(total_tokens, 1),
-        "ppl": math.exp(min(total_nll / max(total_tokens, 1), 20)),
+        "nll": mean_nll,
+        "ppl": math.exp(min(mean_nll, 20)),
         "tokens": total_tokens,
     }
 
@@ -122,6 +92,11 @@ def main() -> None:
         val_ds.src, val_ds.tgt = val_ds.src[:n], val_ds.tgt[:n]
         val_ds.records = val_ds.records[:n]
 
+    # Training only needs the encoded id arrays. Holding the raw article text for
+    # 80k documents costs several hundred MB for nothing.
+    train_ds.records = []
+    val_ds.records = []
+
     train_sampler = BucketBatchSampler(
         train_ds.src_lengths(), cfg["batch_size"], shuffle=True, seed=cfg.get("seed", 1234)
     )
@@ -136,7 +111,7 @@ def main() -> None:
     params = model.num_parameters()
     print(f"parameters: {json.dumps(params)}")
 
-    criterion = LabelSmoothedCrossEntropy(cfg.get("label_smoothing", 0.1))
+    label_smoothing = cfg.get("label_smoothing", 0.1)
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"])
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, mode="min", factor=cfg.get("lr_decay", 0.5), patience=0
@@ -163,15 +138,19 @@ def main() -> None:
         )
         for step, batch in enumerate(pbar, 1):
             batch = {k: v.to(device) for k, v in batch.items()}
-            logits = model(batch)
-            loss = criterion(logits, batch["tgt_out"])
+            h_tilde = model(batch)
+            loss_sum, _, ntok = model.loss_from_states(
+                h_tilde, batch["tgt_out"], label_smoothing
+            )
+            # Normalize by tokens so the gradient scale is independent of how many
+            # target tokens happen to land in this batch.
+            loss = loss_sum / max(ntok, 1)
 
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), cfg.get("clip", 5.0))
             optimizer.step()
 
-            ntok = int(batch["tgt_mask"].sum())
             running += loss.detach().item() * ntok
             seen_tokens += ntok
             if step % 50 == 0:
@@ -181,7 +160,7 @@ def main() -> None:
                 )
 
         train_loss = running / max(seen_tokens, 1)
-        val_metrics = evaluate_loss(model, val_loader, criterion, device)
+        val_metrics = evaluate_loss(model, val_loader, label_smoothing, device)
         scheduler.step(val_metrics["loss"])
         epoch_time = time.time() - epoch_start
 

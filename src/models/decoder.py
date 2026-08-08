@@ -94,12 +94,15 @@ class Decoder(nn.Module):
     ) -> tuple[torch.Tensor, torch.Tensor]:
         """Teacher-forced decoding over the whole target.
 
-        Returns logits (B, T, V) and attention weights (B, T, S).
+        Returns the decoder's attentional vectors (B, T, H) and attention weights
+        (B, T, S) -- deliberately *not* logits.
 
-        The output projection is applied once to the stacked (B, T, H) states
-        rather than once per step. It is the single most expensive op in the model
-        (H x 50k), and folding T into the matmul's batch dimension turns 100 small
-        GEMMs into one large one -- worth roughly a 3x speedup on MPS.
+        Projecting to the 50k vocabulary here would materialize a (B, T, V)
+        tensor: at batch 64 and 100 steps that is 1.28 GB in fp32 before the loss
+        function has copied it even once, which on a 24 GB machine drives the
+        whole run into swap. The projection is instead applied in time-chunks by
+        `Seq2Seq.loss_from_states`, which keeps the GEMMs large enough to be
+        efficient while capping peak memory.
         """
         bsz, tgt_len = tgt_in.shape
         memory_proj = self.attention.project_memory(memory)
@@ -128,5 +131,8 @@ class Decoder(nn.Module):
                 weights_seq.append(weights)
 
         h_tilde = torch.stack(h_seq, dim=1)                      # (B,T,H)
-        logits = self.out_proj(self.dropout(h_tilde))            # (B,T,V), one GEMM
-        return logits, torch.stack(weights_seq, dim=1)
+        return h_tilde, torch.stack(weights_seq, dim=1)
+
+    def project(self, h_tilde: torch.Tensor) -> torch.Tensor:
+        """Map attentional vectors to vocabulary logits."""
+        return self.out_proj(self.dropout(h_tilde))
