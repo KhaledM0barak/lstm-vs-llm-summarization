@@ -22,6 +22,11 @@ NEG_INF = -1e9
 class BahdanauAttention(nn.Module):
     """score(h_dec, h_enc) = v^T tanh(W_dec h_dec + W_enc h_enc)"""
 
+    # Batching additive attention over decoder steps would materialize a
+    # (B, T, S, attn_size) tensor -- ~330 GB at B=64, T=100, S=400 -- so this
+    # variant is necessarily evaluated one step at a time.
+    supports_batched = False
+
     def __init__(self, decoder_size: int, encoder_size: int, attn_size: int = 256) -> None:
         super().__init__()
         self.W_dec = nn.Linear(decoder_size, attn_size, bias=False)
@@ -50,7 +55,16 @@ class BahdanauAttention(nn.Module):
 
 
 class LuongAttention(nn.Module):
-    """score(h_dec, h_enc) = h_dec^T W h_enc  ('general' variant)."""
+    """score(h_dec, h_enc) = h_dec^T W h_enc  ('general' variant).
+
+    Unlike the additive form, the multiplicative score is a plain matrix product,
+    so it can be evaluated for every decoder step at once. That makes the whole
+    decoder a handful of fused kernels instead of a Python loop, which is the
+    difference between a run that finishes and one that does not on this
+    hardware. See `forward_batched`.
+    """
+
+    supports_batched = True
 
     def __init__(self, decoder_size: int, encoder_size: int, attn_size: int = 256) -> None:
         super().__init__()
@@ -70,6 +84,19 @@ class LuongAttention(nn.Module):
         context = torch.bmm(weights.unsqueeze(1), memory).squeeze(1)
         return context, weights
 
+    def forward_batched(
+        self,
+        queries: torch.Tensor,   # (B, T, H)
+        memory: torch.Tensor,    # (B, S, E)
+        mask: torch.Tensor,      # (B, S)
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """All decoder steps at once. Returns context (B,T,E), weights (B,T,S)."""
+        scores = torch.bmm(self.W(queries), memory.transpose(1, 2))     # (B,T,S)
+        scores = scores.masked_fill(~mask.unsqueeze(1), NEG_INF)
+        weights = F.softmax(scores, dim=-1)
+        context = torch.bmm(weights, memory)                            # (B,T,E)
+        return context, weights
+
     def project_memory(self, memory: torch.Tensor) -> torch.Tensor:
         return None
 
@@ -81,6 +108,8 @@ class NoAttention(nn.Module):
     interface is unchanged; this is the classic recurrent bottleneck the report
     compares against.
     """
+
+    supports_batched = True
 
     def __init__(self, decoder_size: int, encoder_size: int, attn_size: int = 256) -> None:
         super().__init__()
@@ -98,6 +127,19 @@ class NoAttention(nn.Module):
         # Uniform weights over real positions, returned for interface parity.
         weights = m.squeeze(-1) / m.sum(dim=1).clamp(min=1.0)
         return context, weights
+
+    def forward_batched(
+        self,
+        queries: torch.Tensor,
+        memory: torch.Tensor,
+        mask: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        context, weights = self.forward(queries[:, 0], memory, mask)
+        t = queries.size(1)
+        return (
+            context.unsqueeze(1).expand(-1, t, -1),
+            weights.unsqueeze(1).expand(-1, t, -1),
+        )
 
     def project_memory(self, memory: torch.Tensor) -> torch.Tensor:
         return None

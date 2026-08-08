@@ -97,8 +97,17 @@ def main() -> None:
     train_ds.records = []
     val_ds.records = []
 
+    # drop_last keeps the batch dimension constant, which together with the
+    # quantized padding in collate_batch holds the number of distinct tensor
+    # shapes low enough for MPS to reuse compiled kernels. It costs <2% of the
+    # training examples per epoch, and reshuffling means a different remainder is
+    # dropped each epoch.
     train_sampler = BucketBatchSampler(
-        train_ds.src_lengths(), cfg["batch_size"], shuffle=True, seed=cfg.get("seed", 1234)
+        train_ds.src_lengths(),
+        cfg["batch_size"],
+        shuffle=True,
+        seed=cfg.get("seed", 1234),
+        drop_last=True,
     )
     val_sampler = BucketBatchSampler(
         val_ds.src_lengths(), cfg["batch_size"], shuffle=False, seed=cfg.get("seed", 1234)

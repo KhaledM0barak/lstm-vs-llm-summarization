@@ -28,7 +28,7 @@ tie_embeddings: true
 batch_size: 64
 lr: 0.001
 lr_decay: 0.5
-epochs: 6
+epochs: 5
 patience: 2
 clip: 5.0
 label_smoothing: 0.1

@@ -119,9 +119,20 @@ class Decoder(nn.Module):
                 feed = torch.tanh(self.attn_combine(torch.cat([h_t, context], dim=-1)))
                 h_seq.append(feed)
                 weights_seq.append(weights)
+        elif getattr(self.attention, "supports_batched", False):
+            # Fast path. Without input feeding the recurrence does not depend on
+            # the attention output, and a multiplicative score can be computed
+            # for every step at once -- so the entire decoder is three fused
+            # kernels (LSTM, bmm, linear) with no Python-level loop at all.
+            emb = self.dropout(self.embedding(tgt_in))
+            out, _ = self.lstm(emb, state)                       # (B,T,H)
+            context, weights = self.attention.forward_batched(out, memory, src_mask)
+            h_tilde = torch.tanh(self.attn_combine(torch.cat([out, context], dim=-1)))
+            return h_tilde, weights
+
         else:
-            # Without input feeding the recurrence does not depend on the
-            # attention output, so the LSTM runs over all steps in one call.
+            # No input feeding, but an attention whose score cannot be batched
+            # (additive): one fused LSTM call, then per-step attention.
             emb = self.dropout(self.embedding(tgt_in))
             out, _ = self.lstm(emb, state)                       # (B,T,H)
             for t in range(tgt_len):
