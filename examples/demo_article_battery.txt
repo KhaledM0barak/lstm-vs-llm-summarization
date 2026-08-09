@@ -1,0 +1,20 @@
+Researchers at the University of Toronto have developed a battery electrolyte that
+allows lithium-ion cells to charge to eighty percent capacity in under six minutes
+without the degradation that normally follows fast charging. The team, led by
+materials scientist Priya Raghunathan, published the findings on Tuesday in the
+journal Nature Energy. Conventional fast charging forces lithium ions into the
+graphite anode faster than they can settle, which causes metallic lithium to plate
+on the surface and permanently reduce capacity. The Toronto group added a
+fluorinated additive that reorganises how ions cluster near the electrode, allowing
+them to enter the anode more evenly. Cells built with the electrolyte retained
+ninety-two percent of their original capacity after a thousand fast-charge cycles,
+compared with sixty-one percent for the control group. Raghunathan cautioned that
+the work has so far been demonstrated only in coin cells a few centimetres across,
+and that scaling to automotive formats introduces thermal problems the study did
+not address. Industry analysts said the result was promising but early. "Every
+year brings a fast-charging breakthrough in a coin cell," said Marcus Vale, an
+analyst at Fenwick Energy Research. "The question is always whether it survives
+contact with a manufacturing line." The university has filed a provisional patent
+and is in discussions with two North American cell manufacturers. Funding came from
+the Natural Sciences and Engineering Research Council of Canada. The research group
+expects to publish results from larger pouch cells within eighteen months.
