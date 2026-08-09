@@ -383,9 +383,8 @@ end; the demo (Appendix D) exercises all five workstreams in one run.
 > unless it is genuinely untrue of your process.
 
 **Tools and use.** During this project we used **Claude (Anthropic)** for the
-following: (1) generating the initial implementation of the code in this
-repository, including the model, the training loop, and the evaluation and
-analysis scripts; (2) suggesting evaluation edge cases and diagnostics.
+following: (1) the initial model, training loop, and evaluation scripts;
+(2) suggesting evaluation edge cases and diagnostics; (3) report review.
 
 **Results.** We did **not** use AI to generate our experimental results. Every
 number reported here was produced by executing the committed code on our own
