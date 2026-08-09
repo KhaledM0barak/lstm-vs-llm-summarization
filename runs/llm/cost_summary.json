@@ -4,7 +4,7 @@
   "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
   "backend_details": {
     "quantization": "4-bit",
-    "batch_size": 8,
+    "batch_size": 4,
     "sampling": "greedy (temp=0.0)",
     "framework": "mlx-lm"
   },
@@ -164,9 +164,45 @@
         "gpu_hours": 0.3944,
         "gpu_hours_per_1k_summaries": 0.7888
       }
+    },
+    {
+      "setting": "B_zeroshot_fullarticle",
+      "backend": "mlx",
+      "backend_kind": "local",
+      "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
+      "backend_details": {
+        "quantization": "4-bit",
+        "batch_size": 4,
+        "sampling": "greedy (temp=0.0)",
+        "framework": "mlx-lm"
+      },
+      "prompt_variant": "B",
+      "prompt_variant_name": "style-matched",
+      "prompt_description": "Specifies CNN/DailyMail highlight length, sentence count, and register.",
+      "shots": 0,
+      "input_condition": "full_article",
+      "max_tokens": 200,
+      "system_prompt": "You write summaries in the style of CNN/DailyMail article highlights: 3 to 4 short, declarative, self-contained sentences totalling roughly 55 words. Each sentence states one concrete fact from the article \u2014 a name, a number, a place, an action. You never editorialize, never add background the article does not contain, and never write an introductory clause such as 'This article discusses'.",
+      "user_template": "Write the highlights for the following news article. Output only the highlight sentences as a single paragraph, with no bullet points, no labels, and no preamble.\n\nArticle:\n{article}\n\nHighlights:",
+      "few_shot_exemplar_summaries": [],
+      "n_examples": 500,
+      "usage": {
+        "requests": 500,
+        "errors": 0,
+        "input_tokens": 500578,
+        "output_tokens": 49471,
+        "wall_clock_s": 2521.2,
+        "latency_mean_s": 5.04,
+        "latency_p50_s": 5.07,
+        "latency_p95_s": 7.2,
+        "throughput_summaries_per_min": 11.9,
+        "cost_usd": 0.0,
+        "gpu_hours": 0.7003,
+        "gpu_hours_per_1k_summaries": 1.4007
+      }
     }
   ],
-  "total_requests": 2000,
+  "total_requests": 2500,
   "total_cost_usd": 0.0,
-  "total_gpu_hours": 3.3647
+  "total_gpu_hours": 4.065
 }

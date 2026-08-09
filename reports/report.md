@@ -84,8 +84,10 @@ Exact prompts in **Appendix A**.
 
 **Input parity.** The LLM receives the article truncated to the **same 400-word
 window the LSTM encoder sees**. Without parity we would be comparing amounts of
-input rather than models. Note this window discards **49% of all article tokens**
-and truncates **82% of articles** — for both systems equally.
+input rather than models. This window discards **49% of all article tokens** and
+truncates **82% of articles** — equally for both systems. We also ran the
+unmatched condition to check the decision did not handicap the LLM; it did not
+(§6.3).
 
 ## 3. Experimental settings
 
@@ -104,6 +106,7 @@ Full tables in **Appendix F**; per-epoch curves in `runs/*/train_summary.json`.
 | System | ROUGE-1 | ROUGE-2 | ROUGE-Lsum | Len |
 |---|---|---|---|---|
 | **LLM B (style-matched), zero-shot** | **41.35** [40.44, 42.20] | **18.07** | **38.14** | 82 |
+| LLM B, zero-shot, **full article** | 40.87 [39.95, 41.70] | 17.70 | 37.65 | 84 |
 | LLM B, few-shot k=4 | 40.48 [39.62, 41.34] | 16.58 | 37.58 | 79 |
 | **Lead-3 baseline** | 39.89 [38.87, 40.93] | 17.60 | 36.35 | 86 |
 | LLM A (plain), few-shot k=4 | 39.40 [38.60, 40.21] | 14.90 | 36.15 | 81 |
@@ -140,9 +143,9 @@ should grow. It does not — and the length buckets cannot really test it, since
 82% of articles already exceed the encoder window and differ only in how much was
 discarded before the model saw them.
 
-All systems degrade sharply on abstractive examples (LSTM −9.5 ROUGE-1
-extractive→abstractive, LLM −10.6, Lead-3 −10.7). They degrade *together*, which
-says more about ROUGE than about the models.
+All systems degrade sharply on abstractive examples (LSTM −9.5 ROUGE-1, LLM
+−10.6, Lead-3 −10.7) and degrade *together*, which says more about ROUGE than
+about the models.
 
 ### 4.3 Ablations
 
@@ -194,14 +197,14 @@ Thirteen examples selected **by behaviour, not by score** are in
 the data supports it; one is refuted.
 
 **Rare-word breakage (LSTM) — confirmed, but invisible in the obvious metric.**
-The measured OOV rate is **0.000** for every LSTM system, which is an artifact:
-`<unk>` is suppressed, so the model *cannot* emit an OOV token (Lead-3, copying
-real text, shows the true rate of 0.023). The failure relocates to **substitution
-and omission**. **67% of references contain at least one token the model cannot
-produce.** Reference `fredric brandt` → model `dr. frederic brandt`, an
-in-vocabulary misspelling of a real person with no metric signature; reference
-`teamed up with golfbidder` → `teamed up with the to offer…`, entity dropped and
-sentence broken.
+The measured OOV rate is **0.000** for every LSTM system — an artifact, since
+`<unk>` is suppressed so the model *cannot* emit an OOV token (Lead-3, copying
+real text, shows the true rate of 0.023). The failure relocates to substitution
+and omission, and **67% of references contain at least one token the model cannot
+produce**: `fredric brandt` → `dr. frederic brandt` (an in-vocabulary misspelling
+of a real person, with no metric signature); `teamed up with golfbidder` →
+`teamed up with the to offer…` (entity dropped, sentence broken). Evidence in
+Appendix G.
 
 **Fluent-but-wrong — confirmed, but only without attention.** The no-attention
 ablation, on a Louisville fire, generated *"the fire is the fire in the city of
@@ -209,10 +212,9 @@ san diego."* The full model does not do this (1.5% unsupported content).
 
 **"The LLM hallucinates" — refuted.** Unsupported-content is a *lexical* proxy:
 on constructed cases a faithful paraphrase scored 0.857 while a fabrication
-reusing source words (wrong district, wrong budget) scored 0.300. Variant B's
-0.055 alongside a 0.246 novel-bigram rate is restrained paraphrase, not
-invention. Establishing real hallucination needs human annotation, which we did
-not perform.
+reusing source words scored 0.300 (Appendix G.2). Variant B's 0.055 alongside a
+0.246 novel-bigram rate is restrained paraphrase, not invention. Establishing
+real hallucination needs human annotation, which we did not perform.
 
 **Format drift (LLM) — confirmed, and its largest weakness here.** Variant A
 zero-shot produces **110-token** summaries against a 58-token reference. Variant
@@ -231,23 +233,20 @@ ROUGE rewards the LSTM's direction more than its quality warrants.
 
 ### 6.1 Why the gap exists
 
-**Pretraining and transfer dominate.** The LSTM sees 80k pairs and nothing else
+**Pretraining and transfer dominate.** The LSTM sees 80k pairs and nothing else,
 and must learn English, news register and the summarization objective at once —
 with 83% of its parameters spent on an embedding table. That the LLM reaches
 41.35 with no gradient step on this data *is* the transfer-learning result.
-
 **Capacity matters less than the counts suggest**: a 500× parameter difference
 yields an 18% relative ROUGE-1 difference.
 
 **The recurrent bottleneck binds only when attention is absent.** Removing
-attention costs 14.02 ROUGE-1 — that is the bottleneck, and self-attention is a
-more thorough solution to the same problem. But a 4× smaller window costs nothing
-significant, and the gap does not widen with length. On this dataset the LSTM
+attention costs 14.02 ROUGE-1 — that is the bottleneck, and self-attention solves
+the same problem more thoroughly. But a 4× smaller window costs nothing
+significant and the gap does not widen with length: on this dataset the LSTM
 fails at knowing what a sentence *means*, not at carrying information across 400
-timesteps.
-
-**Specification accounts for 45% of the gap** (§4.1), which no architectural
-account explains.
+timesteps. **Specification accounts for a further 45% of the gap** (§4.1), which
+no architectural account explains.
 
 ### 6.2 Failure-mode contrast
 
@@ -272,6 +271,13 @@ LLM must be told about it through a prompt. We can quantify this: the A-vs-B gap
 of **2.83 ROUGE-1** is the penalty for not being told, and it is 45% of the total
 gap.
 
+**Input parity does not handicap the LLM — we measured it.** Given the
+*untruncated* article, variant B zero-shot scores **40.87** vs. **41.35** on the
+matched window: **−0.47 ROUGE-1** [−0.91, −0.03], p = 0.034. More input made it
+slightly *worse*. This is consistent with §4.3 and with Lead-3's strength — the
+summary-relevant content sits in the opening — and it means the parity choice
+costs the LLM nothing.
+
 A fairer middle point is fine-tuning a small pretrained transformer (BART-base,
 T5-small) on the same 80k pairs, isolating pretraining from architecture and
 supervision. Our results predict it would close most of the gap, receiving both.
@@ -279,17 +285,17 @@ supervision. Our results predict it would close most of the gap, receiving both.
 ### 6.4 Engineering trade-offs
 
 **Latency:** 0.231 s vs. 2.85 s — 12×, against a quantized 8B model on the same
-GPU with no network hop. Any sub-second interactive budget excludes the LLM
-before cost is considered. **Throughput:** 259 vs. 21 summaries/min; at a million
-documents, ~2.7 GPU-days versus 33, and the 8.73-hour training cost is repaid
-after ~40,000 documents. **Deployment:** 61 MB versus 4.5 GB — commodity CPU,
-embedded hardware, or an air-gapped network where data cannot leave the premises.
-**Controllability:** our failure modes are bounded and fixable at decoding
-(repetition eliminated, length governed by the GNMT penalty, `<unk>` suppressed);
-the LLM ignored an explicit length instruction by 41% and the remedy is prompt
-iteration with no guarantee. **Low-resource settings:** the LLM's advantage comes
-from pretraining, so where that pretraining does not exist the advantage
-disappears while 80k supervised pairs remains achievable.
+GPU with no network hop; any sub-second interactive budget excludes the LLM
+before cost is considered. **Throughput:** 259 vs. 21 summaries/min — at a million
+documents, ~2.7 GPU-days versus 33, with the 8.73-hour training cost repaid after
+~40,000 documents. **Deployment:** 61 MB versus 4.5 GB — commodity CPU, embedded
+hardware, or an air-gapped network. **Controllability:** our failure modes are
+bounded and fixable at decoding (repetition eliminated, length governed by the
+GNMT penalty, `<unk>` suppressed), whereas the LLM ignored an explicit length
+instruction by 41% and the remedy is prompt iteration with no guarantee.
+**Low-resource settings:** the LLM's advantage comes from pretraining, so where
+that pretraining does not exist it disappears, while 80k supervised pairs remains
+achievable.
 
 **Where the LLM clearly wins:** any task with no training data. It scored 41.35
 having never seen this dataset, and we have no counterpart to that.
@@ -482,6 +488,7 @@ directly; see also `results/results.md`.
 | System | ROUGE-1 | ROUGE-2 | ROUGE-Lsum | Len |
 |---|---|---|---|---|
 | LLM B, zero-shot | 41.35 [40.44, 42.20] | 18.07 [17.25, 18.84] | 38.14 | 82.1 |
+| LLM B, zero-shot, full article | 40.87 [39.95, 41.70] | 17.70 [16.92, 18.50] | 37.65 | 84.0 |
 | LLM B, few-shot k=4 | 40.48 [39.62, 41.34] | 16.58 [15.82, 17.36] | 37.58 | 79.1 |
 | Lead-3 baseline | 39.89 [38.87, 40.93] | 17.60 [16.58, 18.60] | 36.35 | 86.2 |
 | LLM A, few-shot k=4 | 39.40 [38.60, 40.21] | 14.90 [14.23, 15.58] | 36.15 | 81.1 |
@@ -507,6 +514,16 @@ directly; see also `results/results.md`.
 | LSTM (greedy) | −2.40 [−3.23, −1.53] | <0.0001 | −1.69 | <0.0001 | 204/291 |
 | LSTM (no trigram block) | −5.35 [−6.03, −4.67] | <0.0001 | −2.83 | <0.0001 | 62/330 |
 | — no attention | −14.02 [−15.02, −13.00] | <0.0001 | −10.28 | <0.0001 | 56/442 |
+
+### F.2b Input-parity check: full article vs. matched 400-word window
+
+Paired bootstrap, variant B zero-shot, n = 500.
+
+| Metric | Δ (full − matched) | 95% CI | p | W/L |
+|---|---|---|---|---|
+| ROUGE-1 | −0.47 | [−0.91, −0.03] | 0.034 | 177/195 |
+| ROUGE-2 | −0.37 | [−0.81, +0.07] | 0.099 *(n.s.)* | 164/201 |
+| ROUGE-Lsum | −0.49 | [−0.93, −0.05] | 0.028 | 172/198 |
 
 ### F.3 Behavioral diagnostics (means)
 
@@ -565,3 +582,82 @@ Total training **8.73 GPU-hours**. LSTM inference: 500 summaries in 115.6 s =
 
 Total LLM generation **3.36 GPU-hours** for 2,000 summaries, monetary cost
 **$0.00** (run locally).
+
+## Appendix G — Error-analysis evidence
+
+The claims in §5 are verified against the data rather than asserted. This
+appendix reproduces the evidence. Full side-by-side comparisons for all thirteen
+behaviour-selected examples are in `results/qualitative.md`.
+
+### G.1 The OOV failure is real but invisible in the OOV metric
+
+`<unk>` is suppressed at generation, so every LSTM system reports an OOV rate of
+exactly 0.000. Lead-3, which copies real article text, shows the true rate for
+this corpus (0.023). **334 of 500 references (67%) contain at least one token
+outside the 50,000-type vocabulary**, so the failure necessarily surfaces as
+substitution or omission instead:
+
+| Reference contains | Model produced | Failure |
+|---|---|---|
+| `fredric brandt` | `dr. frederic brandt` | In-vocabulary **misspelling of a real person** — a factual error with no metric signature |
+| `sportsmail have teamed up with golfbidder` | `sportsmail have teamed up with the to offer…` | Entity **dropped**, sentence left ungrammatical |
+
+### G.2 Unsupported-content is a lexical proxy, not a factuality measure
+
+Constructed cases against a fixed source article
+(*"the mayor announced on tuesday that the city will build a new hospital in the
+eastern district at a cost of forty million dollars"*):
+
+| Candidate summary | Truth | Unsupported-content |
+|---|---|---|
+| "the city plans to construct a medical facility costing $40m" | **correct** | **0.857** |
+| "the mayor announced the hospital will be built in the **western** district at a cost of **four** million dollars" | **false** | **0.300** |
+| "the mayor announced on tuesday that the city will build a new hospital" | correct (verbatim) | 0.000 |
+
+The faithful paraphrase scores nearly **three times worse** than the fabrication.
+The metric counts lexical novelty, which correlates weakly with factual error and
+here inverts. This is why §5 declines to call the LLM's 0.055 rate a
+hallucination rate.
+
+### G.3 What the attention mask prevents
+
+Measured on one short article (3 real tokens) batched with a longer one, using
+the trained model's attention module:
+
+```
+WITHOUT mask: 0.132 0.094 0.146 | 0.108 0.107 0.144 0.146 0.123
+WITH mask   : 0.354 0.253 0.393 | 0.000 0.000 0.000 0.000 0.000
+                 real tokens    |            padding
+```
+
+**62.8% of attention mass lands on padding without the mask**, and the resulting
+context vector differs by 1.83 (L2). It also makes the model's output depend on
+*padding content* — i.e. on which other articles happen to share its batch — which
+is a correctness violation, not merely a quality loss. `tests/test_models.py`
+asserts both properties.
+
+### G.4 The two systems fail in opposite directions
+
+**Largest LLM advantage** (ROUGE-1 11.3 → 53.6). The reference concerns a
+beauty-pageant dispute; the LSTM latches onto a prayer quoted mid-article and
+misses both principals, while the LLM identifies who said what.
+
+> **Reference:** indianara carvalho posted photo of body painted with image of virgin mary . runner-up claudia alende has branded winner an 'attention-seeking sl\*t' …
+>
+> **LSTM (R1 11.3):** claudia james, 21, came second in last year's beauty pageant. she was accompanied with a prayer which including the words: 'good friday. lord, on this day i ask for peace, love, wisdom and strength'.
+>
+> **LLM (R1 53.6):** Claudia Alende, 21, launched a scathing attack on Miss Bumbum winner Indianara Carvalho, calling her an 'attention-seeking sl\*t'. Indianara Carvalho, 23, posted a picture of her naked body painted with an image of the Virgin Mary on Good Friday…
+
+**LSTM beats the LLM** (57.1 vs. 26.3) — and the mechanism is instructive. The
+LSTM copies the reference's exact framing; the LLM writes a longer summary that
+is **entirely true** but reports different facts (follower counts, likes, due
+date) than the reference chose.
+
+> **Reference:** sarah stage, 30, has documented her changing figure via her instagram page throughout her pregnancy …
+>
+> **LSTM (R1 57.1, 28 tokens):** sarah stage, a 30-year-old underwear model and animal rights activist from los angeles, has documented her changing figure via her instagram page throughout her pregnancy.
+>
+> **LLM (R1 26.3, 85 tokens):** Sarah Stage, a 30-year-old underwear model, has shared a photo of her barely-there baby bump 10 days before her due date. The model, who has 1.5 million Instagram followers, posted the picture on Monday…
+
+Neither output is wrong. The LSTM scores twice as high because it happened to
+select the same facts the editor did, which is what ROUGE measures.

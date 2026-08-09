@@ -733,6 +733,29 @@
         "oov_rate": 0.024,
         "empty": 0.0
       },
+      "llm_B_zeroshot_fullarticle": {
+        "rouge1": {
+          "mean": 40.87,
+          "ci_low": 39.95,
+          "ci_high": 41.7
+        },
+        "rouge2": {
+          "mean": 17.7,
+          "ci_low": 16.92,
+          "ci_high": 18.5
+        },
+        "rougeLsum": {
+          "mean": 37.65,
+          "ci_low": 36.8,
+          "ci_high": 38.5
+        },
+        "length_tokens": 84.03,
+        "dup_trigram_rate": 0.0094,
+        "novel_bigram_rate": 0.2413,
+        "unsupported_content_rate": 0.0542,
+        "oov_rate": 0.0282,
+        "empty": 0.0
+      },
       "lead3_baseline": {
         "rouge1": {
           "mean": 39.89,
@@ -990,6 +1013,29 @@
             "oov_rate": 0.0255,
             "empty": 0.0
           },
+          "llm_B_zeroshot_fullarticle": {
+            "rouge1": {
+              "mean": 38.66,
+              "ci_low": 37.03,
+              "ci_high": 40.29
+            },
+            "rouge2": {
+              "mean": 15.71,
+              "ci_low": 14.46,
+              "ci_high": 17.11
+            },
+            "rougeLsum": {
+              "mean": 35.73,
+              "ci_low": 34.22,
+              "ci_high": 37.31
+            },
+            "length_tokens": 89.3533,
+            "dup_trigram_rate": 0.0093,
+            "novel_bigram_rate": 0.2356,
+            "unsupported_content_rate": 0.0484,
+            "oov_rate": 0.0282,
+            "empty": 0.0
+          },
           "lead3_baseline": {
             "rouge1": {
               "mean": 36.87,
@@ -1245,6 +1291,29 @@
             "oov_rate": 0.0227,
             "empty": 0.0
           },
+          "llm_B_zeroshot_fullarticle": {
+            "rouge1": {
+              "mean": 41.37,
+              "ci_low": 39.99,
+              "ci_high": 42.77
+            },
+            "rouge2": {
+              "mean": 17.59,
+              "ci_low": 16.35,
+              "ci_high": 18.89
+            },
+            "rougeLsum": {
+              "mean": 37.75,
+              "ci_low": 36.43,
+              "ci_high": 39.07
+            },
+            "length_tokens": 85.3494,
+            "dup_trigram_rate": 0.0083,
+            "novel_bigram_rate": 0.2439,
+            "unsupported_content_rate": 0.0532,
+            "oov_rate": 0.0282,
+            "empty": 0.0
+          },
           "lead3_baseline": {
             "rouge1": {
               "mean": 40.81,
@@ -1498,6 +1567,29 @@
             "novel_bigram_rate": 0.3617,
             "unsupported_content_rate": 0.1003,
             "oov_rate": 0.0236,
+            "empty": 0.0
+          },
+          "llm_B_zeroshot_fullarticle": {
+            "rouge1": {
+              "mean": 42.6,
+              "ci_low": 40.94,
+              "ci_high": 44.12
+            },
+            "rouge2": {
+              "mean": 19.8,
+              "ci_low": 18.27,
+              "ci_high": 21.28
+            },
+            "rougeLsum": {
+              "mean": 39.46,
+              "ci_low": 37.87,
+              "ci_high": 40.93
+            },
+            "length_tokens": 77.3952,
+            "dup_trigram_rate": 0.0104,
+            "novel_bigram_rate": 0.2445,
+            "unsupported_content_rate": 0.061,
+            "oov_rate": 0.0282,
             "empty": 0.0
           },
           "lead3_baseline": {
@@ -1757,6 +1849,29 @@
             "oov_rate": 0.0239,
             "empty": 0.0
           },
+          "llm_B_zeroshot_fullarticle": {
+            "rouge1": {
+              "mean": 35.58,
+              "ci_low": 34.28,
+              "ci_high": 36.95
+            },
+            "rouge2": {
+              "mean": 12.29,
+              "ci_low": 11.4,
+              "ci_high": 13.26
+            },
+            "rougeLsum": {
+              "mean": 32.46,
+              "ci_low": 31.21,
+              "ci_high": 33.8
+            },
+            "length_tokens": 84.1198,
+            "dup_trigram_rate": 0.009,
+            "novel_bigram_rate": 0.2591,
+            "unsupported_content_rate": 0.0608,
+            "oov_rate": 0.028,
+            "empty": 0.0
+          },
           "lead3_baseline": {
             "rouge1": {
               "mean": 34.61,
@@ -2010,6 +2125,29 @@
             "novel_bigram_rate": 0.3416,
             "unsupported_content_rate": 0.08,
             "oov_rate": 0.0259,
+            "empty": 0.0
+          },
+          "llm_B_zeroshot_fullarticle": {
+            "rouge1": {
+              "mean": 45.17,
+              "ci_low": 43.61,
+              "ci_high": 46.68
+            },
+            "rouge2": {
+              "mean": 23.48,
+              "ci_low": 21.91,
+              "ci_high": 25.09
+            },
+            "rougeLsum": {
+              "mean": 42.28,
+              "ci_low": 40.78,
+              "ci_high": 43.85
+            },
+            "length_tokens": 84.0479,
+            "dup_trigram_rate": 0.0094,
+            "novel_bigram_rate": 0.2213,
+            "unsupported_content_rate": 0.0493,
+            "oov_rate": 0.0298,
             "empty": 0.0
           },
           "lead3_baseline": {
@@ -2267,6 +2405,29 @@
             "oov_rate": 0.0221,
             "empty": 0.0
           },
+          "llm_B_zeroshot_fullarticle": {
+            "rouge1": {
+              "mean": 41.88,
+              "ci_low": 40.56,
+              "ci_high": 43.14
+            },
+            "rouge2": {
+              "mean": 17.33,
+              "ci_low": 16.26,
+              "ci_high": 18.37
+            },
+            "rougeLsum": {
+              "mean": 38.2,
+              "ci_low": 36.95,
+              "ci_high": 39.44
+            },
+            "length_tokens": 83.9217,
+            "dup_trigram_rate": 0.0096,
+            "novel_bigram_rate": 0.2436,
+            "unsupported_content_rate": 0.0524,
+            "oov_rate": 0.0268,
+            "empty": 0.0
+          },
           "lead3_baseline": {
             "rouge1": {
               "mean": 39.72,
@@ -2331,6 +2492,10 @@
         "expected": 500
       },
       "llm_B_fewshot": {
+        "scored": 500,
+        "expected": 500
+      },
+      "llm_B_zeroshot_fullarticle": {
         "scored": 500,
         "expected": 500
       },
@@ -2674,6 +2839,43 @@
           "ties": 1
         }
       },
+      "llm_B_zeroshot_fullarticle": {
+        "vs": "lstm_beam",
+        "n_paired": 500,
+        "rouge1": {
+          "n": 500,
+          "mean_diff": 5.875,
+          "ci_low": 4.859,
+          "ci_high": 6.901,
+          "p_value": 0.0,
+          "significant_at_05": true,
+          "wins": 341,
+          "losses": 159,
+          "ties": 0
+        },
+        "rouge2": {
+          "n": 500,
+          "mean_diff": 3.955,
+          "ci_low": 3.021,
+          "ci_high": 4.897,
+          "p_value": 0.0,
+          "significant_at_05": true,
+          "wins": 324,
+          "losses": 173,
+          "ties": 3
+        },
+        "rougeLsum": {
+          "n": 500,
+          "mean_diff": 5.395,
+          "ci_low": 4.399,
+          "ci_high": 6.409,
+          "p_value": 0.0,
+          "significant_at_05": true,
+          "wins": 342,
+          "losses": 158,
+          "ties": 0
+        }
+      },
       "lead3_baseline": {
         "vs": "lstm_beam",
         "n_paired": 500,
@@ -2729,7 +2931,7 @@
     "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
     "backend_details": {
       "quantization": "4-bit",
-      "batch_size": 8,
+      "batch_size": 4,
       "sampling": "greedy (temp=0.0)",
       "framework": "mlx-lm"
     },
@@ -2889,11 +3091,47 @@
           "gpu_hours": 0.3944,
           "gpu_hours_per_1k_summaries": 0.7888
         }
+      },
+      {
+        "setting": "B_zeroshot_fullarticle",
+        "backend": "mlx",
+        "backend_kind": "local",
+        "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
+        "backend_details": {
+          "quantization": "4-bit",
+          "batch_size": 4,
+          "sampling": "greedy (temp=0.0)",
+          "framework": "mlx-lm"
+        },
+        "prompt_variant": "B",
+        "prompt_variant_name": "style-matched",
+        "prompt_description": "Specifies CNN/DailyMail highlight length, sentence count, and register.",
+        "shots": 0,
+        "input_condition": "full_article",
+        "max_tokens": 200,
+        "system_prompt": "You write summaries in the style of CNN/DailyMail article highlights: 3 to 4 short, declarative, self-contained sentences totalling roughly 55 words. Each sentence states one concrete fact from the article \u2014 a name, a number, a place, an action. You never editorialize, never add background the article does not contain, and never write an introductory clause such as 'This article discusses'.",
+        "user_template": "Write the highlights for the following news article. Output only the highlight sentences as a single paragraph, with no bullet points, no labels, and no preamble.\n\nArticle:\n{article}\n\nHighlights:",
+        "few_shot_exemplar_summaries": [],
+        "n_examples": 500,
+        "usage": {
+          "requests": 500,
+          "errors": 0,
+          "input_tokens": 500578,
+          "output_tokens": 49471,
+          "wall_clock_s": 2521.2,
+          "latency_mean_s": 5.04,
+          "latency_p50_s": 5.07,
+          "latency_p95_s": 7.2,
+          "throughput_summaries_per_min": 11.9,
+          "cost_usd": 0.0,
+          "gpu_hours": 0.7003,
+          "gpu_hours_per_1k_summaries": 1.4007
+        }
       }
     ],
-    "total_requests": 2000,
+    "total_requests": 2500,
     "total_cost_usd": 0.0,
-    "total_gpu_hours": 3.3647
+    "total_gpu_hours": 4.065
   },
   "lstm_inference": {
     "checkpoint": "runs/base/best.pt",

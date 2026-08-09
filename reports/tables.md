@@ -43,6 +43,7 @@ Hardware: Apple M4 Pro, 24 GB RAM, GPU: Apple Silicon GPU (Metal / MPS); device 
 | LLM variant A (plain), few-shot k=4 | 39.40 [38.60, 40.21] | 14.90 [14.23, 15.58] | 36.15 [35.43, 36.91] | 81.1 |
 | LLM variant B (style-matched), zero-shot | 41.35 [40.44, 42.20] | 18.07 [17.25, 18.84] | 38.14 [37.29, 39.02] | 82.1 |
 | LLM variant B (style-matched), few-shot k=4 | 40.48 [39.62, 41.34] | 16.58 [15.82, 17.36] | 37.58 [36.74, 38.41] | 79.1 |
+| LLM variant B, zero-shot, full article | 40.87 [39.95, 41.70] | 17.70 [16.92, 18.50] | 37.65 [36.80, 38.50] | 84.0 |
 
 ## Table 4 — Behavioral diagnostics (means)
 
@@ -59,6 +60,7 @@ Hardware: Apple M4 Pro, 24 GB RAM, GPU: Apple Silicon GPU (Metal / MPS); device 
 | LLM variant A (plain), few-shot k=4 | 0.005 | 0.500 | 0.177 | 0.021 | 0.000 |
 | LLM variant B (style-matched), zero-shot | 0.009 | 0.246 | 0.055 | 0.029 | 0.000 |
 | LLM variant B (style-matched), few-shot k=4 | 0.010 | 0.370 | 0.100 | 0.024 | 0.000 |
+| LLM variant B, zero-shot, full article | 0.009 | 0.241 | 0.054 | 0.028 | 0.000 |
 
 ## Table 5 — ROUGE-1 by length
 
@@ -75,6 +77,7 @@ Hardware: Apple M4 Pro, 24 GB RAM, GPU: Apple Silicon GPU (Metal / MPS); device 
 | LLM variant A (plain), few-shot k=4 | 37.64 | 39.49 | 41.07 |
 | LLM variant B (style-matched), zero-shot | 39.89 | 41.29 | 42.87 |
 | LLM variant B (style-matched), few-shot k=4 | 38.23 | 40.07 | 43.12 |
+| LLM variant B, zero-shot, full article | 38.66 | 41.37 | 42.60 |
 
 ## Table 5 — ROUGE-1 by abstractiveness
 
@@ -91,6 +94,7 @@ Hardware: Apple M4 Pro, 24 GB RAM, GPU: Apple Silicon GPU (Metal / MPS); device 
 | LLM variant A (plain), few-shot k=4 | 35.52 | 43.22 | 39.47 |
 | LLM variant B (style-matched), zero-shot | 35.67 | 46.29 | 42.09 |
 | LLM variant B (style-matched), few-shot k=4 | 36.10 | 44.41 | 40.92 |
+| LLM variant B, zero-shot, full article | 35.58 | 45.17 | 41.88 |
 
 ## Headline gap
 
@@ -104,8 +108,9 @@ Best LLM setting is `llm_B_zeroshot`. Absolute ROUGE gap over the LSTM: R1 +6.35
 | A_zeroshot | 0 | 270,587 | 62,501 | 25.2 | 0.839 | 19.9 | 3.01 | 0 |
 | B_fewshot | 4 | 1,328,087 | 47,914 | 76.5 | 2.550 | 6.5 | 9.05 | 0 |
 | B_zeroshot | 0 | 318,087 | 48,387 | 23.7 | 0.789 | 21.1 | 2.8 | 0 |
+| B_zeroshot_fullarticle | 0 | 500,578 | 49,471 | 42.0 | 1.401 | 11.9 | 5.07 | 0 |
 
-Backend: **local open-weights** — `mlx-community/Llama-3.1-8B-Instruct-4bit` (4-bit, greedy (temp=0.0)) via mlx-lm on the Apple silicon GPU. Monetary cost **$0.00**; total compute **3.36 GPU-hours** over 2,000 summaries.
+Backend: **local open-weights** — `mlx-community/Llama-3.1-8B-Instruct-4bit` (4-bit, greedy (temp=0.0)) via mlx-lm on the Apple silicon GPU. Monetary cost **$0.00**; total compute **4.07 GPU-hours** over 2,500 summaries.
 
 ## Appendix A — Exact prompts
 
@@ -162,6 +167,23 @@ Highlights:
 ```
 
 ### B_zeroshot (variant B — style-matched, 0-shot, truncated_400_words)
+
+**System prompt:**
+```
+You write summaries in the style of CNN/DailyMail article highlights: 3 to 4 short, declarative, self-contained sentences totalling roughly 55 words. Each sentence states one concrete fact from the article — a name, a number, a place, an action. You never editorialize, never add background the article does not contain, and never write an introductory clause such as 'This article discusses'.
+```
+
+**User template:**
+```
+Write the highlights for the following news article. Output only the highlight sentences as a single paragraph, with no bullet points, no labels, and no preamble.
+
+Article:
+{article}
+
+Highlights:
+```
+
+### B_zeroshot_fullarticle (variant B — style-matched, 0-shot, full_article)
 
 **System prompt:**
 ```

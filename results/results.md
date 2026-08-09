@@ -8,6 +8,7 @@ Test set: `data/processed/test_llm.jsonl` (500 examples)
 | System | N | ROUGE-1 | ROUGE-2 | ROUGE-Lsum | Len |
 |---|---|---|---|---|---|
 | llm_B_zeroshot | 500 | 41.35 [40.44, 42.2] | 18.07 [17.25, 18.84] | 38.14 [37.29, 39.02] | 82.086 |
+| llm_B_zeroshot_fullarticle | 500 | 40.87 [39.95, 41.7] | 17.7 [16.92, 18.5] | 37.65 [36.8, 38.5] | 84.03 |
 | llm_B_fewshot | 500 | 40.48 [39.62, 41.34] | 16.58 [15.82, 17.36] | 37.58 [36.74, 38.41] | 79.1 |
 | lead3_baseline | 500 | 39.89 [38.87, 40.93] | 17.6 [16.58, 18.6] | 36.35 [35.35, 37.38] | 86.224 |
 | llm_A_fewshot | 500 | 39.4 [38.6, 40.21] | 14.9 [14.23, 15.58] | 36.15 [35.43, 36.91] | 81.106 |
@@ -33,6 +34,7 @@ Test set: `data/processed/test_llm.jsonl` (500 examples)
 | llm_A_fewshot | 0.0054 | 0.5004 | 0.1767 | 0.0214 | 0.0 |
 | llm_B_zeroshot | 0.0085 | 0.246 | 0.0552 | 0.0286 | 0.0 |
 | llm_B_fewshot | 0.0099 | 0.37 | 0.1003 | 0.024 | 0.0 |
+| llm_B_zeroshot_fullarticle | 0.0094 | 0.2413 | 0.0542 | 0.0282 | 0.0 |
 | lead3_baseline | 0.0105 | 0.0 | 0.0 | 0.0226 | 0.0 |
 
 ## Paired bootstrap vs. `lstm_beam`
@@ -50,6 +52,7 @@ Per-example differences, resampling articles once per replicate and applying the
 | llm_A_fewshot | 500 | +4.40 [+3.42, +5.41] | 0.0000 | +1.16 [+0.23, +2.10] | 0.0143 | 329/171 |
 | llm_B_zeroshot | 500 | +6.35 [+5.34, +7.39] | 0.0000 | +4.33 [+3.39, +5.28] | 0.0000 | 358/142 |
 | llm_B_fewshot | 500 | +5.48 [+4.43, +6.54] | 0.0000 | +2.83 [+1.83, +3.84] | 0.0000 | 348/152 |
+| llm_B_zeroshot_fullarticle | 500 | +5.88 [+4.86, +6.90] | 0.0000 | +3.96 [+3.02, +4.90] | 0.0000 | 341/159 |
 | lead3_baseline | 500 | +4.90 [+3.85, +5.94] | 0.0000 | +3.86 [+2.88, +4.87] | 0.0000 | 333/167 |
 
 ## ROUGE-1 by length
@@ -66,6 +69,7 @@ Per-example differences, resampling articles once per replicate and applying the
 | llm_A_fewshot | 37.64 | 39.49 | 41.07 |
 | llm_B_zeroshot | 39.89 | 41.29 | 42.87 |
 | llm_B_fewshot | 38.23 | 40.07 | 43.12 |
+| llm_B_zeroshot_fullarticle | 38.66 | 41.37 | 42.6 |
 | lead3_baseline | 36.87 | 40.81 | 42.0 |
 
 ## ROUGE-1 by abstractiveness
@@ -82,4 +86,5 @@ Per-example differences, resampling articles once per replicate and applying the
 | llm_A_fewshot | 35.52 | 43.22 | 39.47 |
 | llm_B_zeroshot | 35.67 | 46.29 | 42.09 |
 | llm_B_fewshot | 36.1 | 44.41 | 40.92 |
+| llm_B_zeroshot_fullarticle | 35.58 | 45.17 | 41.88 |
 | lead3_baseline | 34.61 | 45.35 | 39.72 |
