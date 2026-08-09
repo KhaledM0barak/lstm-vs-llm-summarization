@@ -43,10 +43,10 @@ Swap freely — just make sure every file has exactly one owner.
 ```bash
 cd ~/lstm-vs-llm-summarization
 source .venv/bin/activate
-python -m pytest tests/ -q          # expect: 149 passed, ~75 s
+python -m pytest tests/ -q          # expect: 156 passed, ~70 s
 ```
 
-**Run the tests before you start.** There are 149 of them, aimed at the places
+**Run the tests before you start.** There are 156 of them, aimed at the places
 where a bug is silent rather than loud — a wrong attention mask, a misaligned
 target shift, a miscounted diagnostic. Writing them found four real bugs:
 
@@ -59,6 +59,10 @@ target shift, a miscounted diagnostic. Writing them found four real bugs:
    permanently drop an article and leave systems scored on different subsets.
 4. Resume reported token counts and GPU-hours for only the segment after the
    interruption, understating the totals quoted in the report.
+5. `.gitignore` excluded the entire `src/data/` package from the repository —
+   the project ran here and did not import at all from a fresh clone.
+6. `read_jsonl` crashed on a truncated final line, making an interrupted run
+   unresumable.
 
 If a test fails on your machine, that is a finding — write it down rather than
 working around it.
@@ -77,4 +81,4 @@ Regardless of your section:
 
 1. **Attention is worth 14 ROUGE-1.** Removing it drops the model from 35.00 to 20.97 and collapses ROUGE-2 from 13.75 to 3.47. Without attention the model produces summary-shaped text that isn't about the article — 53% of its content words don't appear in the source. In the demo it invents "San Diego" for a fire in Louisville, Kentucky.
 2. **Trigram blocking is worth 5.4 ROUGE-1.** Without it, 28% of generated trigrams are repeats — the classic LSTM repetition failure, demonstrated rather than asserted.
-3. **Lead-3 beats both our LSTM and the 8B LLM.** Copying the article's first three sentences scores 39.75 ROUGE-1 vs. our 35.00 and the LLM's 39.40. That is a statement about what ROUGE rewards, and it is the most intellectually honest thing in the report.
+3. **Lead-3 outscores four of the five LLM configurations, and every LSTM variant.** Copying the article's first three sentences scores 39.89 ROUGE-1, against our 35.00 and the LLM's 38.52–41.35 depending on the prompt. Only the style-matched zero-shot prompt beats it. That is a statement about what ROUGE rewards, and it is the most intellectually honest thing in the report.

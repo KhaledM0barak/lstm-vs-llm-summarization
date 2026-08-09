@@ -29,3 +29,7 @@ runs/**/*.pt
 # OS
 .DS_Store
 reports/report.html
+
+# Intermediate scoring runs superseded by results/ -- regenerate with scripts/finish.sh
+results/partial/
+results/lstm_only/

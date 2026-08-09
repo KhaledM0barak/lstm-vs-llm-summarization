@@ -85,7 +85,7 @@ question a grader is most likely to ask you.
 - ROUGE-1/2/Lsum with `use_stemmer=True`, 95% bootstrap CIs over 1,000 resamples
 
 **Be ready to explain**
-- Why Lead-3 is reported everywhere: it scores **39.75** on the shared set and **beats our LSTM**. That's the honest framing — and it's a statement about what ROUGE measures, not a failure of the model.
+- Why Lead-3 is reported everywhere: it scores **39.89** on the shared set, **beats our LSTM** (35.00), and **outscores four of the five LLM configurations**. That's the honest framing — a statement about what ROUGE measures, not a failure of the model.
 - The diagnostics: duplicate-trigram, novel-bigram, unsupported-content, OOV. These are how error categories were **verified** rather than asserted.
 - That `collect_results.py` reads run artifacts directly and refuses to emit a number whose artifact is missing — no figure in the report was typed by hand.
 

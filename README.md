@@ -33,11 +33,12 @@ as-is; the only addition is deterministic, seeded subsampling for tractability:
 | `train.jsonl` | 79,996 | Model training (subsampled from 287,113 with `--seed 1234`) |
 | `validation.jsonl` | 3,000 | Early stopping and LR scheduling |
 | `test.jsonl` | 11,490 | Full test set — LSTM headline number |
-| `test_llm.jsonl` | 500 | **The shared head-to-head set.** Every system — LSTM, every ablation, and all four LLM settings — is scored on exactly this file. |
+| `test_llm.jsonl` | 500 | **The shared head-to-head set.** Every system — LSTM, every ablation, and all five LLM settings — is scored on exactly this file. |
 
-`test_llm.jsonl` exists because scoring an API model on all 11,490 test articles
-costs far more than the assignment's budget. It is drawn once, before any model
-development, with a fixed seed.
+`test_llm.jsonl` bounds the cost of the head-to-head comparison: generating
+summaries for all 11,490 test articles across five LLM settings would take
+roughly 35 GPU-hours rather than 3.4. It is drawn once, before any model
+development, with a fixed seed, and every system is scored on exactly it.
 
 **Leakage control.** The vocabulary is built from the training split only
 (`src/data/build_vocab.py`); few-shot exemplars for the LLM are drawn from the
@@ -234,7 +235,7 @@ diagnostics attached.
 
 ```bash
 pip install pytest
-python -m pytest tests/ -q          # 131 tests, ~70 s
+python -m pytest tests/ -q          # 156 tests, ~70 s
 ```
 
 The suite covers the places where a bug would be **silent** — a wrong attention

@@ -61,7 +61,7 @@
   "device": "cpu",
   "train_examples": 256,
   "val_examples": 64,
-  "total_train_seconds": 39.4,
+  "total_train_seconds": 38.6,
   "total_train_hours": 0.011,
   "best_val_loss": 8.1195,
   "history": [
@@ -72,7 +72,7 @@
       "val_nll": 7.7023,
       "val_ppl": 2213.33,
       "lr": 0.001,
-      "epoch_seconds": 39.4
+      "epoch_seconds": 38.6
     }
   ]
 }
