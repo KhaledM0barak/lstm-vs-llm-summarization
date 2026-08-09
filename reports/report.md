@@ -376,8 +376,67 @@ that, rather than six ROUGE points, is what pretraining bought.
 
 ## Appendix A — Exact prompts
 
-`[[FILL: paste verbatim from src/llm/prompts.py and the run .meta.json files —
-both system prompts, both user templates, and the four few-shot exemplars]]`
+Reproduced verbatim from `src/llm/prompts.py` and the per-run `.meta.json` files.
+Both variants are run zero-shot and few-shot (k = 4); the few-shot exemplars are
+passed as real prior conversation turns rather than pasted into a single message,
+and are drawn from the **training** split only.
+
+
+### Variant A — "plain"
+
+*Natural summarization request with no dataset-specific styling.*
+
+**System prompt**
+
+```
+You are a helpful assistant that writes concise news summaries.
+```
+
+**User message template**
+
+```
+Summarize the following news article.
+
+Article:
+{article}
+
+Summary:
+```
+
+### Variant B — "style-matched"
+
+*Specifies CNN/DailyMail highlight length, sentence count, and register.*
+
+**System prompt**
+
+```
+You write summaries in the style of CNN/DailyMail article highlights: 3 to 4 short, declarative, self-contained sentences totalling roughly 55 words. Each sentence states one concrete fact from the article — a name, a number, a place, an action. You never editorialize, never add background the article does not contain, and never write an introductory clause such as 'This article discusses'.
+```
+
+**User message template**
+
+```
+Write the highlights for the following news article. Output only the highlight sentences as a single paragraph, with no bullet points, no labels, and no preamble.
+
+Article:
+{article}
+
+Highlights:
+```
+
+### Few-shot exemplars (k = 4)
+
+Identical for both variants (same seed). Articles are truncated to the same 400-word window; only their reference summaries are shown here.
+
+1. grant minchion, 23, had the nunchucks in the glovebox of his ice cream van . they were discovered by police along with a lock knife in a draw with money . stanley knife and throwing knife also found during search, a court was told . he claimed knives were useful for opening stock including chocolate flakes . said that he was given throwing knife by a 'kid' in exchange for a cornetto . pleaded guilty to two counts of possessing offensive weapon and possessing bladed article in public place . no allegation that any of the weapons had been used to commit a crime .
+2. 15,000 people are killed trying to cross train tracks every year . a safety panel said almost half of the deaths were in mumbai . it said 'no civilized society can accept such massacre' . it blamed outdated technology and lack of infrastructure .
+3. female soldier killed, four other troops wounded in roadside bombing . karine blais, 21, is second canadian female soldier killed in afghanistan . there have been 117 canadian troop deaths in the afghan war .
+4. small toy expands to 400 times its size, posing an ingestion risk, consumer commission says . 8-month-old baby from texas needed surgery after ingesting marble-size water balz . consumer product safety commission urges consumers to stop using product . also recalled are growing skulls, h2o orbs and fabulous flowers .
+
+**Generation settings.** Greedy decoding (temperature 0), `max_tokens` = 200,
+batch size 8. Input condition `truncated_400_words` for
+the four headline settings; the unmatched control uses the untruncated article.
+
 
 ## Appendix B — Contribution statement
 
