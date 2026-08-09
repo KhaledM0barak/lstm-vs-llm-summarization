@@ -15,6 +15,32 @@ TEST=data/processed/test_llm.jsonl
 
 step() { echo; echo "=============== $* ==============="; }
 
+# ------------------------------------------------------------- preflight
+# Fail with an instruction rather than a traceback. A fresh clone has neither
+# the dataset nor the vocabulary, and every step below depends on both.
+missing=0
+for f in "$TEST" data/processed/train.jsonl data/processed/vocab.json; do
+    if [[ ! -f "$f" ]]; then
+        echo "missing: $f"
+        missing=1
+    fi
+done
+if [[ $missing -eq 1 ]]; then
+    cat <<'MSG'
+
+The dataset has not been built yet. It is not redistributed in this repository
+(CNN/DailyMail is ~400 MB processed); rebuild it deterministically with:
+
+  python -m src.data.prepare --out-dir data/processed \
+      --train-size 80000 --val-size 3000 --llm-test-size 500 --seed 1234
+  python -m src.data.build_vocab --train-file data/processed/train.jsonl \
+      --out data/processed/vocab.json --max-size 50000 --min-freq 2
+
+Then re-run this script.
+MSG
+    exit 1
+fi
+
 # ---------------------------------------------------------------- 1. decode
 step "1/5  Decoding LSTM summaries"
 for run in base no_attention unidirectional short_context; do
@@ -65,18 +91,37 @@ add llm_B_zeroshot                runs/llm/B_zeroshot.jsonl
 add llm_B_fewshot                 runs/llm/B_fewshot.jsonl
 add llm_B_zeroshot_fullarticle    runs/llm/B_zeroshot_fullarticle.jsonl
 
+# macOS ships bash 3.2, where expanding an empty array under `set -u` raises
+# "unbound variable" rather than expanding to nothing. Guard the count instead
+# of relying on the expansion being safe.
+if [[ ${#ARGS[@]} -eq 0 ]]; then
+    echo "SKIPPED: no prediction files found. Train a model and decode first:"
+    echo "  bash scripts/train_all.sh"
+    exit 1
+fi
+
 "$PY" -m src.evaluate --test-file "$TEST" "${ARGS[@]}" --out-dir results/
 
 # ---------------------------------------------------------------- 4. qualitative
 step "4/5  Qualitative comparison"
+# Count the systems, not the argv entries: each --system contributes two array
+# elements, so a length check against a magic number breaks silently the moment
+# a third system is added.
 QARGS=()
-[[ -f runs/base/preds_test_llm.jsonl ]] && QARGS+=(--system "lstm_beam=runs/base/preds_test_llm.jsonl")
-[[ -f runs/llm/B_zeroshot.jsonl ]] && QARGS+=(--system "llm_B_zeroshot=runs/llm/B_zeroshot.jsonl")
-if [[ ${#QARGS[@]} -eq 4 ]]; then
+QSYS=0
+if [[ -f runs/base/preds_test_llm.jsonl ]]; then
+    QARGS+=(--system "lstm_beam=runs/base/preds_test_llm.jsonl"); QSYS=$((QSYS + 1))
+fi
+if [[ -f runs/llm/B_zeroshot.jsonl ]]; then
+    QARGS+=(--system "llm_B_zeroshot=runs/llm/B_zeroshot.jsonl"); QSYS=$((QSYS + 1))
+fi
+
+if [[ $QSYS -eq 2 ]]; then
     "$PY" -m src.qualitative --scores results/per_example_scores.json "${QARGS[@]}" \
         --out results/qualitative.md
 else
-    echo "SKIPPED: need both LSTM and LLM predictions."
+    echo "SKIPPED: the side-by-side comparison needs both an LSTM and an LLM"
+    echo "         prediction file ($QSYS of 2 present)."
 fi
 
 # ---------------------------------------------------------------- 5. tables

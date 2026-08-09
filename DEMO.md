@@ -61,7 +61,24 @@ python -m pytest tests/ -q
 **Expect:** `131 passed`. If anything fails, do not record — the failure is
 either a real regression or a stale artifact.
 
-### 7. Reproduce the headline numbers
+### 7. The repository works from a clean clone
+
+This is the one check that cannot be done from inside the working directory,
+and it is the one that matters most for a "fully reproducible" requirement.
+
+```bash
+cd /tmp && rm -rf checkclone
+git clone https://github.com/KhaledM0barak/lstm-vs-llm-summarization.git checkclone
+cd checkclone && python3 -m venv .venv
+.venv/bin/pip install -q -r requirements.txt
+.venv/bin/python -m pytest tests/ -q
+```
+**Expect:** `148 passed, 1 skipped`. This caught a real bug — an unanchored
+`.gitignore` rule had excluded the entire `src/data/` package from the
+repository, so the project ran perfectly here and did not import at all for
+anyone who cloned it.
+
+### 8. Reproduce the headline numbers
 
 ```bash
 python scripts/collect_results.py

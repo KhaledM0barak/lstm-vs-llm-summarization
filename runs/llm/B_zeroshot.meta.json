@@ -1,0 +1,36 @@
+{
+  "setting": "B_zeroshot",
+  "backend": "mlx",
+  "backend_kind": "local",
+  "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
+  "backend_details": {
+    "quantization": "4-bit",
+    "batch_size": 8,
+    "sampling": "greedy (temp=0.0)",
+    "framework": "mlx-lm"
+  },
+  "prompt_variant": "B",
+  "prompt_variant_name": "style-matched",
+  "prompt_description": "Specifies CNN/DailyMail highlight length, sentence count, and register.",
+  "shots": 0,
+  "input_condition": "truncated_400_words",
+  "max_tokens": 200,
+  "system_prompt": "You write summaries in the style of CNN/DailyMail article highlights: 3 to 4 short, declarative, self-contained sentences totalling roughly 55 words. Each sentence states one concrete fact from the article \u2014 a name, a number, a place, an action. You never editorialize, never add background the article does not contain, and never write an introductory clause such as 'This article discusses'.",
+  "user_template": "Write the highlights for the following news article. Output only the highlight sentences as a single paragraph, with no bullet points, no labels, and no preamble.\n\nArticle:\n{article}\n\nHighlights:",
+  "few_shot_exemplar_summaries": [],
+  "n_examples": 500,
+  "usage": {
+    "requests": 500,
+    "errors": 0,
+    "input_tokens": 318087,
+    "output_tokens": 48387,
+    "wall_clock_s": 1419.9,
+    "latency_mean_s": 2.84,
+    "latency_p50_s": 2.8,
+    "latency_p95_s": 3.12,
+    "throughput_summaries_per_min": 21.1,
+    "cost_usd": 0.0,
+    "gpu_hours": 0.3944,
+    "gpu_hours_per_1k_summaries": 0.7888
+  }
+}

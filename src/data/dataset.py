@@ -16,8 +16,45 @@ from src.data.vocab import BOS_ID, EOS_ID, PAD_ID, Vocab
 
 
 def read_jsonl(path: str | Path) -> list[dict]:
+    """Read a JSONL file, tolerating a truncated final line.
+
+    The generation runners append one flushed line per completed example so a run
+    can resume after an interruption. A process killed mid-write (or a full disk)
+    leaves a partial final line, and refusing to parse the file would make the
+    interrupted run unresumable -- losing hours of completed work for one bad
+    trailing fragment.
+
+    A malformed line *followed by more content* is different: that is genuine
+    corruption rather than an interrupted append, and it is raised rather than
+    silently skipped.
+    """
+    rows: list[dict] = []
+    pending: tuple[int, str] | None = None
+
     with Path(path).open(encoding="utf-8") as f:
-        return [json.loads(line) for line in f if line.strip()]
+        for lineno, line in enumerate(f, 1):
+            if not line.strip():
+                continue
+            if pending is not None:
+                bad_line, msg = pending
+                raise ValueError(
+                    f"{path}: malformed JSON on line {bad_line} followed by further "
+                    f"content on line {lineno}; the file is corrupted rather than "
+                    f"truncated ({msg})"
+                )
+            try:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError as exc:
+                pending = (lineno, str(exc))
+
+    if pending is not None:
+        bad_line, _ = pending
+        print(
+            f"warning: {path} ends with a truncated line ({bad_line}); it was "
+            f"skipped. This is expected if a run was interrupted mid-write.",
+            file=sys.stderr,
+        )
+    return rows
 
 
 class SummarizationDataset(Dataset):

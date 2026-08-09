@@ -236,3 +236,37 @@ def test_bucket_sampler_groups_similar_lengths():
     sampler = BucketBatchSampler(lengths, batch_size=16, shuffle=True, seed=1)
     spreads = [lengths[b].max() - lengths[b].min() for b in sampler]
     assert np.mean(spreads) < 40, "bucketing is not grouping similar lengths"
+
+
+# ------------------------------------------------------- jsonl robustness
+
+def test_read_jsonl_tolerates_a_truncated_final_line(tmp_path, capsys):
+    """A process killed mid-write leaves a partial line. Refusing to parse the
+    file would make an interrupted run unresumable, losing all completed work."""
+    from src.data.dataset import read_jsonl
+
+    f = tmp_path / "partial.jsonl"
+    f.write_text('{"id": "a"}\n{"id": "b"}\n{"id": "c", "predicti')
+    rows = read_jsonl(f)
+
+    assert [r["id"] for r in rows] == ["a", "b"]
+    assert "truncated" in capsys.readouterr().err
+
+
+def test_read_jsonl_raises_on_corruption_mid_file(tmp_path):
+    """A bad line followed by more content is corruption, not an interrupted
+    append, and must not be silently skipped."""
+    from src.data.dataset import read_jsonl
+
+    f = tmp_path / "corrupt.jsonl"
+    f.write_text('{"id": "a"}\n{"id": BROKEN\n{"id": "c"}\n')
+    with pytest.raises(ValueError, match="corrupted rather than truncated"):
+        read_jsonl(f)
+
+
+def test_read_jsonl_handles_blank_lines(tmp_path):
+    from src.data.dataset import read_jsonl
+
+    f = tmp_path / "blanks.jsonl"
+    f.write_text('{"id": "a"}\n\n\n{"id": "b"}\n')
+    assert len(read_jsonl(f)) == 2
