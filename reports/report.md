@@ -186,8 +186,8 @@ parameters / 61 MB** against ~8B / ~4.5 GB, cost **8.73 GPU-hours** to train onc
 and generates a summary in **0.231 s** (259/min). The LLM needs **2.85 s**
 zero-shot (21/min) and 9.2 s few-shot (6.5/min): the LSTM is **12× faster per
 summary** than the fastest LLM setting — against a quantized 8B model on the
-*same GPU*, with no network hop. Total LLM generation: **3.36 GPU-hours for 2,000
-summaries**; both are $0.00, run locally. Few-shot triples generation cost (2,200
+*same GPU*, with no network hop. Total LLM generation: **4.07 GPU-hours for 2,500
+summaries** across all five settings; both systems cost $0.00, run locally. Few-shot triples generation cost (2,200
 extra prefill tokens per request) for no benefit on the better prompt.
 
 ## 5. Error analysis
@@ -329,7 +329,7 @@ remain the publishers' property and are not redistributed.
 Its numbers should be read as an upper bound on genuinely held-out performance.
 Our few-shot exemplars come from train, which controls the leakage we can.
 
-**Compute.** 8.73 GPU-hours of training plus 3.36 of generation — small
+**Compute.** 8.73 GPU-hours of training plus 4.07 of generation — small
 absolutely, but the LLM's pretraining cost is amortized across all users and
 invisible here, a real asymmetry when comparing "compute used".
 
@@ -638,9 +638,11 @@ Total training **8.73 GPU-hours**. LSTM inference: 500 summaries in 115.6 s =
 | B zero-shot | 318,087 | 48,387 | 23.7 min | 21.1 / min |
 | A few-shot k=4 | 1,234,587 | 48,433 | 76.5 min | 6.5 / min |
 | B few-shot k=4 | 1,328,087 | 47,914 | 76.5 min | 6.5 / min |
+| B zero-shot, full article | 500,578 | 49,471 | 42.0 min | 11.9 / min |
 
-Total LLM generation **3.36 GPU-hours** for 2,000 summaries, monetary cost
-**$0.00** (run locally).
+Total LLM generation **4.07 GPU-hours** for 2,500 summaries, monetary cost
+**$0.00** (run locally). Note the full-article condition costs 77% more
+generation time than the matched window for a *lower* score (§6.3).
 
 ## Appendix G — Error-analysis evidence
 
