@@ -96,7 +96,7 @@ There are two ways to record. Pick one.
 
 ```bash
 bash scripts/walkthrough.sh --fast    # rehearse: 30 seconds, no pauses
-bash scripts/walkthrough.sh           # record this: ~7:05
+bash scripts/walkthrough.sh           # record this: ~7:06
 ```
 
 It prints each explanation on screen, pauses long enough to read it, then runs the

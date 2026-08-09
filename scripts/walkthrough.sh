@@ -5,15 +5,15 @@
 # then runs the command. Start a screen recording, run this, and let it play --
 # no voice-over and no editing required.
 #
-#   bash scripts/walkthrough.sh              # ~8 minutes, paced for recording
+#   bash scripts/walkthrough.sh              # ~7:06, paced for recording
 #   bash scripts/walkthrough.sh --fast       # no pauses, for rehearsing
 #   bash scripts/walkthrough.sh --step       # advance manually with Enter
 #   bash scripts/walkthrough.sh --from 4     # start at segment 4
 #   bash scripts/walkthrough.sh --replay     # replay recorded LLM responses
 #                                            # (no Apple silicon / no 4.5 GB model)
 #
-# Pacing is tuned so the whole run lands near 8:00 including the ~8s each demo
-# command takes. Use --fast first to check everything works, then record.
+# Pacing is measured, not guessed: 7:06 end to end, inside the 8-minute limit.
+# Scale it with --pace. Use --fast first to check everything works, then record.
 set -uo pipefail
 
 cd "$(dirname "$0")/.."

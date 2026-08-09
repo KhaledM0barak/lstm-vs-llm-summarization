@@ -43,7 +43,7 @@ Swap freely — just make sure every file has exactly one owner.
 ```bash
 cd ~/lstm-vs-llm-summarization
 source .venv/bin/activate
-python -m pytest tests/ -q          # expect: 156 passed, ~70 s
+python -m pytest tests/ -q          # expect: 172 passed, ~70 s
 ```
 
 **Run the tests before you start.** There are 156 of them, aimed at the places

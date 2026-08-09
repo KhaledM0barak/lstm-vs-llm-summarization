@@ -340,7 +340,7 @@ scripts/
   walkthrough.sh        Self-narrating 8-minute demo (see DEMO_SCRIPT.md)
   fetch_demo_bundle.sh  Download checkpoints + test data needed to run the demo
   build_llm_cache.py    Record LLM responses so the demo runs without the model
-tests/                  162 tests, run with `pytest -q`
+tests/                  172 tests, run with `pytest -q`
 review/                 Per-component review packets, one per team member
 results/                Generated tables and analyses
 runs/                   Checkpoints, training logs, predictions (checkpoints gitignored)
