@@ -5,14 +5,15 @@
 # then runs the command. Start a screen recording, run this, and let it play --
 # no voice-over and no editing required.
 #
-#   bash scripts/walkthrough.sh              # ~7:06, paced for recording
+#   bash scripts/walkthrough.sh              # ~7:05-7:10, paced for recording
 #   bash scripts/walkthrough.sh --fast       # no pauses, for rehearsing
 #   bash scripts/walkthrough.sh --step       # advance manually with Enter
 #   bash scripts/walkthrough.sh --from 4     # start at segment 4
 #   bash scripts/walkthrough.sh --replay     # replay recorded LLM responses
 #                                            # (no Apple silicon / no 4.5 GB model)
 #
-# Pacing is measured, not guessed: 7:06 end to end, inside the 8-minute limit.
+# Pacing is measured, not guessed: 7:05-7:10 end to end, inside the 8-minute
+# limit. The spread is live vs. replayed LLM generation.
 # Scale it with --pace. Use --fast first to check everything works, then record.
 set -uo pipefail
 

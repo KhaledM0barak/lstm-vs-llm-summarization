@@ -4,7 +4,8 @@ The recorded demo is **8 minutes maximum**. Everything below is produced by one
 command — `bash scripts/walkthrough.sh` — which prints each explanation on screen,
 pauses long enough to read it, then runs the command. **No voice-over is required.**
 
-Measured runtime in paced mode: **7:06**, leaving ~54 s of headroom.
+Measured runtime in paced mode: **7:05–7:10**, leaving ~50 s of headroom.
+(The spread is whether the LLM generates live or replays a recorded response.)
 
 Read this file before recording so you know what is coming and can stop the take
 early if something looks wrong.
@@ -32,7 +33,7 @@ The **#** column is the segment number printed on screen — the same number
 | 5:16 | **11** | The reverse case | Test example 4 (Sarah Stage), LSTM 57.1 vs LLM 26.3 | The LLM's summary is entirely true and scores less than half, because it chose different true facts than the editor. Bounds what ROUGE can tell us |
 | 6:00 | **12** | Trade-off table | Parameters, disk, training hours, latency, throughput, cost | 15.3M vs ~8B; 0.231 s vs 2.85 s per summary; both $0.00 (local) |
 | 6:22 | **13** | Conclusion | The four claims we're prepared to defend | LLM wins by 6.35 ROUGE-1 (p < 0.0001) — real, but 6 points against a model 500× smaller; 45% of the gap is prompt phrasing; the LSTM is 12× faster and 74× smaller; with no training data it has no answer at all, and that is what pretraining bought |
-| ~7:06 | — | Close | Closing rule | |
+| ~7:08 | — | Close | Closing rule | |
 
 ---
 
@@ -80,8 +81,8 @@ Do not touch the keyboard until the closing rule prints. Stop the recording.
 **5. If it needs to be shorter or longer**, scale every pause at once:
 
 ```bash
-bash scripts/walkthrough.sh --pace 0.85   # ~6:00
-bash scripts/walkthrough.sh --pace 1.1    # ~7:45
+bash scripts/walkthrough.sh --pace 0.85   # ~6:10
+bash scripts/walkthrough.sh --pace 1.1    # ~7:50
 ```
 
 Do not exceed 8:00.

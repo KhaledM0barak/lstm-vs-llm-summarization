@@ -8,6 +8,10 @@ The LSTM is implemented directly in PyTorch — `nn.LSTM` and `nn.Embedding` onl
 No prebuilt seq2seq pipeline (Fairseq, OpenNMT, HuggingFace `Seq2SeqTrainer`) is
 used anywhere in the model, training loop, or decoding.
 
+> **Running or recording the demo? Go straight to
+> [§4 — The demo and the 8-minute video](#4-the-demo-and-the-8-minute-video).**
+> Four commands on any machine; no training, no dataset, no LLM download.
+
 ---
 
 ## 1. Task and dataset
@@ -95,26 +99,112 @@ python -m src.llm.baseline --all --backend anthropic
 `.env` is gitignored. Every step other than the first dataset download runs
 offline.
 
-### Just want to run the demo?
+---
 
-You do not need the 400 MB dataset, 8.7 GPU-hours of training, or the 4.5 GB LLM.
-On any platform:
+## 4. The demo and the 8-minute video
+
+**This is the section to read if you are recording the video, or just want to see
+the system run.** You do not need the 400 MB dataset, 8.7 GPU-hours of training,
+or the 4.5 GB LLM. Works on macOS, Linux and Windows, Apple silicon or not.
+
+### 4.1 Set up (once, ~10 minutes, mostly download)
 
 ```bash
-pip install -r requirements-demo.txt
+git clone https://github.com/KhaledM0barak/lstm-vs-llm-summarization.git
+cd lstm-vs-llm-summarization
+
+python3 -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
+pip install -r requirements-demo.txt # ~2 min
+
 bash scripts/fetch_demo_bundle.sh    # 217 MB: trained checkpoints + the 500 test articles
+```
+
+`fetch_demo_bundle.sh` pulls the four trained checkpoints and the held-out test
+set from the [`demo-artifacts-v1`](https://github.com/KhaledM0barak/lstm-vs-llm-summarization/releases/tag/demo-artifacts-v1)
+release, verifies the SHA-256, and unpacks them. They are not in git: 232 MB of
+binary artifacts, and we do not redistribute the full dataset. Re-running it is a
+no-op once the files are there.
+
+Check it worked:
+
+```bash
 python -m src.demo --example 3 --ablations
 ```
 
-The LSTM runs locally. The LLM side replays responses recorded in
-`examples/llm_cache.json` by `scripts/build_llm_cache.py` — produced through the
-same code path a live run uses, and labelled `· replayed` on screen so nothing is
-presented as live generation when it isn't. See
-[`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
+You should see the article, the reference summary, the LSTM's summary at
+**ROUGE-1 36.9**, the LLM's at **33.3**, and the three ablations — including the
+no-attention model placing a Louisville fire in *San Diego*.
+
+### 4.2 Record the video
+
+One command produces the whole thing. It prints an explanation, pauses long
+enough to read it, then runs the command. **No voice-over, no editing.**
+
+```bash
+bash scripts/walkthrough.sh --fast     # rehearse: 30 s, pauses collapsed
+bash scripts/walkthrough.sh            # record this: 7:05-7:10
+```
+
+1. Rehearse with `--fast` first. If anything errors, fix it before recording.
+2. Full-screen the terminal, 100–120 columns (`tput cols`), large font, dark
+   theme. The demo adapts its width to the window.
+3. Start the screen recording — macOS `Cmd+Shift+5`, or QuickTime → New Screen
+   Recording.
+4. Run `bash scripts/walkthrough.sh` and **do not touch the keyboard** until the
+   closing rule prints.
+5. Stop, check it is under 8:00 and legible at half size, upload, and paste the
+   URL into Appendix D of the report.
+
+| Flag | Use |
+|---|---|
+| `--fast` | Rehearsal. No pauses. |
+| `--pace 0.85` | Shorter, ~6:10. `--pace 1.1` → ~7:50. |
+| `--step` | Advance manually with Enter — use this if you want to narrate. |
+| `--from N` | Start at segment N, for re-recording one part. |
+| `--replay` | Force recorded LLM responses instead of loading the model. |
+
+### 4.3 What the video covers
+
+Thirteen segments, timed. Full detail and the reasoning behind each is in
+[`DEMO_SCRIPT.md`](DEMO_SCRIPT.md); [`DEMO.md`](DEMO.md) has the pre-recording
+verification checklist.
+
+| Mark | # | Segment |
+|---|---|---|
+| 0:00 | — | Title, group, repo |
+| 0:08 | 1 | Task and data — official splits, the same 500 articles for all systems |
+| 0:32 | 2 | Lead-3 reproduced against See et al. (2017) — the credibility anchor |
+| 0:58 | 3 | The model, built from `nn.*` primitives, no framework |
+| 1:20 | 4 | The attention mask — 62.8% of attention lands on padding without it |
+| 1:46 | 5 | **Live:** one article through the LSTM, the LLM, and three ablations |
+| 2:30 | 6 | **Live:** out-of-domain text the vocabulary cannot express |
+| 3:10 | 7 | Results, all systems |
+| 3:36 | 8 | Three numbers: −14.02, +2.83, 39.89 |
+| 4:10 | 9 | Paired bootstrap, including a result reported as *not* significant |
+| 4:40 | 10 | **Live:** error analysis — fluent output at ROUGE-2 exactly 0.0 |
+| 5:16 | 11 | The reverse case: a correct LLM summary scoring less than half |
+| 6:00 | 12 | The engineering trade-off |
+| 6:22 | 13 | Conclusion |
+
+### 4.4 A note on the LLM half
+
+Running Llama 3.1 8B live needs Apple silicon, `mlx-lm`, and a 4.5 GB download.
+Everywhere else the demo replays responses from `examples/llm_cache.json`,
+recorded by `scripts/build_llm_cache.py` through the *same* code path a live run
+uses — verified to produce identical text and identical ROUGE.
+
+The screen says which one it used: the header prints `replayed from cache,
+recorded <date>` and the output is labelled `· replayed`. A recording should
+never present a replay as live generation.
+
+Replay covers the walkthrough's four fixed articles. `--interactive` and
+`--file yourown.txt` on new text need the live backend; `--no-llm` shows the
+LSTM side alone and works anywhere.
 
 ---
 
-## 4. Reproducing the results
+## 5. Reproducing the results
 
 All commands are run from the repository root, with the virtualenv active. Every
 step is seeded with `1234`.
@@ -249,7 +339,7 @@ diagnostics attached.
 
 ---
 
-## 4b. Tests
+## 5b. Tests
 
 ```bash
 pip install pytest
@@ -274,7 +364,7 @@ reported number without raising anything. Notable checks:
 Two real bugs were found by writing these; both are described in the commit
 history and in Appendix E of the report.
 
-## 5. Model
+## 6. Model
 
 ```
 tokens → Embedding(50k × 256, shared)
@@ -304,7 +394,7 @@ Implementation notes worth knowing:
 - `<unk>` and `<pad>` are suppressed at inference: an `<unk>` in a generated
   summary is a pure error rather than a useful token.
 
-## 6. Repository layout
+## 7. Repository layout
 
 ```
 configs/                YAML configs: base + three ablations + smoke test
@@ -349,7 +439,7 @@ runs/                   Checkpoints, training logs, predictions (checkpoints git
 Demo and recording: [`DEMO.md`](DEMO.md) (verification checklist + how to record),
 [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md) (segment-by-segment timeline of the video).
 
-## 7. Reproducibility
+## 8. Reproducibility
 
 - Every entry point calls `set_seed(1234)` before touching data or parameters.
 - Dataset subsampling, vocabulary tie-breaking, batch shuffling, and few-shot
