@@ -25,6 +25,9 @@ mlx-lm==0.31.3
 anthropic==0.121.0
 python-dotenv==1.2.2
 
+# Report rendering (markdown -> HTML -> PDF via headless Chrome)
+markdown==3.10.3
+
 # Plumbing
 PyYAML==6.0.3
 tqdm==4.70.0

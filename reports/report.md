@@ -389,13 +389,18 @@ name against the workstream each member actually owned, and adjust the wording
 where the real division differed — a contribution statement is only useful if it
 is accurate.
 
+Group **CP-468-D — AI — 17**.
+
 | Member | Workstream | Specific responsibilities |
 |---|---|---|
-| `[[NAME]]` | **Data & preprocessing** | Dataset acquisition and licensing check; frozen seeded splits and the shared head-to-head subset; word-level tokenizer, normalization, and abbreviation-aware sentence splitting; train-only vocabulary construction and coverage analysis; leakage controls. Files: `src/data/*`. |
-| `[[NAME]]` | **Model implementation** | BiLSTM encoder and the bridge to the decoder state; Bahdanau, Luong, and no-attention modules with source masking; LSTM decoder with input feeding; weight tying; greedy and beam search with length penalty and trigram blocking. Files: `src/models/*`. |
-| `[[NAME]]` | **Training & performance** | Training loop, label smoothing, bucketed batching, early stopping and LR scheduling; the four experiment configs; the memory and MPS-shape performance work described in §2.1. Files: `src/train.py`, `configs/*`, `scripts/train_all.sh`. |
-| `[[NAME]]` | **LLM baseline** | Prompt variant design and the zero-/few-shot protocol; the local MLX backend and the API backend; input-parity design; token, latency, and compute accounting; resumability. Files: `src/llm/*`. |
-| `[[NAME]]` | **Evaluation, analysis & report** | ROUGE harness with bootstrap CIs; Lead-3 validation against the literature; length and abstractiveness bucketing; repetition/OOV/unsupported-content diagnostics; qualitative selection and error categorization; this report. Files: `src/evaluate.py`, `src/qualitative.py`, `scripts/collect_results.py`, `reports/*`. |
+| Mohanad Bahammam | **Data & preprocessing** | Dataset acquisition and licensing check; frozen seeded splits and the shared head-to-head subset; word-level tokenizer, normalization, and abbreviation-aware sentence splitting; train-only vocabulary construction and coverage analysis; leakage controls. Files: `src/data/*`. |
+| Yakup Bastug | **Model implementation** | BiLSTM encoder and the bridge to the decoder state; Bahdanau, Luong, and no-attention modules with source masking; LSTM decoder with input feeding; weight tying; greedy and beam search with length penalty and trigram blocking. Files: `src/models/*`. |
+| Orhan Gundogan | **Training & performance** | Training loop, label smoothing, bucketed batching, early stopping and LR scheduling; the four experiment configs; the memory and MPS-shape performance work described in §2.1. Files: `src/train.py`, `configs/*`, `scripts/train_all.sh`. |
+| Ayuub Hagi | **LLM baseline** | Prompt variant design and the zero-/few-shot protocol; the local MLX backend and the API backend; input-parity design; token, latency, and compute accounting; resumability. Files: `src/llm/*`. |
+| Khaled Mobarak | **Evaluation, analysis & report** | ROUGE harness with bootstrap CIs; Lead-3 validation against the literature; length and abstractiveness bucketing; repetition/OOV/unsupported-content diagnostics; qualitative selection and error categorization; this report. Files: `src/evaluate.py`, `src/qualitative.py`, `scripts/collect_results.py`, `reports/*`. |
+
+> **Reorder the workstreams so each name sits against what that person actually
+> did.** The assignment order above is a placeholder, not a record.
 
 Every member should additionally be able to explain the whole pipeline end to
 end; the demo (Appendix D) exercises all five workstreams in one run.
