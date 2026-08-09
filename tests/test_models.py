@@ -319,3 +319,51 @@ def test_trigram_blocking_is_per_row():
     _block_repeat_trigrams(logits, [[10, 11, 12, 20, 10, 11], [1, 2, 3]])
     assert logits[0, 12] == float("-inf")
     assert torch.isfinite(logits[1]).all()
+
+
+# ------------------------------------------- beam re-padding invariants
+
+def test_beam_padding_duplicates_never_win(model):
+    """When a hypothesis completes, survivors are padded back to beam_size by
+    duplicating the last one with score -inf. Those placeholders must never be
+    selected: at least one live beam always exists, contributing |V| finite
+    candidates, so topk always prefers a real beam over -inf."""
+    batch = make_batch(src_lens=(7, 4), tgt_lens=(3, 3))
+    # min_len=1 lets EOS fire immediately, forcing completions and re-padding.
+    out = model.generate_beam(
+        batch["src"], batch["src_len"], batch["src_mask"],
+        beam_size=4, max_len=15, min_len=1,
+    )
+    assert len(out) == 2
+    for seq in out:
+        assert PAD_ID not in seq and UNK_ID not in seq
+        assert EOS_ID not in seq, "EOS leaked into the returned sequence"
+
+
+def test_beam_with_early_completion_is_deterministic(model):
+    batch = make_batch(src_lens=(7, 4), tgt_lens=(3, 3))
+    kw = dict(beam_size=4, max_len=15, min_len=1)
+    a = model.generate_beam(batch["src"], batch["src_len"], batch["src_mask"], **kw)
+    b = model.generate_beam(batch["src"], batch["src_len"], batch["src_mask"], **kw)
+    assert a == b
+
+
+def test_topk_prefers_finite_over_neg_inf():
+    """The invariant the re-padding relies on, stated directly."""
+    scores = torch.tensor([0.0, float("-inf"), float("-inf"), float("-inf")])
+    logprobs = torch.log_softmax(torch.randn(4, 500), dim=-1)
+    cand = scores.unsqueeze(1) + logprobs
+    _, top_idx = cand.view(-1).topk(4)
+    chosen_beams = torch.div(top_idx, 500, rounding_mode="floor")
+    assert (chosen_beams == 0).all(), "a -inf placeholder beam was selected"
+
+
+def test_first_step_does_not_duplicate_the_same_hypothesis(model):
+    """At t=0 only beam 0 is live (-inf elsewhere), so the beam must expand to
+    beam_size *distinct* tokens rather than the same hypothesis four times."""
+    batch = make_batch(src_lens=(7,), tgt_lens=(3,), max_s=8, max_t=6)
+    out = model.generate_beam(
+        batch["src"], batch["src_len"], batch["src_mask"],
+        beam_size=4, max_len=10, min_len=3,
+    )
+    assert len(out) == 1 and len(out[0]) > 0

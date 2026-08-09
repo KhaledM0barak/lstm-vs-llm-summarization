@@ -1,0 +1,2223 @@
+{
+  "test_file": "data/processed/test_llm.jsonl",
+  "n_test": 500,
+  "rouge_config": {
+    "types": [
+      "rouge1",
+      "rouge2",
+      "rougeLsum"
+    ],
+    "use_stemmer": true,
+    "bootstrap_n": 1000
+  },
+  "overall": {
+    "lstm_beam": {
+      "rouge1": {
+        "mean": 35.0,
+        "ci_low": 34.03,
+        "ci_high": 36.04
+      },
+      "rouge2": {
+        "mean": 13.75,
+        "ci_low": 12.85,
+        "ci_high": 14.64
+      },
+      "rougeLsum": {
+        "mean": 32.25,
+        "ci_low": 31.35,
+        "ci_high": 33.27
+      },
+      "length_tokens": 48.188,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.0796,
+      "unsupported_content_rate": 0.0152,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "lstm_greedy": {
+      "rouge1": {
+        "mean": 32.6,
+        "ci_low": 31.66,
+        "ci_high": 33.62
+      },
+      "rouge2": {
+        "mean": 12.05,
+        "ci_low": 11.25,
+        "ci_high": 12.85
+      },
+      "rougeLsum": {
+        "mean": 30.57,
+        "ci_low": 29.64,
+        "ci_high": 31.53
+      },
+      "length_tokens": 48.274,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.218,
+      "unsupported_content_rate": 0.0648,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "lstm_beam_norepeat": {
+      "rouge1": {
+        "mean": 29.65,
+        "ci_low": 28.69,
+        "ci_high": 30.71
+      },
+      "rouge2": {
+        "mean": 10.92,
+        "ci_low": 10.14,
+        "ci_high": 11.76
+      },
+      "rougeLsum": {
+        "mean": 26.99,
+        "ci_low": 26.07,
+        "ci_high": 28.03
+      },
+      "length_tokens": 51.838,
+      "dup_trigram_rate": 0.2817,
+      "novel_bigram_rate": 0.0614,
+      "unsupported_content_rate": 0.0075,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "no_attention": {
+      "rouge1": {
+        "mean": 20.97,
+        "ci_low": 20.32,
+        "ci_high": 21.67
+      },
+      "rouge2": {
+        "mean": 3.47,
+        "ci_low": 3.15,
+        "ci_high": 3.81
+      },
+      "rougeLsum": {
+        "mean": 19.4,
+        "ci_low": 18.82,
+        "ci_high": 20.02
+      },
+      "length_tokens": 38.222,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.704,
+      "unsupported_content_rate": 0.5297,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "unidirectional": {
+      "rouge1": {
+        "mean": 33.12,
+        "ci_low": 32.21,
+        "ci_high": 34.08
+      },
+      "rouge2": {
+        "mean": 12.64,
+        "ci_low": 11.84,
+        "ci_high": 13.49
+      },
+      "rougeLsum": {
+        "mean": 30.37,
+        "ci_low": 29.49,
+        "ci_high": 31.26
+      },
+      "length_tokens": 45.776,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.0876,
+      "unsupported_content_rate": 0.0242,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "short_context": {
+      "rouge1": {
+        "mean": 34.02,
+        "ci_low": 33.1,
+        "ci_high": 34.91
+      },
+      "rouge2": {
+        "mean": 13.44,
+        "ci_low": 12.59,
+        "ci_high": 14.29
+      },
+      "rougeLsum": {
+        "mean": 31.49,
+        "ci_low": 30.61,
+        "ci_high": 32.32
+      },
+      "length_tokens": 41.76,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.1501,
+      "unsupported_content_rate": 0.04,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "llm_A_zeroshot": {
+      "rouge1": {
+        "mean": 38.52,
+        "ci_low": 37.63,
+        "ci_high": 39.34
+      },
+      "rouge2": {
+        "mean": 14.91,
+        "ci_low": 14.28,
+        "ci_high": 15.56
+      },
+      "rougeLsum": {
+        "mean": 34.65,
+        "ci_low": 33.83,
+        "ci_high": 35.41
+      },
+      "length_tokens": 109.862,
+      "dup_trigram_rate": 0.0072,
+      "novel_bigram_rate": 0.5206,
+      "unsupported_content_rate": 0.2061,
+      "oov_rate": 0.021,
+      "empty": 0.0
+    },
+    "llm_A_fewshot": {
+      "rouge1": {
+        "mean": 39.4,
+        "ci_low": 38.6,
+        "ci_high": 40.21
+      },
+      "rouge2": {
+        "mean": 14.9,
+        "ci_low": 14.23,
+        "ci_high": 15.58
+      },
+      "rougeLsum": {
+        "mean": 36.15,
+        "ci_low": 35.43,
+        "ci_high": 36.91
+      },
+      "length_tokens": 81.106,
+      "dup_trigram_rate": 0.0054,
+      "novel_bigram_rate": 0.5004,
+      "unsupported_content_rate": 0.1767,
+      "oov_rate": 0.0214,
+      "empty": 0.0
+    },
+    "llm_B_zeroshot": {
+      "rouge1": {
+        "mean": 41.35,
+        "ci_low": 40.44,
+        "ci_high": 42.2
+      },
+      "rouge2": {
+        "mean": 18.07,
+        "ci_low": 17.25,
+        "ci_high": 18.84
+      },
+      "rougeLsum": {
+        "mean": 38.14,
+        "ci_low": 37.29,
+        "ci_high": 39.02
+      },
+      "length_tokens": 82.086,
+      "dup_trigram_rate": 0.0085,
+      "novel_bigram_rate": 0.246,
+      "unsupported_content_rate": 0.0552,
+      "oov_rate": 0.0286,
+      "empty": 0.0
+    },
+    "llm_B_fewshot": {
+      "rouge1": {
+        "mean": 40.48,
+        "ci_low": 39.62,
+        "ci_high": 41.34
+      },
+      "rouge2": {
+        "mean": 16.58,
+        "ci_low": 15.82,
+        "ci_high": 17.36
+      },
+      "rougeLsum": {
+        "mean": 37.58,
+        "ci_low": 36.74,
+        "ci_high": 38.41
+      },
+      "length_tokens": 79.1,
+      "dup_trigram_rate": 0.0099,
+      "novel_bigram_rate": 0.37,
+      "unsupported_content_rate": 0.1003,
+      "oov_rate": 0.024,
+      "empty": 0.0
+    },
+    "lead3_baseline": {
+      "rouge1": {
+        "mean": 39.89,
+        "ci_low": 38.87,
+        "ci_high": 40.93
+      },
+      "rouge2": {
+        "mean": 17.6,
+        "ci_low": 16.58,
+        "ci_high": 18.6
+      },
+      "rougeLsum": {
+        "mean": 36.35,
+        "ci_low": 35.35,
+        "ci_high": 37.38
+      },
+      "length_tokens": 86.224,
+      "dup_trigram_rate": 0.0105,
+      "novel_bigram_rate": 0.0,
+      "unsupported_content_rate": 0.0,
+      "oov_rate": 0.0226,
+      "empty": 0.0
+    }
+  },
+  "by_bucket": {
+    "length": {
+      "long (>834 tok)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 33.15,
+            "ci_low": 31.4,
+            "ci_high": 34.83
+          },
+          "rouge2": {
+            "mean": 12.5,
+            "ci_low": 11.19,
+            "ci_high": 13.97
+          },
+          "rougeLsum": {
+            "mean": 30.35,
+            "ci_low": 28.66,
+            "ci_high": 31.97
+          },
+          "length_tokens": 51.0659,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0764,
+          "unsupported_content_rate": 0.0151,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 30.47,
+            "ci_low": 28.87,
+            "ci_high": 32.0
+          },
+          "rouge2": {
+            "mean": 10.51,
+            "ci_low": 9.37,
+            "ci_high": 11.81
+          },
+          "rougeLsum": {
+            "mean": 28.48,
+            "ci_low": 27.05,
+            "ci_high": 29.95
+          },
+          "length_tokens": 50.8802,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2078,
+          "unsupported_content_rate": 0.0619,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 27.43,
+            "ci_low": 25.69,
+            "ci_high": 29.27
+          },
+          "rouge2": {
+            "mean": 9.55,
+            "ci_low": 8.41,
+            "ci_high": 10.84
+          },
+          "rougeLsum": {
+            "mean": 24.63,
+            "ci_low": 23.03,
+            "ci_high": 26.27
+          },
+          "length_tokens": 55.0479,
+          "dup_trigram_rate": 0.2905,
+          "novel_bigram_rate": 0.0575,
+          "unsupported_content_rate": 0.0076,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 20.81,
+            "ci_low": 19.74,
+            "ci_high": 21.86
+          },
+          "rouge2": {
+            "mean": 3.31,
+            "ci_low": 2.84,
+            "ci_high": 3.88
+          },
+          "rougeLsum": {
+            "mean": 19.07,
+            "ci_low": 18.11,
+            "ci_high": 20.1
+          },
+          "length_tokens": 40.4012,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.6453,
+          "unsupported_content_rate": 0.4792,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 30.75,
+            "ci_low": 29.15,
+            "ci_high": 32.41
+          },
+          "rouge2": {
+            "mean": 10.85,
+            "ci_low": 9.57,
+            "ci_high": 12.23
+          },
+          "rougeLsum": {
+            "mean": 28.26,
+            "ci_low": 26.77,
+            "ci_high": 29.89
+          },
+          "length_tokens": 46.7904,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0797,
+          "unsupported_content_rate": 0.0214,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 31.14,
+            "ci_low": 29.68,
+            "ci_high": 32.6
+          },
+          "rouge2": {
+            "mean": 11.74,
+            "ci_low": 10.57,
+            "ci_high": 13.07
+          },
+          "rougeLsum": {
+            "mean": 28.9,
+            "ci_low": 27.58,
+            "ci_high": 30.3
+          },
+          "length_tokens": 42.6287,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1548,
+          "unsupported_content_rate": 0.0383,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "llm_A_zeroshot": {
+          "rouge1": {
+            "mean": 37.34,
+            "ci_low": 35.87,
+            "ci_high": 38.78
+          },
+          "rouge2": {
+            "mean": 13.96,
+            "ci_low": 13.05,
+            "ci_high": 14.93
+          },
+          "rougeLsum": {
+            "mean": 33.62,
+            "ci_low": 32.29,
+            "ci_high": 34.96
+          },
+          "length_tokens": 115.6886,
+          "dup_trigram_rate": 0.0091,
+          "novel_bigram_rate": 0.5138,
+          "unsupported_content_rate": 0.1974,
+          "oov_rate": 0.0212,
+          "empty": 0.0
+        },
+        "llm_A_fewshot": {
+          "rouge1": {
+            "mean": 37.64,
+            "ci_low": 36.28,
+            "ci_high": 39.06
+          },
+          "rouge2": {
+            "mean": 13.07,
+            "ci_low": 12.06,
+            "ci_high": 14.06
+          },
+          "rougeLsum": {
+            "mean": 34.31,
+            "ci_low": 33.02,
+            "ci_high": 35.61
+          },
+          "length_tokens": 85.8563,
+          "dup_trigram_rate": 0.0058,
+          "novel_bigram_rate": 0.4882,
+          "unsupported_content_rate": 0.1645,
+          "oov_rate": 0.0217,
+          "empty": 0.0
+        },
+        "llm_B_zeroshot": {
+          "rouge1": {
+            "mean": 39.89,
+            "ci_low": 38.19,
+            "ci_high": 41.69
+          },
+          "rouge2": {
+            "mean": 16.81,
+            "ci_low": 15.5,
+            "ci_high": 18.18
+          },
+          "rougeLsum": {
+            "mean": 36.86,
+            "ci_low": 35.2,
+            "ci_high": 38.59
+          },
+          "length_tokens": 85.012,
+          "dup_trigram_rate": 0.0074,
+          "novel_bigram_rate": 0.2585,
+          "unsupported_content_rate": 0.0541,
+          "oov_rate": 0.0292,
+          "empty": 0.0
+        },
+        "llm_B_fewshot": {
+          "rouge1": {
+            "mean": 38.23,
+            "ci_low": 36.69,
+            "ci_high": 39.73
+          },
+          "rouge2": {
+            "mean": 14.43,
+            "ci_low": 13.26,
+            "ci_high": 15.62
+          },
+          "rougeLsum": {
+            "mean": 35.52,
+            "ci_low": 34.04,
+            "ci_high": 36.97
+          },
+          "length_tokens": 81.521,
+          "dup_trigram_rate": 0.01,
+          "novel_bigram_rate": 0.3653,
+          "unsupported_content_rate": 0.1008,
+          "oov_rate": 0.0255,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 36.87,
+            "ci_low": 35.1,
+            "ci_high": 38.59
+          },
+          "rouge2": {
+            "mean": 15.04,
+            "ci_low": 13.64,
+            "ci_high": 16.55
+          },
+          "rougeLsum": {
+            "mean": 33.7,
+            "ci_low": 32.01,
+            "ci_high": 35.42
+          },
+          "length_tokens": 91.3653,
+          "dup_trigram_rate": 0.0099,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0203,
+          "empty": 0.0
+        }
+      },
+      "medium (534-834 tok)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 36.16,
+            "ci_low": 34.48,
+            "ci_high": 37.91
+          },
+          "rouge2": {
+            "mean": 14.05,
+            "ci_low": 12.48,
+            "ci_high": 15.89
+          },
+          "rougeLsum": {
+            "mean": 33.36,
+            "ci_low": 31.68,
+            "ci_high": 35.09
+          },
+          "length_tokens": 49.759,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0783,
+          "unsupported_content_rate": 0.0146,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 32.54,
+            "ci_low": 30.87,
+            "ci_high": 34.14
+          },
+          "rouge2": {
+            "mean": 11.55,
+            "ci_low": 10.15,
+            "ci_high": 13.12
+          },
+          "rougeLsum": {
+            "mean": 30.35,
+            "ci_low": 28.77,
+            "ci_high": 32.0
+          },
+          "length_tokens": 49.1024,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2153,
+          "unsupported_content_rate": 0.064,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 31.01,
+            "ci_low": 29.26,
+            "ci_high": 32.71
+          },
+          "rouge2": {
+            "mean": 11.28,
+            "ci_low": 9.9,
+            "ci_high": 12.77
+          },
+          "rougeLsum": {
+            "mean": 28.37,
+            "ci_low": 26.67,
+            "ci_high": 30.06
+          },
+          "length_tokens": 53.1024,
+          "dup_trigram_rate": 0.2762,
+          "novel_bigram_rate": 0.0609,
+          "unsupported_content_rate": 0.0078,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 20.4,
+            "ci_low": 19.31,
+            "ci_high": 21.52
+          },
+          "rouge2": {
+            "mean": 2.68,
+            "ci_low": 2.25,
+            "ci_high": 3.17
+          },
+          "rougeLsum": {
+            "mean": 18.73,
+            "ci_low": 17.74,
+            "ci_high": 19.71
+          },
+          "length_tokens": 39.1867,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7145,
+          "unsupported_content_rate": 0.5292,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 33.96,
+            "ci_low": 32.44,
+            "ci_high": 35.57
+          },
+          "rouge2": {
+            "mean": 13.23,
+            "ci_low": 11.93,
+            "ci_high": 14.75
+          },
+          "rougeLsum": {
+            "mean": 31.05,
+            "ci_low": 29.61,
+            "ci_high": 32.58
+          },
+          "length_tokens": 46.4699,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0838,
+          "unsupported_content_rate": 0.021,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 35.37,
+            "ci_low": 33.97,
+            "ci_high": 36.88
+          },
+          "rouge2": {
+            "mean": 13.99,
+            "ci_low": 12.52,
+            "ci_high": 15.54
+          },
+          "rougeLsum": {
+            "mean": 32.79,
+            "ci_low": 31.33,
+            "ci_high": 34.25
+          },
+          "length_tokens": 42.5482,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.14,
+          "unsupported_content_rate": 0.0372,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "llm_A_zeroshot": {
+          "rouge1": {
+            "mean": 38.0,
+            "ci_low": 36.65,
+            "ci_high": 39.41
+          },
+          "rouge2": {
+            "mean": 14.59,
+            "ci_low": 13.52,
+            "ci_high": 15.67
+          },
+          "rougeLsum": {
+            "mean": 34.44,
+            "ci_low": 33.18,
+            "ci_high": 35.7
+          },
+          "length_tokens": 114.3735,
+          "dup_trigram_rate": 0.0066,
+          "novel_bigram_rate": 0.5267,
+          "unsupported_content_rate": 0.2108,
+          "oov_rate": 0.021,
+          "empty": 0.0
+        },
+        "llm_A_fewshot": {
+          "rouge1": {
+            "mean": 39.49,
+            "ci_low": 38.09,
+            "ci_high": 40.9
+          },
+          "rouge2": {
+            "mean": 14.8,
+            "ci_low": 13.72,
+            "ci_high": 15.96
+          },
+          "rougeLsum": {
+            "mean": 36.29,
+            "ci_low": 35.02,
+            "ci_high": 37.64
+          },
+          "length_tokens": 83.7048,
+          "dup_trigram_rate": 0.0051,
+          "novel_bigram_rate": 0.5141,
+          "unsupported_content_rate": 0.1828,
+          "oov_rate": 0.0205,
+          "empty": 0.0
+        },
+        "llm_B_zeroshot": {
+          "rouge1": {
+            "mean": 41.29,
+            "ci_low": 39.84,
+            "ci_high": 42.75
+          },
+          "rouge2": {
+            "mean": 17.35,
+            "ci_low": 16.05,
+            "ci_high": 18.63
+          },
+          "rougeLsum": {
+            "mean": 37.78,
+            "ci_low": 36.35,
+            "ci_high": 39.15
+          },
+          "length_tokens": 83.5783,
+          "dup_trigram_rate": 0.0081,
+          "novel_bigram_rate": 0.2428,
+          "unsupported_content_rate": 0.0541,
+          "oov_rate": 0.0292,
+          "empty": 0.0
+        },
+        "llm_B_fewshot": {
+          "rouge1": {
+            "mean": 40.07,
+            "ci_low": 38.61,
+            "ci_high": 41.56
+          },
+          "rouge2": {
+            "mean": 16.29,
+            "ci_low": 15.13,
+            "ci_high": 17.66
+          },
+          "rougeLsum": {
+            "mean": 37.1,
+            "ci_low": 35.69,
+            "ci_high": 38.54
+          },
+          "length_tokens": 81.5482,
+          "dup_trigram_rate": 0.0101,
+          "novel_bigram_rate": 0.3831,
+          "unsupported_content_rate": 0.0997,
+          "oov_rate": 0.0227,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 40.81,
+            "ci_low": 39.21,
+            "ci_high": 42.3
+          },
+          "rouge2": {
+            "mean": 18.0,
+            "ci_low": 16.46,
+            "ci_high": 19.68
+          },
+          "rougeLsum": {
+            "mean": 37.04,
+            "ci_low": 35.38,
+            "ci_high": 38.68
+          },
+          "length_tokens": 86.0241,
+          "dup_trigram_rate": 0.0132,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0237,
+          "empty": 0.0
+        }
+      },
+      "short (<=534 tok)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 35.69,
+            "ci_low": 34.11,
+            "ci_high": 37.39
+          },
+          "rouge2": {
+            "mean": 14.69,
+            "ci_low": 13.14,
+            "ci_high": 16.33
+          },
+          "rougeLsum": {
+            "mean": 33.05,
+            "ci_low": 31.54,
+            "ci_high": 34.66
+          },
+          "length_tokens": 43.7485,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0841,
+          "unsupported_content_rate": 0.0159,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 34.79,
+            "ci_low": 33.24,
+            "ci_high": 36.31
+          },
+          "rouge2": {
+            "mean": 14.09,
+            "ci_low": 12.69,
+            "ci_high": 15.58
+          },
+          "rougeLsum": {
+            "mean": 32.87,
+            "ci_low": 31.43,
+            "ci_high": 34.38
+          },
+          "length_tokens": 44.8443,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2309,
+          "unsupported_content_rate": 0.0684,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 30.52,
+            "ci_low": 28.92,
+            "ci_high": 32.19
+          },
+          "rouge2": {
+            "mean": 11.91,
+            "ci_low": 10.62,
+            "ci_high": 13.35
+          },
+          "rougeLsum": {
+            "mean": 27.97,
+            "ci_low": 26.47,
+            "ci_high": 29.57
+          },
+          "length_tokens": 47.3713,
+          "dup_trigram_rate": 0.2785,
+          "novel_bigram_rate": 0.0658,
+          "unsupported_content_rate": 0.0072,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 21.71,
+            "ci_low": 20.5,
+            "ci_high": 22.9
+          },
+          "rouge2": {
+            "mean": 4.41,
+            "ci_low": 3.71,
+            "ci_high": 5.11
+          },
+          "rougeLsum": {
+            "mean": 20.4,
+            "ci_low": 19.25,
+            "ci_high": 21.57
+          },
+          "length_tokens": 35.0838,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7521,
+          "unsupported_content_rate": 0.5809,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 34.67,
+            "ci_low": 33.07,
+            "ci_high": 36.32
+          },
+          "rouge2": {
+            "mean": 13.84,
+            "ci_low": 12.34,
+            "ci_high": 15.42
+          },
+          "rougeLsum": {
+            "mean": 31.8,
+            "ci_low": 30.23,
+            "ci_high": 33.39
+          },
+          "length_tokens": 44.0719,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0992,
+          "unsupported_content_rate": 0.0303,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 35.57,
+            "ci_low": 33.97,
+            "ci_high": 37.04
+          },
+          "rouge2": {
+            "mean": 14.59,
+            "ci_low": 13.09,
+            "ci_high": 16.09
+          },
+          "rougeLsum": {
+            "mean": 32.79,
+            "ci_low": 31.22,
+            "ci_high": 34.24
+          },
+          "length_tokens": 40.1078,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1555,
+          "unsupported_content_rate": 0.0445,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "llm_A_zeroshot": {
+          "rouge1": {
+            "mean": 40.2,
+            "ci_low": 38.77,
+            "ci_high": 41.66
+          },
+          "rouge2": {
+            "mean": 16.17,
+            "ci_low": 15.07,
+            "ci_high": 17.33
+          },
+          "rougeLsum": {
+            "mean": 35.88,
+            "ci_low": 34.61,
+            "ci_high": 37.2
+          },
+          "length_tokens": 99.5509,
+          "dup_trigram_rate": 0.006,
+          "novel_bigram_rate": 0.5214,
+          "unsupported_content_rate": 0.21,
+          "oov_rate": 0.0208,
+          "empty": 0.0
+        },
+        "llm_A_fewshot": {
+          "rouge1": {
+            "mean": 41.07,
+            "ci_low": 39.73,
+            "ci_high": 42.3
+          },
+          "rouge2": {
+            "mean": 16.84,
+            "ci_low": 15.66,
+            "ci_high": 18.02
+          },
+          "rougeLsum": {
+            "mean": 37.86,
+            "ci_low": 36.58,
+            "ci_high": 39.07
+          },
+          "length_tokens": 73.7725,
+          "dup_trigram_rate": 0.0053,
+          "novel_bigram_rate": 0.499,
+          "unsupported_content_rate": 0.183,
+          "oov_rate": 0.0219,
+          "empty": 0.0
+        },
+        "llm_B_zeroshot": {
+          "rouge1": {
+            "mean": 42.87,
+            "ci_low": 41.34,
+            "ci_high": 44.33
+          },
+          "rouge2": {
+            "mean": 20.06,
+            "ci_low": 18.55,
+            "ci_high": 21.57
+          },
+          "rougeLsum": {
+            "mean": 39.77,
+            "ci_low": 38.22,
+            "ci_high": 41.22
+          },
+          "length_tokens": 77.6766,
+          "dup_trigram_rate": 0.0101,
+          "novel_bigram_rate": 0.2366,
+          "unsupported_content_rate": 0.0574,
+          "oov_rate": 0.0274,
+          "empty": 0.0
+        },
+        "llm_B_fewshot": {
+          "rouge1": {
+            "mean": 43.12,
+            "ci_low": 41.58,
+            "ci_high": 44.41
+          },
+          "rouge2": {
+            "mean": 19.0,
+            "ci_low": 17.53,
+            "ci_high": 20.3
+          },
+          "rougeLsum": {
+            "mean": 40.1,
+            "ci_low": 38.67,
+            "ci_high": 41.36
+          },
+          "length_tokens": 74.2455,
+          "dup_trigram_rate": 0.0094,
+          "novel_bigram_rate": 0.3617,
+          "unsupported_content_rate": 0.1003,
+          "oov_rate": 0.0236,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 42.0,
+            "ci_low": 40.12,
+            "ci_high": 43.87
+          },
+          "rouge2": {
+            "mean": 19.77,
+            "ci_low": 17.94,
+            "ci_high": 21.63
+          },
+          "rougeLsum": {
+            "mean": 38.3,
+            "ci_low": 36.43,
+            "ci_high": 40.07
+          },
+          "length_tokens": 81.2814,
+          "dup_trigram_rate": 0.0085,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0239,
+          "empty": 0.0
+        }
+      }
+    },
+    "abstractiveness": {
+      "abstractive (high novelty)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 30.52,
+            "ci_low": 29.11,
+            "ci_high": 31.95
+          },
+          "rouge2": {
+            "mean": 8.78,
+            "ci_low": 7.91,
+            "ci_high": 9.73
+          },
+          "rougeLsum": {
+            "mean": 27.72,
+            "ci_low": 26.34,
+            "ci_high": 29.08
+          },
+          "length_tokens": 46.1078,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0827,
+          "unsupported_content_rate": 0.0162,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 28.18,
+            "ci_low": 26.79,
+            "ci_high": 29.57
+          },
+          "rouge2": {
+            "mean": 7.81,
+            "ci_low": 7.02,
+            "ci_high": 8.65
+          },
+          "rougeLsum": {
+            "mean": 26.24,
+            "ci_low": 24.95,
+            "ci_high": 27.56
+          },
+          "length_tokens": 46.024,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.236,
+          "unsupported_content_rate": 0.08,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 26.71,
+            "ci_low": 25.39,
+            "ci_high": 28.25
+          },
+          "rouge2": {
+            "mean": 7.27,
+            "ci_low": 6.48,
+            "ci_high": 8.15
+          },
+          "rougeLsum": {
+            "mean": 24.15,
+            "ci_low": 22.92,
+            "ci_high": 25.59
+          },
+          "length_tokens": 49.4371,
+          "dup_trigram_rate": 0.2377,
+          "novel_bigram_rate": 0.0634,
+          "unsupported_content_rate": 0.0097,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 19.32,
+            "ci_low": 18.2,
+            "ci_high": 20.54
+          },
+          "rouge2": {
+            "mean": 3.12,
+            "ci_low": 2.6,
+            "ci_high": 3.72
+          },
+          "rougeLsum": {
+            "mean": 18.27,
+            "ci_low": 17.23,
+            "ci_high": 19.43
+          },
+          "length_tokens": 37.521,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7134,
+          "unsupported_content_rate": 0.5383,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 28.85,
+            "ci_low": 27.53,
+            "ci_high": 30.26
+          },
+          "rouge2": {
+            "mean": 7.86,
+            "ci_low": 7.03,
+            "ci_high": 8.78
+          },
+          "rougeLsum": {
+            "mean": 26.17,
+            "ci_low": 24.95,
+            "ci_high": 27.46
+          },
+          "length_tokens": 45.3533,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1025,
+          "unsupported_content_rate": 0.0321,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 30.71,
+            "ci_low": 29.34,
+            "ci_high": 32.24
+          },
+          "rouge2": {
+            "mean": 9.31,
+            "ci_low": 8.37,
+            "ci_high": 10.33
+          },
+          "rougeLsum": {
+            "mean": 28.2,
+            "ci_low": 26.94,
+            "ci_high": 29.56
+          },
+          "length_tokens": 40.7964,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1583,
+          "unsupported_content_rate": 0.044,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "llm_A_zeroshot": {
+          "rouge1": {
+            "mean": 34.3,
+            "ci_low": 33.04,
+            "ci_high": 35.65
+          },
+          "rouge2": {
+            "mean": 11.35,
+            "ci_low": 10.48,
+            "ci_high": 12.23
+          },
+          "rougeLsum": {
+            "mean": 31.1,
+            "ci_low": 29.93,
+            "ci_high": 32.36
+          },
+          "length_tokens": 108.2216,
+          "dup_trigram_rate": 0.0062,
+          "novel_bigram_rate": 0.5442,
+          "unsupported_content_rate": 0.2234,
+          "oov_rate": 0.0203,
+          "empty": 0.0
+        },
+        "llm_A_fewshot": {
+          "rouge1": {
+            "mean": 35.52,
+            "ci_low": 34.23,
+            "ci_high": 36.85
+          },
+          "rouge2": {
+            "mean": 11.35,
+            "ci_low": 10.44,
+            "ci_high": 12.27
+          },
+          "rougeLsum": {
+            "mean": 32.65,
+            "ci_low": 31.45,
+            "ci_high": 33.89
+          },
+          "length_tokens": 79.7066,
+          "dup_trigram_rate": 0.0048,
+          "novel_bigram_rate": 0.5406,
+          "unsupported_content_rate": 0.2021,
+          "oov_rate": 0.022,
+          "empty": 0.0
+        },
+        "llm_B_zeroshot": {
+          "rouge1": {
+            "mean": 35.67,
+            "ci_low": 34.38,
+            "ci_high": 37.07
+          },
+          "rouge2": {
+            "mean": 12.32,
+            "ci_low": 11.45,
+            "ci_high": 13.22
+          },
+          "rougeLsum": {
+            "mean": 32.63,
+            "ci_low": 31.28,
+            "ci_high": 33.91
+          },
+          "length_tokens": 82.2036,
+          "dup_trigram_rate": 0.0081,
+          "novel_bigram_rate": 0.2518,
+          "unsupported_content_rate": 0.0589,
+          "oov_rate": 0.027,
+          "empty": 0.0
+        },
+        "llm_B_fewshot": {
+          "rouge1": {
+            "mean": 36.1,
+            "ci_low": 34.78,
+            "ci_high": 37.36
+          },
+          "rouge2": {
+            "mean": 12.22,
+            "ci_low": 11.24,
+            "ci_high": 13.18
+          },
+          "rougeLsum": {
+            "mean": 33.6,
+            "ci_low": 32.34,
+            "ci_high": 34.93
+          },
+          "length_tokens": 78.4491,
+          "dup_trigram_rate": 0.0087,
+          "novel_bigram_rate": 0.3801,
+          "unsupported_content_rate": 0.1053,
+          "oov_rate": 0.0239,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 34.61,
+            "ci_low": 33.07,
+            "ci_high": 36.04
+          },
+          "rouge2": {
+            "mean": 11.51,
+            "ci_low": 10.59,
+            "ci_high": 12.42
+          },
+          "rougeLsum": {
+            "mean": 30.89,
+            "ci_low": 29.53,
+            "ci_high": 32.18
+          },
+          "length_tokens": 85.8862,
+          "dup_trigram_rate": 0.0082,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0217,
+          "empty": 0.0
+        }
+      },
+      "extractive (low novelty)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 40.04,
+            "ci_low": 38.18,
+            "ci_high": 41.71
+          },
+          "rouge2": {
+            "mean": 19.45,
+            "ci_low": 17.62,
+            "ci_high": 21.22
+          },
+          "rougeLsum": {
+            "mean": 37.26,
+            "ci_low": 35.42,
+            "ci_high": 38.93
+          },
+          "length_tokens": 49.4251,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0783,
+          "unsupported_content_rate": 0.0144,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 37.39,
+            "ci_low": 35.87,
+            "ci_high": 38.98
+          },
+          "rouge2": {
+            "mean": 17.21,
+            "ci_low": 15.71,
+            "ci_high": 18.75
+          },
+          "rougeLsum": {
+            "mean": 35.34,
+            "ci_low": 33.8,
+            "ci_high": 36.87
+          },
+          "length_tokens": 49.2814,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1934,
+          "unsupported_content_rate": 0.0571,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 33.52,
+            "ci_low": 31.7,
+            "ci_high": 35.18
+          },
+          "rouge2": {
+            "mean": 15.39,
+            "ci_low": 13.86,
+            "ci_high": 16.85
+          },
+          "rougeLsum": {
+            "mean": 30.87,
+            "ci_low": 29.1,
+            "ci_high": 32.52
+          },
+          "length_tokens": 53.0359,
+          "dup_trigram_rate": 0.3074,
+          "novel_bigram_rate": 0.06,
+          "unsupported_content_rate": 0.0072,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 22.15,
+            "ci_low": 21.15,
+            "ci_high": 23.13
+          },
+          "rouge2": {
+            "mean": 3.74,
+            "ci_low": 3.14,
+            "ci_high": 4.31
+          },
+          "rougeLsum": {
+            "mean": 20.05,
+            "ci_low": 19.11,
+            "ci_high": 20.98
+          },
+          "length_tokens": 38.4491,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7006,
+          "unsupported_content_rate": 0.5207,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 37.38,
+            "ci_low": 35.8,
+            "ci_high": 38.9
+          },
+          "rouge2": {
+            "mean": 18.07,
+            "ci_low": 16.42,
+            "ci_high": 19.71
+          },
+          "rougeLsum": {
+            "mean": 34.76,
+            "ci_low": 33.21,
+            "ci_high": 36.34
+          },
+          "length_tokens": 45.2515,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0759,
+          "unsupported_content_rate": 0.0181,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 38.19,
+            "ci_low": 36.6,
+            "ci_high": 39.85
+          },
+          "rouge2": {
+            "mean": 18.84,
+            "ci_low": 17.01,
+            "ci_high": 20.63
+          },
+          "rougeLsum": {
+            "mean": 35.68,
+            "ci_low": 34.03,
+            "ci_high": 37.26
+          },
+          "length_tokens": 42.7844,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1302,
+          "unsupported_content_rate": 0.0342,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "llm_A_zeroshot": {
+          "rouge1": {
+            "mean": 42.55,
+            "ci_low": 41.07,
+            "ci_high": 44.06
+          },
+          "rouge2": {
+            "mean": 18.98,
+            "ci_low": 17.89,
+            "ci_high": 20.19
+          },
+          "rougeLsum": {
+            "mean": 38.17,
+            "ci_low": 36.84,
+            "ci_high": 39.56
+          },
+          "length_tokens": 111.0898,
+          "dup_trigram_rate": 0.0078,
+          "novel_bigram_rate": 0.4934,
+          "unsupported_content_rate": 0.1839,
+          "oov_rate": 0.0221,
+          "empty": 0.0
+        },
+        "llm_A_fewshot": {
+          "rouge1": {
+            "mean": 43.22,
+            "ci_low": 41.8,
+            "ci_high": 44.6
+          },
+          "rouge2": {
+            "mean": 19.08,
+            "ci_low": 17.78,
+            "ci_high": 20.28
+          },
+          "rougeLsum": {
+            "mean": 39.54,
+            "ci_low": 38.17,
+            "ci_high": 40.78
+          },
+          "length_tokens": 81.0,
+          "dup_trigram_rate": 0.0048,
+          "novel_bigram_rate": 0.4661,
+          "unsupported_content_rate": 0.1578,
+          "oov_rate": 0.022,
+          "empty": 0.0
+        },
+        "llm_B_zeroshot": {
+          "rouge1": {
+            "mean": 46.29,
+            "ci_low": 44.72,
+            "ci_high": 47.84
+          },
+          "rouge2": {
+            "mean": 24.3,
+            "ci_low": 22.8,
+            "ci_high": 25.85
+          },
+          "rougeLsum": {
+            "mean": 43.17,
+            "ci_low": 41.58,
+            "ci_high": 44.77
+          },
+          "length_tokens": 82.012,
+          "dup_trigram_rate": 0.0082,
+          "novel_bigram_rate": 0.2273,
+          "unsupported_content_rate": 0.0506,
+          "oov_rate": 0.0309,
+          "empty": 0.0
+        },
+        "llm_B_fewshot": {
+          "rouge1": {
+            "mean": 44.41,
+            "ci_low": 42.91,
+            "ci_high": 45.89
+          },
+          "rouge2": {
+            "mean": 21.44,
+            "ci_low": 20.09,
+            "ci_high": 22.96
+          },
+          "rougeLsum": {
+            "mean": 41.39,
+            "ci_low": 39.98,
+            "ci_high": 42.76
+          },
+          "length_tokens": 78.8144,
+          "dup_trigram_rate": 0.0097,
+          "novel_bigram_rate": 0.3416,
+          "unsupported_content_rate": 0.08,
+          "oov_rate": 0.0259,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 45.35,
+            "ci_low": 43.47,
+            "ci_high": 47.17
+          },
+          "rouge2": {
+            "mean": 24.95,
+            "ci_low": 23.03,
+            "ci_high": 27.05
+          },
+          "rougeLsum": {
+            "mean": 42.26,
+            "ci_low": 40.3,
+            "ci_high": 44.23
+          },
+          "length_tokens": 84.1198,
+          "dup_trigram_rate": 0.0092,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0232,
+          "empty": 0.0
+        }
+      },
+      "mixed": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 34.44,
+            "ci_low": 32.78,
+            "ci_high": 36.04
+          },
+          "rouge2": {
+            "mean": 13.01,
+            "ci_low": 11.73,
+            "ci_high": 14.34
+          },
+          "rougeLsum": {
+            "mean": 31.77,
+            "ci_low": 30.25,
+            "ci_high": 33.23
+          },
+          "length_tokens": 49.0361,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0777,
+          "unsupported_content_rate": 0.015,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 32.23,
+            "ci_low": 30.59,
+            "ci_high": 33.75
+          },
+          "rouge2": {
+            "mean": 11.13,
+            "ci_low": 9.95,
+            "ci_high": 12.33
+          },
+          "rougeLsum": {
+            "mean": 30.12,
+            "ci_low": 28.62,
+            "ci_high": 31.53
+          },
+          "length_tokens": 49.5241,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2247,
+          "unsupported_content_rate": 0.0572,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 28.71,
+            "ci_low": 27.09,
+            "ci_high": 30.32
+          },
+          "rouge2": {
+            "mean": 10.08,
+            "ci_low": 8.89,
+            "ci_high": 11.2
+          },
+          "rougeLsum": {
+            "mean": 25.93,
+            "ci_low": 24.43,
+            "ci_high": 27.4
+          },
+          "length_tokens": 53.0482,
+          "dup_trigram_rate": 0.3001,
+          "novel_bigram_rate": 0.0608,
+          "unsupported_content_rate": 0.0057,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 21.46,
+            "ci_low": 20.31,
+            "ci_high": 22.68
+          },
+          "rouge2": {
+            "mean": 3.54,
+            "ci_low": 2.97,
+            "ci_high": 4.13
+          },
+          "rougeLsum": {
+            "mean": 19.88,
+            "ci_low": 18.85,
+            "ci_high": 21.0
+          },
+          "length_tokens": 38.6988,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.6978,
+          "unsupported_content_rate": 0.5303,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 33.15,
+            "ci_low": 31.5,
+            "ci_high": 34.67
+          },
+          "rouge2": {
+            "mean": 11.97,
+            "ci_low": 10.68,
+            "ci_high": 13.21
+          },
+          "rougeLsum": {
+            "mean": 30.18,
+            "ci_low": 28.66,
+            "ci_high": 31.56
+          },
+          "length_tokens": 46.7289,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0844,
+          "unsupported_content_rate": 0.0225,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 33.16,
+            "ci_low": 31.72,
+            "ci_high": 34.61
+          },
+          "rouge2": {
+            "mean": 12.16,
+            "ci_low": 11.01,
+            "ci_high": 13.35
+          },
+          "rougeLsum": {
+            "mean": 30.59,
+            "ci_low": 29.19,
+            "ci_high": 31.97
+          },
+          "length_tokens": 41.6988,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.162,
+          "unsupported_content_rate": 0.042,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "llm_A_zeroshot": {
+          "rouge1": {
+            "mean": 38.7,
+            "ci_low": 37.41,
+            "ci_high": 39.9
+          },
+          "rouge2": {
+            "mean": 14.4,
+            "ci_low": 13.47,
+            "ci_high": 15.31
+          },
+          "rougeLsum": {
+            "mean": 34.67,
+            "ci_low": 33.47,
+            "ci_high": 35.84
+          },
+          "length_tokens": 110.2771,
+          "dup_trigram_rate": 0.0078,
+          "novel_bigram_rate": 0.5243,
+          "unsupported_content_rate": 0.211,
+          "oov_rate": 0.0206,
+          "empty": 0.0
+        },
+        "llm_A_fewshot": {
+          "rouge1": {
+            "mean": 39.47,
+            "ci_low": 38.16,
+            "ci_high": 40.69
+          },
+          "rouge2": {
+            "mean": 14.28,
+            "ci_low": 13.28,
+            "ci_high": 15.25
+          },
+          "rougeLsum": {
+            "mean": 36.27,
+            "ci_low": 35.07,
+            "ci_high": 37.45
+          },
+          "length_tokens": 82.6205,
+          "dup_trigram_rate": 0.0066,
+          "novel_bigram_rate": 0.4944,
+          "unsupported_content_rate": 0.1703,
+          "oov_rate": 0.0202,
+          "empty": 0.0
+        },
+        "llm_B_zeroshot": {
+          "rouge1": {
+            "mean": 42.09,
+            "ci_low": 40.74,
+            "ci_high": 43.5
+          },
+          "rouge2": {
+            "mean": 17.59,
+            "ci_low": 16.5,
+            "ci_high": 18.74
+          },
+          "rougeLsum": {
+            "mean": 38.62,
+            "ci_low": 37.38,
+            "ci_high": 39.96
+          },
+          "length_tokens": 82.0422,
+          "dup_trigram_rate": 0.0093,
+          "novel_bigram_rate": 0.2588,
+          "unsupported_content_rate": 0.0562,
+          "oov_rate": 0.0279,
+          "empty": 0.0
+        },
+        "llm_B_fewshot": {
+          "rouge1": {
+            "mean": 40.92,
+            "ci_low": 39.53,
+            "ci_high": 42.44
+          },
+          "rouge2": {
+            "mean": 16.06,
+            "ci_low": 14.85,
+            "ci_high": 17.33
+          },
+          "rougeLsum": {
+            "mean": 37.74,
+            "ci_low": 36.43,
+            "ci_high": 39.24
+          },
+          "length_tokens": 80.0422,
+          "dup_trigram_rate": 0.0112,
+          "novel_bigram_rate": 0.3885,
+          "unsupported_content_rate": 0.1156,
+          "oov_rate": 0.0221,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 39.72,
+            "ci_low": 38.04,
+            "ci_high": 41.5
+          },
+          "rouge2": {
+            "mean": 16.34,
+            "ci_low": 14.87,
+            "ci_high": 17.77
+          },
+          "rougeLsum": {
+            "mean": 35.88,
+            "ci_low": 34.3,
+            "ci_high": 37.54
+          },
+          "length_tokens": 88.6807,
+          "dup_trigram_rate": 0.0143,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0229,
+          "empty": 0.0
+        }
+      }
+    }
+  },
+  "coverage": {
+    "lstm_beam": {
+      "scored": 500,
+      "expected": 500
+    },
+    "lstm_greedy": {
+      "scored": 500,
+      "expected": 500
+    },
+    "lstm_beam_norepeat": {
+      "scored": 500,
+      "expected": 500
+    },
+    "no_attention": {
+      "scored": 500,
+      "expected": 500
+    },
+    "unidirectional": {
+      "scored": 500,
+      "expected": 500
+    },
+    "short_context": {
+      "scored": 500,
+      "expected": 500
+    },
+    "llm_A_zeroshot": {
+      "scored": 500,
+      "expected": 500
+    },
+    "llm_A_fewshot": {
+      "scored": 500,
+      "expected": 500
+    },
+    "llm_B_zeroshot": {
+      "scored": 500,
+      "expected": 500
+    },
+    "llm_B_fewshot": {
+      "scored": 500,
+      "expected": 500
+    },
+    "lead3_baseline": {
+      "scored": 500,
+      "expected": 500
+    }
+  },
+  "paired_vs": "lstm_beam",
+  "paired_tests": {
+    "lstm_greedy": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": -2.399,
+        "ci_low": -3.231,
+        "ci_high": -1.531,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 204,
+        "losses": 291,
+        "ties": 5
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": -1.693,
+        "ci_low": -2.436,
+        "ci_high": -0.928,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 196,
+        "losses": 287,
+        "ties": 17
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": -1.687,
+        "ci_low": -2.523,
+        "ci_high": -0.808,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 213,
+        "losses": 283,
+        "ties": 4
+      }
+    },
+    "lstm_beam_norepeat": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": -5.348,
+        "ci_low": -6.025,
+        "ci_high": -4.673,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 62,
+        "losses": 330,
+        "ties": 108
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": -2.83,
+        "ci_low": -3.34,
+        "ci_high": -2.323,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 78,
+        "losses": 289,
+        "ties": 133
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": -5.267,
+        "ci_low": -5.933,
+        "ci_high": -4.606,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 64,
+        "losses": 326,
+        "ties": 110
+      }
+    },
+    "no_attention": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": -14.024,
+        "ci_low": -15.02,
+        "ci_high": -13.001,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 56,
+        "losses": 442,
+        "ties": 2
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": -10.277,
+        "ci_low": -11.181,
+        "ci_high": -9.354,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 57,
+        "losses": 417,
+        "ties": 26
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": -12.851,
+        "ci_low": -13.824,
+        "ci_high": -11.851,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 60,
+        "losses": 438,
+        "ties": 2
+      }
+    },
+    "unidirectional": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": -1.874,
+        "ci_low": -2.743,
+        "ci_high": -0.98,
+        "p_value": 0.0001,
+        "significant_at_05": true,
+        "wins": 210,
+        "losses": 284,
+        "ties": 6
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": -1.108,
+        "ci_low": -1.839,
+        "ci_high": -0.351,
+        "p_value": 0.0028,
+        "significant_at_05": true,
+        "wins": 211,
+        "losses": 269,
+        "ties": 20
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": -1.883,
+        "ci_low": -2.719,
+        "ci_high": -1.027,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 213,
+        "losses": 283,
+        "ties": 4
+      }
+    },
+    "short_context": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": -0.976,
+        "ci_low": -1.955,
+        "ci_high": 0.016,
+        "p_value": 0.0532,
+        "significant_at_05": false,
+        "wins": 235,
+        "losses": 265,
+        "ties": 0
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": -0.306,
+        "ci_low": -1.16,
+        "ci_high": 0.584,
+        "p_value": 0.4951,
+        "significant_at_05": false,
+        "wins": 237,
+        "losses": 254,
+        "ties": 9
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": -0.759,
+        "ci_low": -1.705,
+        "ci_high": 0.196,
+        "p_value": 0.1204,
+        "significant_at_05": false,
+        "wins": 224,
+        "losses": 275,
+        "ties": 1
+      }
+    },
+    "llm_A_zeroshot": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": 3.519,
+        "ci_low": 2.52,
+        "ci_high": 4.546,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 314,
+        "losses": 185,
+        "ties": 1
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": 1.165,
+        "ci_low": 0.248,
+        "ci_high": 2.08,
+        "p_value": 0.0124,
+        "significant_at_05": true,
+        "wins": 304,
+        "losses": 195,
+        "ties": 1
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": 2.396,
+        "ci_low": 1.403,
+        "ci_high": 3.421,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 297,
+        "losses": 202,
+        "ties": 1
+      }
+    },
+    "llm_A_fewshot": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": 4.402,
+        "ci_low": 3.417,
+        "ci_high": 5.406,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 329,
+        "losses": 171,
+        "ties": 0
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": 1.158,
+        "ci_low": 0.235,
+        "ci_high": 2.105,
+        "p_value": 0.0143,
+        "significant_at_05": true,
+        "wins": 284,
+        "losses": 216,
+        "ties": 0
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": 3.902,
+        "ci_low": 2.925,
+        "ci_high": 4.888,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 325,
+        "losses": 175,
+        "ties": 0
+      }
+    },
+    "llm_B_zeroshot": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": 6.349,
+        "ci_low": 5.336,
+        "ci_high": 7.395,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 358,
+        "losses": 142,
+        "ties": 0
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": 4.327,
+        "ci_low": 3.389,
+        "ci_high": 5.281,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 333,
+        "losses": 164,
+        "ties": 3
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": 5.888,
+        "ci_low": 4.877,
+        "ci_high": 6.937,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 353,
+        "losses": 147,
+        "ties": 0
+      }
+    },
+    "llm_B_fewshot": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": 5.478,
+        "ci_low": 4.426,
+        "ci_high": 6.535,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 348,
+        "losses": 152,
+        "ties": 0
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": 2.83,
+        "ci_low": 1.833,
+        "ci_high": 3.838,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 318,
+        "losses": 180,
+        "ties": 2
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": 5.324,
+        "ci_low": 4.288,
+        "ci_high": 6.354,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 347,
+        "losses": 152,
+        "ties": 1
+      }
+    },
+    "lead3_baseline": {
+      "vs": "lstm_beam",
+      "n_paired": 500,
+      "rouge1": {
+        "n": 500,
+        "mean_diff": 4.896,
+        "ci_low": 3.848,
+        "ci_high": 5.938,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 333,
+        "losses": 167,
+        "ties": 0
+      },
+      "rouge2": {
+        "n": 500,
+        "mean_diff": 3.856,
+        "ci_low": 2.879,
+        "ci_high": 4.872,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 331,
+        "losses": 167,
+        "ties": 2
+      },
+      "rougeLsum": {
+        "n": 500,
+        "mean_diff": 4.096,
+        "ci_low": 3.074,
+        "ci_high": 5.133,
+        "p_value": 0.0,
+        "significant_at_05": true,
+        "wins": 325,
+        "losses": 175,
+        "ties": 0
+      }
+    }
+  }
+}
