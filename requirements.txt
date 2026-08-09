@@ -16,7 +16,12 @@ absl-py==2.5.0          # required by rouge-score
 nltk==3.10.2            # required by rouge-score
 scipy==1.18.0
 
-# LLM baseline
+# LLM baseline -- local open-weights model on Apple silicon (primary path).
+# mlx/mlx-lm are Apple-silicon only; on other hardware use --backend anthropic.
+mlx==0.32.0
+mlx-lm==0.31.3
+
+# LLM baseline -- hosted API (alternative path, --backend anthropic)
 anthropic==0.121.0
 python-dotenv==1.2.2
 

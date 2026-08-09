@@ -198,26 +198,48 @@ def main() -> None:
     cost = load_json(RUNS / "llm" / "cost_summary.json")
     if cost:
         data["llm_cost"] = cost
-        md.append("\n## Table 6 — LLM baseline cost and latency\n")
+        is_local = cost.get("backend_kind") == "local"
+        unit_col = "GPU-h / 1k summaries" if is_local else "$ / 1k summaries"
+
+        md.append("\n## Table 6 — LLM baseline compute and latency\n")
         rows = []
-        for s in cost["settings"]:
+        for s in sorted(cost["settings"], key=lambda x: x["setting"]):
             u = s["usage"]
+            unit = (
+                f"{u.get('gpu_hours_per_1k_summaries', 0):.3f}"
+                if is_local
+                else f"${u.get('cost_per_1k_summaries_usd', 0):.2f}"
+            )
             rows.append([
                 s["setting"], s["shots"], f"{u['input_tokens']:,}", f"{u['output_tokens']:,}",
-                f"${u['cost_usd']:.4f}", f"${u['cost_per_1k_summaries_usd']:.2f}",
-                u["latency_p50_s"], u["latency_p95_s"], u["errors"],
+                f"{u.get('wall_clock_s', 0)/60:.1f}", unit,
+                u.get("throughput_summaries_per_min", "-"),
+                u["latency_p50_s"], u["errors"],
             ])
         md.append(table(
-            ["Setting", "Shots", "Input tok", "Output tok", "Cost", "$/1k summaries",
-             "p50 latency (s)", "p95 latency (s)", "Errors"],
+            ["Setting", "Shots", "Input tok", "Output tok", "Wall-clock (min)",
+             unit_col, "Summaries/min", "p50 latency (s)", "Errors"],
             rows,
         ))
-        md.append(
-            f"\nModel `{cost['model']}` at ${cost['price_per_mtok_input_usd']:.2f}/MTok input, "
-            f"${cost['price_per_mtok_output_usd']:.2f}/MTok output. "
-            f"**Total measured cost: ${cost['total_cost_usd']:.4f}** over "
-            f"{cost['total_requests']:,} requests."
-        )
+
+        if is_local:
+            d = cost.get("backend_details", {})
+            md.append(
+                f"\nBackend: **local open-weights** — `{cost['model']}` "
+                f"({d.get('quantization', '?')}, {d.get('sampling', '?')}) via "
+                f"{d.get('framework', 'mlx-lm')} on the Apple silicon GPU. "
+                f"Monetary cost **$0.00**; total compute "
+                f"**{cost.get('total_gpu_hours', 0):.2f} GPU-hours** over "
+                f"{cost['total_requests']:,} summaries."
+            )
+        else:
+            md.append(
+                f"\nBackend: **hosted API** — `{cost['model']}` at "
+                f"${cost.get('price_per_mtok_input_usd', 0):.2f}/MTok input, "
+                f"${cost.get('price_per_mtok_output_usd', 0):.2f}/MTok output. "
+                f"**Total measured cost: ${cost['total_cost_usd']:.4f}** over "
+                f"{cost['total_requests']:,} requests."
+            )
 
         md.append("\n## Appendix A — Exact prompts\n")
         for s in cost["settings"]:

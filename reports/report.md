@@ -134,8 +134,22 @@ not.
 
 ### 2.2 LLM baseline
 
-**Model.** Claude Haiku 4.5 (`claude-haiku-4-5`) via the Anthropic API — the
-low-cost tier, matching the assignment's "low-cost LLM API" option.
+**Model.** **Llama 3.1 8B Instruct**, 4-bit quantized, run **locally** on the
+Apple silicon GPU via MLX (`mlx-community/Llama-3.1-8B-Instruct-4bit`). This is
+the assignment's second option — "a free, locally run open-weights
+instruction-tuned model (e.g., a 7–8B parameter model) if you prefer not to use
+an API" — so the baseline's cost is reported as GPU-hours rather than USD.
+Decoding is greedy (temperature 0), making the baseline deterministic and exactly
+reproducible, and generation is batched so the GPU is used efficiently.
+
+Choosing an open-weights model rather than a frontier API model changes what the
+comparison measures, and the report is explicit about this: the gap reported here
+is *LSTM vs. a mid-size open model*, which is a **lower bound** on the gap
+against a frontier model. That makes the comparison more informative in one
+respect — an 8B model is close enough in scale to make the pretraining variable,
+rather than sheer parameter count, the visible one. The harness also supports a
+hosted API backend (`--backend anthropic`), so the same experiment can be re-run
+against a frontier model without any change to the prompts or scoring.
 
 **Prompt variants.** Two, differing along the axis that most affects ROUGE on
 this dataset — whether the prompt describes the *reference style*:

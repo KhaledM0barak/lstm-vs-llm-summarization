@@ -40,5 +40,454 @@
     "token_coverage": 0.9816876163441399,
     "oov_token_rate_train": 0.01831
   },
-  "training": {}
+  "training": {
+    "base": {
+      "run_name": "base",
+      "config": {
+        "run_name": "base",
+        "out_dir": "runs/base",
+        "train_file": "data/processed/train.jsonl",
+        "val_file": "data/processed/validation.jsonl",
+        "vocab_file": "data/processed/vocab.json",
+        "seed": 1234,
+        "max_src_len": 400,
+        "max_tgt_len": 100,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": true,
+        "attention": "bahdanau",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true,
+        "batch_size": 64,
+        "lr": 0.001,
+        "lr_decay": 0.5,
+        "epochs": 5,
+        "patience": 2,
+        "clip": 5.0,
+        "label_smoothing": 0.1
+      },
+      "model_config": {
+        "vocab_size": 50000,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": true,
+        "attention": "bahdanau",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true
+      },
+      "parameters": {
+        "total": 15347280,
+        "trainable": 15347280,
+        "embedding": 12800000,
+        "encoder": 14115328,
+        "decoder": 14031952
+      },
+      "hardware": {
+        "platform": "macOS-15.4.1-arm64-arm-64bit-Mach-O",
+        "python": "3.13.1",
+        "torch": "2.13.0",
+        "processor": "arm",
+        "cpu_model": "Apple M4 Pro",
+        "ram_gb": 24,
+        "gpu": "Apple Silicon GPU (Metal / MPS)"
+      },
+      "device": "mps",
+      "train_examples": 79996,
+      "val_examples": 3000,
+      "total_train_seconds": 10965.4,
+      "total_train_hours": 3.046,
+      "best_val_loss": 4.6219,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 7.2645,
+          "val_loss": 6.4911,
+          "val_nll": 5.8165,
+          "val_ppl": 335.79,
+          "lr": 0.001,
+          "epoch_seconds": 3174.1
+        },
+        {
+          "epoch": 2,
+          "train_loss": 6.0789,
+          "val_loss": 5.1481,
+          "val_nll": 4.2489,
+          "val_ppl": 70.03,
+          "lr": 0.001,
+          "epoch_seconds": 2148.0
+        },
+        {
+          "epoch": 3,
+          "train_loss": 5.3178,
+          "val_loss": 4.8289,
+          "val_nll": 3.8494,
+          "val_ppl": 46.96,
+          "lr": 0.001,
+          "epoch_seconds": 1882.5
+        },
+        {
+          "epoch": 4,
+          "train_loss": 5.043,
+          "val_loss": 4.6935,
+          "val_nll": 3.6738,
+          "val_ppl": 39.4,
+          "lr": 0.001,
+          "epoch_seconds": 1879.5
+        },
+        {
+          "epoch": 5,
+          "train_loss": 4.8866,
+          "val_loss": 4.6219,
+          "val_nll": 3.573,
+          "val_ppl": 35.62,
+          "lr": 0.001,
+          "epoch_seconds": 1881.0
+        }
+      ]
+    },
+    "no_attention": {
+      "run_name": "no_attention",
+      "config": {
+        "run_name": "no_attention",
+        "out_dir": "runs/no_attention",
+        "train_file": "data/processed/train.jsonl",
+        "val_file": "data/processed/validation.jsonl",
+        "vocab_file": "data/processed/vocab.json",
+        "seed": 1234,
+        "max_src_len": 400,
+        "max_tgt_len": 100,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": true,
+        "attention": "none",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true,
+        "batch_size": 64,
+        "lr": 0.001,
+        "lr_decay": 0.5,
+        "epochs": 5,
+        "patience": 2,
+        "clip": 5.0,
+        "label_smoothing": 0.1
+      },
+      "model_config": {
+        "vocab_size": 50000,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": true,
+        "attention": "none",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true
+      },
+      "parameters": {
+        "total": 15150416,
+        "trainable": 15150416,
+        "embedding": 12800000,
+        "encoder": 14115328,
+        "decoder": 13835088
+      },
+      "hardware": {
+        "platform": "macOS-15.4.1-arm64-arm-64bit-Mach-O",
+        "python": "3.13.1",
+        "torch": "2.13.0",
+        "processor": "arm",
+        "cpu_model": "Apple M4 Pro",
+        "ram_gb": 24,
+        "gpu": "Apple Silicon GPU (Metal / MPS)"
+      },
+      "device": "mps",
+      "train_examples": 79996,
+      "val_examples": 3000,
+      "total_train_seconds": 9611.0,
+      "total_train_hours": 2.67,
+      "best_val_loss": 5.6369,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 7.2233,
+          "val_loss": 6.4911,
+          "val_nll": 5.8154,
+          "val_ppl": 335.41,
+          "lr": 0.001,
+          "epoch_seconds": 1926.4
+        },
+        {
+          "epoch": 2,
+          "train_loss": 6.4418,
+          "val_loss": 6.0847,
+          "val_nll": 5.3421,
+          "val_ppl": 208.95,
+          "lr": 0.001,
+          "epoch_seconds": 1921.6
+        },
+        {
+          "epoch": 3,
+          "train_loss": 6.1394,
+          "val_loss": 5.8617,
+          "val_nll": 5.0723,
+          "val_ppl": 159.54,
+          "lr": 0.001,
+          "epoch_seconds": 1921.5
+        },
+        {
+          "epoch": 4,
+          "train_loss": 5.9495,
+          "val_loss": 5.7228,
+          "val_nll": 4.9079,
+          "val_ppl": 135.36,
+          "lr": 0.001,
+          "epoch_seconds": 1920.8
+        },
+        {
+          "epoch": 5,
+          "train_loss": 5.8184,
+          "val_loss": 5.6369,
+          "val_nll": 4.8019,
+          "val_ppl": 121.74,
+          "lr": 0.001,
+          "epoch_seconds": 1920.4
+        }
+      ]
+    },
+    "short_context": {
+      "run_name": "short_context",
+      "config": {
+        "run_name": "short_context",
+        "out_dir": "runs/short_context",
+        "train_file": "data/processed/train.jsonl",
+        "val_file": "data/processed/validation.jsonl",
+        "vocab_file": "data/processed/vocab.json",
+        "seed": 1234,
+        "max_src_len": 100,
+        "max_tgt_len": 100,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": true,
+        "attention": "bahdanau",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true,
+        "batch_size": 64,
+        "lr": 0.001,
+        "lr_decay": 0.5,
+        "epochs": 5,
+        "patience": 2,
+        "clip": 5.0,
+        "label_smoothing": 0.1
+      },
+      "model_config": {
+        "vocab_size": 50000,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": true,
+        "attention": "bahdanau",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true
+      },
+      "parameters": {
+        "total": 15347280,
+        "trainable": 15347280,
+        "embedding": 12800000,
+        "encoder": 14115328,
+        "decoder": 14031952
+      },
+      "hardware": {
+        "platform": "macOS-15.4.1-arm64-arm-64bit-Mach-O",
+        "python": "3.13.1",
+        "torch": "2.13.0",
+        "processor": "arm",
+        "cpu_model": "Apple M4 Pro",
+        "ram_gb": 24,
+        "gpu": "Apple Silicon GPU (Metal / MPS)"
+      },
+      "device": "mps",
+      "train_examples": 79996,
+      "val_examples": 3000,
+      "total_train_seconds": 3997.9,
+      "total_train_hours": 1.111,
+      "best_val_loss": 5.1179,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 7.2459,
+          "val_loss": 6.4529,
+          "val_nll": 5.769,
+          "val_ppl": 320.21,
+          "lr": 0.001,
+          "epoch_seconds": 797.7
+        },
+        {
+          "epoch": 2,
+          "train_loss": 6.25,
+          "val_loss": 5.5996,
+          "val_nll": 4.7686,
+          "val_ppl": 117.75,
+          "lr": 0.001,
+          "epoch_seconds": 798.7
+        },
+        {
+          "epoch": 3,
+          "train_loss": 5.7559,
+          "val_loss": 5.3427,
+          "val_nll": 4.4453,
+          "val_ppl": 85.22,
+          "lr": 0.001,
+          "epoch_seconds": 798.6
+        },
+        {
+          "epoch": 4,
+          "train_loss": 5.5247,
+          "val_loss": 5.2062,
+          "val_nll": 4.2877,
+          "val_ppl": 72.8,
+          "lr": 0.001,
+          "epoch_seconds": 800.1
+        },
+        {
+          "epoch": 5,
+          "train_loss": 5.3831,
+          "val_loss": 5.1179,
+          "val_nll": 4.182,
+          "val_ppl": 65.5,
+          "lr": 0.001,
+          "epoch_seconds": 802.5
+        }
+      ]
+    },
+    "unidirectional": {
+      "run_name": "unidirectional",
+      "config": {
+        "run_name": "unidirectional",
+        "out_dir": "runs/unidirectional",
+        "train_file": "data/processed/train.jsonl",
+        "val_file": "data/processed/validation.jsonl",
+        "vocab_file": "data/processed/vocab.json",
+        "seed": 1234,
+        "max_src_len": 400,
+        "max_tgt_len": 100,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": false,
+        "attention": "bahdanau",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true,
+        "batch_size": 64,
+        "lr": 0.001,
+        "lr_decay": 0.5,
+        "epochs": 5,
+        "patience": 2,
+        "clip": 5.0,
+        "label_smoothing": 0.1
+      },
+      "model_config": {
+        "vocab_size": 50000,
+        "emb_dim": 256,
+        "hidden_size": 256,
+        "enc_layers": 1,
+        "dec_layers": 1,
+        "bidirectional": false,
+        "attention": "bahdanau",
+        "attn_size": 256,
+        "dropout": 0.3,
+        "input_feeding": true,
+        "tie_embeddings": true
+      },
+      "parameters": {
+        "total": 14558800,
+        "trainable": 14558800,
+        "embedding": 12800000,
+        "encoder": 13457920,
+        "decoder": 13900880
+      },
+      "hardware": {
+        "platform": "macOS-15.4.1-arm64-arm-64bit-Mach-O",
+        "python": "3.13.1",
+        "torch": "2.13.0",
+        "processor": "arm",
+        "cpu_model": "Apple M4 Pro",
+        "ram_gb": 24,
+        "gpu": "Apple Silicon GPU (Metal / MPS)"
+      },
+      "device": "mps",
+      "train_examples": 79996,
+      "val_examples": 3000,
+      "total_train_seconds": 6839.7,
+      "total_train_hours": 1.9,
+      "best_val_loss": 4.7204,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 7.1484,
+          "val_loss": 6.4118,
+          "val_nll": 5.7233,
+          "val_ppl": 305.9,
+          "lr": 0.001,
+          "epoch_seconds": 1386.4
+        },
+        {
+          "epoch": 2,
+          "train_loss": 6.0287,
+          "val_loss": 5.2045,
+          "val_nll": 4.3014,
+          "val_ppl": 73.8,
+          "lr": 0.001,
+          "epoch_seconds": 1362.5
+        },
+        {
+          "epoch": 3,
+          "train_loss": 5.4125,
+          "val_loss": 4.9354,
+          "val_nll": 3.9649,
+          "val_ppl": 52.72,
+          "lr": 0.001,
+          "epoch_seconds": 1361.9
+        },
+        {
+          "epoch": 4,
+          "train_loss": 5.1759,
+          "val_loss": 4.8107,
+          "val_nll": 3.804,
+          "val_ppl": 44.88,
+          "lr": 0.001,
+          "epoch_seconds": 1361.6
+        },
+        {
+          "epoch": 5,
+          "train_loss": 5.0299,
+          "val_loss": 4.7204,
+          "val_nll": 3.6901,
+          "val_ppl": 40.05,
+          "lr": 0.001,
+          "epoch_seconds": 1367.1
+        }
+      ]
+    }
+  }
 }

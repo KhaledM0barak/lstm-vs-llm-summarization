@@ -39,14 +39,15 @@ if [[ -f runs/base/best.pt ]]; then
 fi
 
 # ---------------------------------------------------------------- 2. LLM
-step "2/5  LLM baseline"
-if [[ -f .env ]] && grep -q "ANTHROPIC_API_KEY=sk-" .env 2>/dev/null; then
-    "$PY" -m src.llm.baseline --all --workers 8
-    "$PY" -m src.llm.baseline --setting B_zeroshot --full-article --workers 8
-else
-    echo "SKIPPED: .env with ANTHROPIC_API_KEY not found."
-    echo "  cp .env.example .env  &&  edit it, then re-run this script."
-fi
+# Local open-weights model on Apple silicon: free, and the assignment's stated
+# alternative to a paid API. Run after training so neither measurement is taken
+# under GPU contention. Resumable -- re-running skips completed examples.
+step "2/5  LLM baseline (local open-weights via MLX)"
+BACKEND="${BACKEND:-mlx}"
+"$PY" -m src.llm.baseline --all --backend "$BACKEND" --batch-size 8
+# Unmatched-input condition for the fairness discussion.
+"$PY" -m src.llm.baseline --setting B_zeroshot --full-article \
+    --backend "$BACKEND" --batch-size 4
 
 # ---------------------------------------------------------------- 3. score
 step "3/5  Scoring"

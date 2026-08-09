@@ -79,15 +79,19 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-For the LLM baseline only, provide an API key:
+The LLM baseline runs a **local open-weights model** by default — no API key and
+no cost. The model (~4.5 GB) downloads automatically on first use.
+
+`mlx` and `mlx-lm` are Apple-silicon only. On other hardware, either drop them
+from `requirements.txt` and use the hosted-API backend:
 
 ```bash
-cp .env.example .env
-# edit .env and set ANTHROPIC_API_KEY=sk-ant-...
+cp .env.example .env         # then set ANTHROPIC_API_KEY=sk-ant-...
+python -m src.llm.baseline --all --backend anthropic
 ```
 
-`.env` is gitignored. Every other step runs offline once the dataset is
-downloaded.
+`.env` is gitignored. Every step other than the first dataset download runs
+offline.
 
 ---
 
@@ -158,17 +162,18 @@ python -m src.generate --checkpoint runs/base/best.pt \
 
 ### Step 5 — Run the LLM baseline
 
-Two prompt variants × {zero-shot, few-shot k=4} = four settings, all on the same
-500 articles. Inspect the exact prompts without spending anything:
+Llama 3.1 8B Instruct (4-bit) run locally via MLX, greedy decoding. Two prompt
+variants × {zero-shot, few-shot k=4} = four settings, all on the same 500
+articles. Inspect the exact prompts first (loads nothing):
 
 ```bash
 python -m src.llm.baseline --all --dry-run
 ```
 
-Then run for real:
+Then run for real (~2 hours on an M4 Pro; resumable if interrupted):
 
 ```bash
-python -m src.llm.baseline --all --workers 8
+python -m src.llm.baseline --all --batch-size 8
 ```
 
 By default the model receives the article **truncated to the same 400-word window
@@ -176,13 +181,14 @@ the LSTM encoder sees**, so the comparison is not confounded by input length. Th
 unmatched condition is available separately and reported as its own row:
 
 ```bash
-python -m src.llm.baseline --setting B_zeroshot --full-article
+python -m src.llm.baseline --setting B_zeroshot --full-article --batch-size 4
 ```
 
 Results are written per setting to `runs/llm/<setting>.jsonl` with a
-`.meta.json` recording the verbatim prompts, token usage, latency percentiles,
-and measured USD cost. `runs/llm/cost_summary.json` aggregates the total. The
-runner is resumable: rerunning after an interruption skips completed examples.
+`.meta.json` recording the verbatim prompts, token counts, latency percentiles,
+and measured compute (GPU-hours locally, USD via the API backend).
+`runs/llm/cost_summary.json` aggregates across settings. The runner is
+resumable: rerunning after an interruption skips completed examples.
 
 ### Step 6 — Score everything
 
