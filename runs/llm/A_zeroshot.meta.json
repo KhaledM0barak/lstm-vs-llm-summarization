@@ -1,0 +1,36 @@
+{
+  "setting": "A_zeroshot",
+  "backend": "mlx",
+  "backend_kind": "local",
+  "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
+  "backend_details": {
+    "quantization": "4-bit",
+    "batch_size": 8,
+    "sampling": "greedy (temp=0.0)",
+    "framework": "mlx-lm"
+  },
+  "prompt_variant": "A",
+  "prompt_variant_name": "plain",
+  "prompt_description": "Natural summarization request with no dataset-specific styling.",
+  "shots": 0,
+  "input_condition": "truncated_400_words",
+  "max_tokens": 200,
+  "system_prompt": "You are a helpful assistant that writes concise news summaries.",
+  "user_template": "Summarize the following news article.\n\nArticle:\n{article}\n\nSummary:",
+  "few_shot_exemplar_summaries": [],
+  "n_examples": 500,
+  "usage": {
+    "requests": 500,
+    "errors": 0,
+    "input_tokens": 270587,
+    "output_tokens": 62501,
+    "wall_clock_s": 1510.3,
+    "latency_mean_s": 3.02,
+    "latency_p50_s": 3.01,
+    "latency_p95_s": 3.41,
+    "throughput_summaries_per_min": 19.9,
+    "cost_usd": 0.0,
+    "gpu_hours": 0.4195,
+    "gpu_hours_per_1k_summaries": 0.8391
+  }
+}

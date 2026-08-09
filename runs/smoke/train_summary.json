@@ -1,0 +1,78 @@
+{
+  "run_name": "smoke",
+  "config": {
+    "run_name": "smoke",
+    "out_dir": "runs/smoke",
+    "train_file": "data/processed/train.jsonl",
+    "val_file": "data/processed/validation.jsonl",
+    "vocab_file": "data/processed/vocab.json",
+    "seed": 1234,
+    "max_src_len": 400,
+    "max_tgt_len": 100,
+    "train_size": 256,
+    "val_size": 64,
+    "emb_dim": 256,
+    "hidden_size": 256,
+    "enc_layers": 1,
+    "dec_layers": 1,
+    "bidirectional": true,
+    "attention": "bahdanau",
+    "attn_size": 256,
+    "dropout": 0.3,
+    "input_feeding": true,
+    "tie_embeddings": true,
+    "batch_size": 8,
+    "lr": 0.001,
+    "lr_decay": 0.5,
+    "epochs": 1,
+    "patience": 2,
+    "clip": 5.0,
+    "label_smoothing": 0.1
+  },
+  "model_config": {
+    "vocab_size": 50000,
+    "emb_dim": 256,
+    "hidden_size": 256,
+    "enc_layers": 1,
+    "dec_layers": 1,
+    "bidirectional": true,
+    "attention": "bahdanau",
+    "attn_size": 256,
+    "dropout": 0.3,
+    "input_feeding": true,
+    "tie_embeddings": true
+  },
+  "parameters": {
+    "total": 15347280,
+    "trainable": 15347280,
+    "embedding": 12800000,
+    "encoder": 14115328,
+    "decoder": 14031952
+  },
+  "hardware": {
+    "platform": "macOS-15.4.1-arm64-arm-64bit-Mach-O",
+    "python": "3.13.1",
+    "torch": "2.13.0",
+    "processor": "arm",
+    "cpu_model": "Apple M4 Pro",
+    "ram_gb": 24,
+    "gpu": "Apple Silicon GPU (Metal / MPS)"
+  },
+  "device": "cpu",
+  "train_examples": 256,
+  "val_examples": 64,
+  "total_train_seconds": 41.7,
+  "total_train_hours": 0.012,
+  "best_val_loss": 8.1195,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 9.0659,
+      "val_loss": 8.1195,
+      "val_nll": 7.7023,
+      "val_ppl": 2213.33,
+      "lr": 0.001,
+      "epoch_seconds": 41.7
+    }
+  ]
+}

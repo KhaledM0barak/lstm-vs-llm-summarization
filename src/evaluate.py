@@ -114,6 +114,95 @@ def bootstrap_ci(values: np.ndarray, n_boot: int = 1000, seed: int = 1234) -> tu
     return float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))
 
 
+def paired_bootstrap(
+    a: np.ndarray,
+    b: np.ndarray,
+    n_boot: int = 10_000,
+    seed: int = 1234,
+) -> dict:
+    """Paired bootstrap significance test on the per-example difference a - b.
+
+    Two systems scored on the same articles produce *paired* observations, and
+    per-example scores are strongly correlated across systems (a hard article is
+    hard for everyone). Comparing two independent confidence intervals throws
+    that pairing away: non-overlapping intervals do imply a real difference, but
+    overlapping intervals do **not** imply the absence of one — the usual case
+    where an independent-CI reading is too conservative.
+
+    This resamples article indices once per replicate and applies the same
+    resample to both systems, so the correlation is preserved. The reported
+    p-value is two-sided, for the null hypothesis that the mean difference is
+    zero, computed by centring the bootstrap distribution on that null.
+    """
+    a = np.asarray(a, dtype=float)
+    b = np.asarray(b, dtype=float)
+    if a.shape != b.shape:
+        raise ValueError(f"paired test needs equal-length inputs, got {a.shape} and {b.shape}")
+
+    n = len(a)
+    if n == 0:
+        return {"n": 0, "mean_diff": float("nan"), "p_value": float("nan")}
+
+    diff = a - b
+    observed = float(diff.mean())
+
+    rng = np.random.default_rng(seed)
+    # One index draw per replicate, applied to both systems: this is what makes
+    # the test paired.
+    idx = rng.integers(0, n, size=(n_boot, n))
+    boot = diff[idx].mean(axis=1)
+
+    lo, hi = np.percentile(boot, [2.5, 97.5])
+    # Two-sided p-value: how often a null-centred bootstrap difference is at
+    # least as extreme as the one observed.
+    centred = boot - observed
+    p = float((np.abs(centred) >= abs(observed)).mean())
+
+    return {
+        "n": n,
+        "mean_diff": round(observed * 100, 3),
+        "ci_low": round(float(lo) * 100, 3),
+        "ci_high": round(float(hi) * 100, 3),
+        "p_value": round(p, 4),
+        "significant_at_05": bool(p < 0.05),
+        "wins": int((diff > 0).sum()),
+        "losses": int((diff < 0).sum()),
+        "ties": int((diff == 0).sum()),
+    }
+
+
+def compare_systems(
+    scored: dict[str, dict],
+    reference_system: str,
+    metrics=("rouge1", "rouge2", "rougeLsum"),
+    seed: int = 1234,
+) -> dict:
+    """Paired-bootstrap every system against one reference system.
+
+    Only examples scored by *both* systems are used, so the pairing is genuine
+    even if a system is missing predictions for some articles.
+    """
+    if reference_system not in scored:
+        return {}
+
+    ref_rows = {r["id"]: r for r in scored[reference_system]["per_example"]}
+    out: dict[str, dict] = {}
+
+    for name, s in scored.items():
+        if name == reference_system:
+            continue
+        rows = {r["id"]: r for r in s["per_example"]}
+        shared = sorted(set(ref_rows) & set(rows))
+        if not shared:
+            continue
+        out[name] = {"vs": reference_system, "n_paired": len(shared)}
+        for metric in metrics:
+            a = np.array([rows[i][metric] for i in shared])
+            b = np.array([ref_rows[i][metric] for i in shared])
+            out[name][metric] = paired_bootstrap(a, b, seed=seed)
+    return out
+
+
 def score_system(
     name: str,
     preds: dict[str, str],
@@ -225,6 +314,11 @@ def main() -> None:
     )
     ap.add_argument("--out-dir", default="results")
     ap.add_argument("--no-lead3", action="store_true")
+    ap.add_argument(
+        "--paired-reference",
+        default="lstm_beam",
+        help="System every other system is paired-bootstrap tested against.",
+    )
     ap.add_argument("--seed", type=int, default=1234)
     args = ap.parse_args()
 
@@ -274,6 +368,32 @@ def main() -> None:
     for name, s in scored.items():
         results["coverage"][name] = {"scored": s["n"], "expected": len(records)}
         results["overall"][name] = aggregate(s["per_example"], seed=args.seed)
+
+    # Paired significance tests. Resolve the reference in decreasing order of
+    # specificity, and fall back to the first system the user named rather than
+    # silently skipping the tests when the default name is absent.
+    ref = None
+    if args.paired_reference in scored:
+        ref = args.paired_reference
+    else:
+        for candidate in ("lstm_beam", "lstm", "base"):
+            if candidate in scored:
+                ref = candidate
+                break
+        if ref is None:
+            user_named = [n for n in scored if n != "lead3_baseline"]
+            if user_named:
+                ref = user_named[0]
+                print(
+                    f"note: --paired-reference '{args.paired_reference}' not among the "
+                    f"scored systems; pairing against '{ref}' instead"
+                )
+
+    if ref and len(scored) > 1:
+        results["paired_vs"] = ref
+        results["paired_tests"] = compare_systems(scored, ref, seed=args.seed)
+    else:
+        print("note: paired tests skipped (need at least two scored systems)")
 
     for bucket_kind, mapping in buckets.items():
         results["by_bucket"][bucket_kind] = {}
@@ -337,6 +457,36 @@ def main() -> None:
              ("unsup", "Unsupported content"), ("oov", "OOV rate"), ("empty", "Empty")],
         )
     )
+
+    if results.get("paired_tests"):
+        ref = results["paired_vs"]
+        lines.append(
+            f"\n## Paired bootstrap vs. `{ref}`\n\n"
+            "Per-example differences, resampling articles once per replicate and "
+            "applying the same resample to both systems (10,000 replicates). A "
+            "positive difference means the system beats "
+            f"`{ref}`. Unlike comparing two independent CIs, this test accounts "
+            "for the fact that a hard article is hard for every system.\n"
+        )
+        prows = []
+        for name, t in results["paired_tests"].items():
+            r1 = t["rouge1"]
+            r2 = t["rouge2"]
+            prows.append({
+                "system": name,
+                "n": t["n_paired"],
+                "d1": f"{r1['mean_diff']:+.2f} [{r1['ci_low']:+.2f}, {r1['ci_high']:+.2f}]",
+                "p1": f"{r1['p_value']:.4f}" + ("" if r1["significant_at_05"] else " (n.s.)"),
+                "d2": f"{r2['mean_diff']:+.2f} [{r2['ci_low']:+.2f}, {r2['ci_high']:+.2f}]",
+                "p2": f"{r2['p_value']:.4f}" + ("" if r2["significant_at_05"] else " (n.s.)"),
+                "wl": f"{r1['wins']}/{r1['losses']}",
+            })
+        lines.append(markdown_table(
+            prows,
+            [("system", "System"), ("n", "N"), ("d1", "Δ ROUGE-1 [95% CI]"),
+             ("p1", "p"), ("d2", "Δ ROUGE-2 [95% CI]"), ("p2", "p"),
+             ("wl", "W/L")],
+        ))
 
     for bucket_kind in results["by_bucket"]:
         lines.append(f"\n## ROUGE-1 by {bucket_kind}\n")

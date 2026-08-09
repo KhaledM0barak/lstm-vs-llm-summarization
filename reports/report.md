@@ -44,7 +44,7 @@ test text influences the vocabulary, the exemplars, or any hyperparameter.
 
 **Pipeline validation.** Before comparing systems we verified the preprocessing
 and ROUGE implementation by reproducing a published baseline. Our Lead-3 (first
-three article sentences) scores **40.00 / 17.46 / 36.28** (ROUGE-1/2/Lsum) on the
+three article sentences) scores **40.04 / 17.50 / 36.34** (ROUGE-1/2/Lsum) on the
 full 11,490-article test set, against See et al. (2017)'s published
 **40.34 / 17.70 / 36.57**. Agreement to within ~0.3 ROUGE indicates the
 tokenization, sentence splitting, reference construction, and ROUGE configuration

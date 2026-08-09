@@ -1,8 +1,8 @@
 # LSTM seq2seq vs. LLM on abstractive summarization
 
 Course project: a from-scratch LSTM encoder–decoder with attention, trained on
-CNN/DailyMail, compared against a pretrained LLM baseline (Claude Haiku 4.5) on
-an identical test set.
+CNN/DailyMail, compared against a locally-run open-weights LLM baseline
+(Llama 3.1 8B Instruct) on an identical test set.
 
 The LSTM is implemented directly in PyTorch — `nn.LSTM` and `nn.Embedding` only.
 No prebuilt seq2seq pipeline (Fairseq, OpenNMT, HuggingFace `Seq2SeqTrainer`) is
@@ -54,7 +54,7 @@ the article) on the **full 11,490-article test set**:
 
 | | ROUGE-1 | ROUGE-2 | ROUGE-Lsum |
 |---|---|---|---|
-| This repo's Lead-3 | **40.00** | **17.46** | **36.28** |
+| This repo's Lead-3 | **40.04** | **17.50** | **36.34** |
 | See et al. (2017), published Lead-3 | 40.34 | 17.70 | 36.57 |
 
 Reproducing a published baseline to within ~0.3 ROUGE indicates the tokenization,
@@ -229,6 +229,31 @@ articles — rather than by score, and emits them side by side with the measured
 diagnostics attached.
 
 ---
+
+## 4b. Tests
+
+```bash
+pip install pytest
+python -m pytest tests/ -q          # 131 tests, ~70 s
+```
+
+The suite covers the places where a bug would be **silent** — a wrong attention
+mask, a misaligned target shift, or a miscounted diagnostic changes every
+reported number without raising anything. Notable checks:
+
+| Test | Why it exists |
+|---|---|
+| `test_attention_assigns_zero_weight_to_padding` | Verifies the mask actually zeroes padded positions and that weights still sum to 1 |
+| `test_attention_context_ignores_padded_content` | Writes garbage into padded positions and asserts the context vector is unchanged |
+| `test_chunked_loss_matches_unchunked_reference` | The chunked projection (a memory optimization) must be numerically identical to projecting at once |
+| `test_collate_target_shift_is_correct` | An off-by-one in the `<bos>`/`<eos>` shift trains the model to predict the wrong token |
+| `test_bucket_sampler_covers_every_example_exactly_once` | Guards against silently losing or duplicating training data |
+| `test_split_sentences_boundaries` | Asserts split *positions*, not just counts — this caught two real bugs |
+| `test_paired_bootstrap_beats_independent_cis_on_correlated_data` | Demonstrates the case the paired test exists for |
+| `tests/test_integration.py` | Full pipeline on a synthetic corpus: vocab → train → generate → evaluate → qualitative |
+
+Two real bugs were found by writing these; both are described in the commit
+history and in Appendix E of the report.
 
 ## 5. Model
 

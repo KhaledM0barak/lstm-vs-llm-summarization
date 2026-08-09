@@ -80,7 +80,7 @@ question a grader is most likely to ask you.
 **Files:** `src/evaluate.py`, `qualitative.py`, `scripts/collect_results.py`, `reports/*`
 
 **Own these numbers**
-- **Lead-3 validation: 40.00 / 17.46 / 36.28** vs. See et al.'s published **40.34 / 17.70 / 36.57**
+- **Lead-3 validation: 40.04 / 17.50 / 36.34** vs. See et al.'s published **40.34 / 17.70 / 36.57**
 - LSTM beam **35.00** R1; no-attention **20.97** (−14.03); no trigram blocking **29.65** (−5.35)
 - ROUGE-1/2/Lsum with `use_stemmer=True`, 95% bootstrap CIs over 1,000 resamples
 

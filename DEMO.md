@@ -53,7 +53,15 @@ python -m src.demo --example 3 --no-llm
 > and falls back to CPU automatically, printing a warning. If you want to force
 > it: `--device cpu`. Do not record while another GPU job is running.
 
-### 6. Reproduce the headline numbers
+### 6. The test suite passes
+
+```bash
+python -m pytest tests/ -q
+```
+**Expect:** `131 passed`. If anything fails, do not record — the failure is
+either a real regression or a stale artifact.
+
+### 7. Reproduce the headline numbers
 
 ```bash
 python scripts/collect_results.py
@@ -77,7 +85,7 @@ can't find is listed under "Not yet available" rather than guessed.
 | Time | Segment | What to show | What to say |
 |---|---|---|---|
 | **0:00–0:45** | **Problem & setup** | `README.md` §1 on screen | The task is abstractive summarization on CNN/DailyMail, Apache-2.0, official splits. Every system is scored on the same 500-article held-out subset, drawn once before any modeling. |
-| **0:45–1:30** | **Pipeline is trustworthy** | `README.md` §2, the Lead-3 table | Before comparing anything, we validated the pipeline: our Lead-3 baseline scores 40.00 / 17.46 / 36.28 against See et al.'s published 40.34 / 17.70 / 36.57. That agreement is what makes the rest of the numbers believable. |
+| **0:45–1:30** | **Pipeline is trustworthy** | `README.md` §2, the Lead-3 table | Before comparing anything, we validated the pipeline: our Lead-3 baseline scores 40.04 / 17.50 / 36.34 against See et al.'s published 40.34 / 17.70 / 36.57. That agreement is what makes the rest of the numbers believable. |
 | **1:30–2:45** | **The model** | `src/models/encoder.py`, `attention.py`, `decoder.py` — scroll, don't read | Embedding → BiLSTM encoder → Bahdanau attention with source masking → LSTM decoder with input feeding → tied output projection. 15.3M parameters, written against `nn.LSTM` and `nn.Embedding` only. Point out the attention mask and say why it matters. |
 | **2:45–4:15** | **Live demo — the payoff** | `python -m src.demo --example 3 --ablations` | Walk through: source, human reference, then the LSTM's summary with its ROUGE and diagnostics. Then the ablations on the *same* article. **Land on the no-attention output inventing "San Diego" for a Louisville fire** — 56% unsupported content. This is the fixed-vector bottleneck, visible in one example. |
 | **4:15–5:00** | **Interactive** | `python -m src.demo --interactive`, paste a news article of your own | Shows it generalizes beyond the test set. Have the article in your clipboard ready. |

@@ -28,6 +28,9 @@ python-dotenv==1.2.2
 # Report rendering (markdown -> HTML -> PDF via headless Chrome)
 markdown==3.10.3
 
+# Tests
+pytest==9.1.1
+
 # Plumbing
 PyYAML==6.0.3
 tqdm==4.70.0

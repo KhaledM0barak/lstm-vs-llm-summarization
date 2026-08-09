@@ -13,22 +13,22 @@
   "overall": {
     "lead3_baseline": {
       "rouge1": {
-        "mean": 40.0,
-        "ci_low": 39.79,
-        "ci_high": 40.22
+        "mean": 40.04,
+        "ci_low": 39.83,
+        "ci_high": 40.26
       },
       "rouge2": {
-        "mean": 17.46,
-        "ci_low": 17.26,
-        "ci_high": 17.67
+        "mean": 17.5,
+        "ci_low": 17.3,
+        "ci_high": 17.7
       },
       "rougeLsum": {
-        "mean": 36.28,
-        "ci_low": 36.09,
-        "ci_high": 36.51
+        "mean": 36.34,
+        "ci_low": 36.14,
+        "ci_high": 36.56
       },
-      "length_tokens": 85.2959,
-      "dup_trigram_rate": 0.0104,
+      "length_tokens": 85.6223,
+      "dup_trigram_rate": 0.0103,
       "novel_bigram_rate": 0.0,
       "unsupported_content_rate": 0.0,
       "oov_rate": 0.0209,
@@ -40,21 +40,21 @@
       "long (>874 tok)": {
         "lead3_baseline": {
           "rouge1": {
-            "mean": 37.68,
-            "ci_low": 37.31,
-            "ci_high": 38.1
+            "mean": 37.72,
+            "ci_low": 37.35,
+            "ci_high": 38.14
           },
           "rouge2": {
-            "mean": 15.02,
-            "ci_low": 14.71,
-            "ci_high": 15.36
+            "mean": 15.06,
+            "ci_low": 14.74,
+            "ci_high": 15.4
           },
           "rougeLsum": {
-            "mean": 33.99,
-            "ci_low": 33.63,
-            "ci_high": 34.37
+            "mean": 34.03,
+            "ci_low": 33.67,
+            "ci_high": 34.43
           },
-          "length_tokens": 87.5893,
+          "length_tokens": 87.9573,
           "dup_trigram_rate": 0.0096,
           "novel_bigram_rate": 0.0,
           "unsupported_content_rate": 0.0,
@@ -65,22 +65,22 @@
       "medium (544-874 tok)": {
         "lead3_baseline": {
           "rouge1": {
-            "mean": 40.14,
-            "ci_low": 39.81,
-            "ci_high": 40.5
+            "mean": 40.19,
+            "ci_low": 39.86,
+            "ci_high": 40.53
           },
           "rouge2": {
-            "mean": 17.44,
-            "ci_low": 17.11,
-            "ci_high": 17.79
+            "mean": 17.49,
+            "ci_low": 17.16,
+            "ci_high": 17.84
           },
           "rougeLsum": {
-            "mean": 36.37,
-            "ci_low": 36.03,
-            "ci_high": 36.71
+            "mean": 36.43,
+            "ci_low": 36.1,
+            "ci_high": 36.77
           },
-          "length_tokens": 86.5297,
-          "dup_trigram_rate": 0.0119,
+          "length_tokens": 86.9896,
+          "dup_trigram_rate": 0.0118,
           "novel_bigram_rate": 0.0,
           "unsupported_content_rate": 0.0,
           "oov_rate": 0.0211,
@@ -90,22 +90,22 @@
       "short (<=544 tok)": {
         "lead3_baseline": {
           "rouge1": {
-            "mean": 42.16,
-            "ci_low": 41.79,
-            "ci_high": 42.52
+            "mean": 42.19,
+            "ci_low": 41.82,
+            "ci_high": 42.55
           },
           "rouge2": {
-            "mean": 19.91,
-            "ci_low": 19.51,
-            "ci_high": 20.29
+            "mean": 19.93,
+            "ci_low": 19.56,
+            "ci_high": 20.31
           },
           "rougeLsum": {
-            "mean": 38.48,
-            "ci_low": 38.1,
-            "ci_high": 38.86
+            "mean": 38.54,
+            "ci_low": 38.18,
+            "ci_high": 38.91
           },
-          "length_tokens": 81.789,
-          "dup_trigram_rate": 0.0096,
+          "length_tokens": 81.9409,
+          "dup_trigram_rate": 0.0094,
           "novel_bigram_rate": 0.0,
           "unsupported_content_rate": 0.0,
           "oov_rate": 0.0218,
@@ -117,22 +117,22 @@
       "abstractive (high novelty)": {
         "lead3_baseline": {
           "rouge1": {
-            "mean": 33.93,
-            "ci_low": 33.62,
-            "ci_high": 34.25
+            "mean": 33.95,
+            "ci_low": 33.64,
+            "ci_high": 34.26
           },
           "rouge2": {
-            "mean": 10.82,
-            "ci_low": 10.62,
-            "ci_high": 11.02
+            "mean": 10.83,
+            "ci_low": 10.63,
+            "ci_high": 11.04
           },
           "rougeLsum": {
-            "mean": 30.04,
-            "ci_low": 29.76,
-            "ci_high": 30.33
+            "mean": 30.09,
+            "ci_low": 29.8,
+            "ci_high": 30.36
           },
-          "length_tokens": 84.8025,
-          "dup_trigram_rate": 0.0066,
+          "length_tokens": 84.9291,
+          "dup_trigram_rate": 0.0065,
           "novel_bigram_rate": 0.0,
           "unsupported_content_rate": 0.0,
           "oov_rate": 0.0197,
@@ -142,22 +142,22 @@
       "extractive (low novelty)": {
         "lead3_baseline": {
           "rouge1": {
-            "mean": 45.64,
-            "ci_low": 45.25,
-            "ci_high": 46.03
+            "mean": 45.74,
+            "ci_low": 45.35,
+            "ci_high": 46.14
           },
           "rouge2": {
-            "mean": 24.69,
-            "ci_low": 24.27,
-            "ci_high": 25.1
+            "mean": 24.79,
+            "ci_low": 24.35,
+            "ci_high": 25.19
           },
           "rougeLsum": {
-            "mean": 42.33,
-            "ci_low": 41.91,
-            "ci_high": 42.74
+            "mean": 42.44,
+            "ci_low": 42.04,
+            "ci_high": 42.84
           },
-          "length_tokens": 84.6299,
-          "dup_trigram_rate": 0.0131,
+          "length_tokens": 85.1375,
+          "dup_trigram_rate": 0.0129,
           "novel_bigram_rate": 0.0,
           "unsupported_content_rate": 0.0,
           "oov_rate": 0.0219,
@@ -167,25 +167,25 @@
       "mixed": {
         "lead3_baseline": {
           "rouge1": {
-            "mean": 40.4,
+            "mean": 40.41,
             "ci_low": 40.06,
             "ci_high": 40.74
           },
           "rouge2": {
-            "mean": 16.85,
-            "ci_low": 16.56,
-            "ci_high": 17.11
+            "mean": 16.86,
+            "ci_low": 16.57,
+            "ci_high": 17.12
           },
           "rougeLsum": {
-            "mean": 36.46,
+            "mean": 36.47,
             "ci_low": 36.15,
-            "ci_high": 36.77
+            "ci_high": 36.78
           },
-          "length_tokens": 86.4538,
-          "dup_trigram_rate": 0.0115,
+          "length_tokens": 86.7981,
+          "dup_trigram_rate": 0.0114,
           "novel_bigram_rate": 0.0,
           "unsupported_content_rate": 0.0,
-          "oov_rate": 0.0211,
+          "oov_rate": 0.021,
           "empty": 0.0
         }
       }
