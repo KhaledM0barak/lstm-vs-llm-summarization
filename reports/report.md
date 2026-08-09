@@ -189,8 +189,23 @@ recorded in `runs/<name>/train_summary.json`.
 
 ## 4. Results
 
-`[[FILL: main results table from results/results.md — LSTM (beam/greedy),
-three architecture ablations, Lead-3, and all four LLM settings, with CIs]]`
+Full tables: `results/results.md`; generated report tables: `reports/tables.md`.
+
+**Context for the LSTM's absolute score.** Our attentional LSTM reaches 35.00
+ROUGE-1 / 13.75 ROUGE-2 / 32.23 ROUGE-Lsum. For reference, See et al. (2017)
+report 31.33 / 11.81 / 28.83 for their sequence-to-sequence-plus-attention
+baseline on the full test set. Ours is not directly comparable — a 500-article
+subset, our own tokenization, and a different training budget — but it does
+establish that the model being compared against the LLM is a competently trained
+instance of its architecture rather than a strawman, which is the necessary
+precondition for the comparison to mean anything.
+
+**Lead-3 beats it.** The first three sentences of the article score 39.75
+ROUGE-1, comfortably above our LSTM's 35.00 and outside its confidence interval.
+This is the well-known CNN/DailyMail result and it frames everything below: a
+model can be a legitimate neural summarizer and still lose to copying the opening
+paragraphs, because the references were written by editors who largely
+foreground the lead.
 
 ### 4.1 The quantitative gap
 
@@ -204,8 +219,51 @@ tercile; state whether the gap is constant or widens, and in which direction]]`
 
 ### 4.3 Ablations
 
-`[[FILL: effect of removing attention, removing bidirectionality, and shrinking
-the encoder window to 100 tokens; plus greedy-vs-beam and trigram-blocking]]`
+All ablations are trained with identical hyperparameters, data, and seed, and
+scored on the same 500 articles. ROUGE F1 ×100, 95% bootstrap CI.
+
+| Variant | Val PPL | ROUGE-1 | ROUGE-2 | ROUGE-Lsum | Δ R1 |
+|---|---|---|---|---|---|
+| **LSTM + attention (beam 4)** | **35.6** | **35.00** [34.03, 36.04] | **13.75** | **32.23** | — |
+| — 100-token encoder window | 65.5 | 34.02 [33.10, 34.91] | 13.44 | 31.48 | −0.98 |
+| — unidirectional encoder | 40.0 | 33.12 [32.21, 34.08] | 12.64 | 30.37 | −1.88 |
+| — greedy decoding | 35.6 | 32.60 [31.66, 33.62] | 12.05 | 30.50 | −2.40 |
+| — no trigram blocking | 35.6 | 29.65 [28.69, 30.71] | 10.92 | 26.98 | −5.35 |
+| — **no attention** | **121.7** | **20.97** [20.32, 21.67] | **3.47** | 19.36 | **−14.03** |
+
+Four things stand out.
+
+**Attention is not a refinement here; it is the model.** Removing it costs 14.0
+ROUGE-1 and collapses ROUGE-2 from 13.75 to 3.47 — a factor of four. Validation
+perplexity more than triples (35.6 → 121.7). Bigram overlap near zero while
+unigram overlap remains at 21 is the signature of a model producing
+*summary-shaped text that is not about this article*: the diagnostics confirm it,
+with 53% of its content words absent from the source (vs. 1.5% for the full
+model) and a 70% novel-bigram rate. This is the fixed-vector bottleneck behaving
+exactly as the literature describes — with only a pooled encoder state, the
+decoder has no mechanism to select *which* part of a 400-token article to talk
+about, so it falls back on the genre's statistical regularities.
+
+**Repetition is real, and blocking it is worth 5.4 ROUGE-1.** Without
+repeated-trigram blocking the duplicate-trigram rate is 0.282 — more than a
+quarter of all generated trigrams are repeats — and ROUGE-1 falls to 29.65. With
+blocking it is exactly 0.0. This is a controlled demonstration of the canonical
+LSTM failure mode rather than an assertion of it, and it locates the cause at
+decoding rather than in the trained model.
+
+**Most of the score is available in the first 100 tokens.** Shrinking the encoder
+window from 400 to 100 tokens costs only 0.98 ROUGE-1 overall, despite a large
+perplexity penalty (35.6 → 65.5). The model is therefore summarizing the opening
+of the article far more than the body — the lead bias that makes Lead-3 so strong
+on this dataset. The bucketed results support this reading: on long articles the
+gap widens (33.15 → 31.14) while on short ones it nearly vanishes
+(35.69 → 35.57).
+
+**Beam search matters more than bidirectionality.** Greedy decoding costs 2.40
+ROUGE-1, more than removing the encoder's backward pass (1.88). Greedy output
+also drifts further from the source — novel-bigram rate 0.218 vs. 0.080, and
+unsupported content 6.5% vs. 1.5% — so the beam's advantage is partly that it
+stays anchored to the article.
 
 ### 4.4 Cost, latency, and compute
 
