@@ -93,7 +93,9 @@ can't find is listed under "Not yet available" rather than guessed.
 **Setup before you hit record**
 
 - Close the LLM sweep and any other GPU job (`pgrep -f src.llm.baseline`) — see the warning above.
-- Terminal at ~110 columns, large readable font, dark theme.
+- Terminal at ~110–130 columns, large readable font, dark theme. The demo adapts
+  its render width to the window (clamped 60–140), so nothing wraps — check with
+  `tput cols`. To pin a width regardless of window size: `COLUMNS=120 python -m src.demo ...`
 - Have `reports/tables.md` and `results/qualitative.md` open in a second window.
 - Do a dry run first. The commands below are fast, but rehearse once so you aren't reading them cold.
 

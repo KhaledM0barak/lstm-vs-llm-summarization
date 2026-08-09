@@ -24,6 +24,7 @@ protocol, so what you see on screen is the comparison the report describes.
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 import textwrap
 import time
@@ -51,7 +52,23 @@ YELLOW = lambda s: _c("33", s)
 MAGENTA = lambda s: _c("35", s)
 RED = lambda s: _c("31", s)
 
-WIDTH = 96
+def terminal_width(default: int = 96, minimum: int = 60, maximum: int = 140) -> int:
+    """Render width, adapted to the terminal.
+
+    A fixed width wraps every line in a window narrower than it, which is exactly
+    when the side-by-side comparison stops being readable. Clamped at both ends:
+    below `minimum` the diagnostics no longer line up, and above `maximum` prose
+    becomes hard to track across the line.
+
+    `shutil.get_terminal_size` honours a `COLUMNS` override first, then queries
+    the terminal, then falls back — so piped output and screenshots stay at a
+    consistent `default` width, and the value can be forced for a recording.
+    """
+    cols = shutil.get_terminal_size(fallback=(default, 24)).columns
+    return max(minimum, min(cols - 2, maximum))
+
+
+WIDTH = terminal_width()
 
 
 def rule(title: str = "", color=CYAN) -> None:

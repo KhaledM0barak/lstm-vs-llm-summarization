@@ -217,3 +217,36 @@ def test_build_pdf_flags_unfilled_placeholders(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "unfilled placeholders" in out
     assert "[[FILL: something]]" in out
+
+
+# ------------------------------------------------------------ demo rendering
+
+@pytest.mark.parametrize(
+    "cols,expected",
+    [
+        (70, 68),     # narrow: track the window
+        (96, 94),
+        (120, 118),
+        (200, 140),   # very wide: clamp, long lines are hard to read
+        (40, 60),     # very narrow: clamp, diagnostics stop lining up
+    ],
+)
+def test_terminal_width_tracks_and_clamps(cols, expected, monkeypatch):
+    """A fixed render width wraps every line in a narrower window, which is
+    exactly when the side-by-side comparison becomes unreadable."""
+    from src.demo import terminal_width
+
+    monkeypatch.setenv("COLUMNS", str(cols))
+    assert terminal_width() == expected
+
+
+def test_terminal_width_falls_back_when_there_is_no_terminal(monkeypatch):
+    """Piped output and screenshots should stay at a stable width."""
+    import shutil as _shutil
+
+    from src.demo import terminal_width
+
+    monkeypatch.delenv("COLUMNS", raising=False)
+    monkeypatch.setattr(_shutil, "get_terminal_size",
+                        lambda fallback=(96, 24): __import__("os").terminal_size(fallback))
+    assert terminal_width() == 94
