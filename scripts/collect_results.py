@@ -243,10 +243,19 @@ def main() -> None:
 
         md.append("\n## Appendix A — Exact prompts\n")
         for s in cost["settings"]:
-            md.append(f"\n### {s['setting']} (variant {s['prompt_variant']} — "
-                      f"{s['prompt_variant_name']}, {s['shots']}-shot, {s['input_condition']})\n")
+            # Tolerate entries written by an earlier version of the runner:
+            # cost_summary.json merges settings across runs, so a stale entry
+            # must degrade the appendix, not crash the whole collector.
+            if not s.get("system_prompt"):
+                md.append(f"\n### {s['setting']} — prompt not recorded in this run's metadata\n")
+                continue
+            md.append(
+                f"\n### {s['setting']} (variant {s.get('prompt_variant', '?')} — "
+                f"{s.get('prompt_variant_name', '?')}, {s.get('shots', '?')}-shot, "
+                f"{s.get('input_condition', '?')})\n"
+            )
             md.append("**System prompt:**\n```\n" + s["system_prompt"] + "\n```\n")
-            md.append("**User template:**\n```\n" + s["user_template"] + "\n```")
+            md.append("**User template:**\n```\n" + s.get("user_template", "") + "\n```")
     else:
         missing.append("runs/llm/cost_summary.json (run src.llm.baseline --all)")
 

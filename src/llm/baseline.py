@@ -31,7 +31,7 @@ from dotenv import load_dotenv
 from tqdm import tqdm
 
 from src.data.dataset import read_jsonl
-from src.llm.backends import build_backend
+from src.llm.backends import GenResult, build_backend
 from src.llm.prompts import VARIANTS, build_messages
 from src.utils.seed import set_seed
 
@@ -60,6 +60,45 @@ def sample_exemplars(train_path: str, k: int, seed: int, max_src_words: int | No
     ]
 
 
+def completed_ids(path: Path) -> set[str]:
+    """IDs already generated successfully in a previous run.
+
+    Records carrying an `error` are deliberately excluded: a transient failure
+    must be retried on resume, not treated as done. Treating it as done would
+    silently drop that article from this setting, leaving systems scored on
+    different subsets of the shared test set.
+    """
+    if not Path(path).exists():
+        return set()
+    return {r["id"] for r in read_jsonl(path) if "prediction" in r}
+
+
+def prior_usage(path: Path, tracker: "UsageTracker") -> None:
+    """Fold a previous run's usage into the tracker before resuming.
+
+    Without this, an interrupted-then-resumed setting reports token counts, cost,
+    and GPU-hours for only the final segment, understating the true totals that
+    the report quotes.
+    """
+    if not Path(path).exists():
+        return
+    for rec in read_jsonl(path):
+        if "prediction" not in rec:
+            continue
+        latency = rec.get("latency_s", 0.0)
+        tracker.add(
+            GenResult(
+                text=rec.get("prediction", ""),
+                input_tokens=rec.get("input_tokens", 0),
+                output_tokens=rec.get("output_tokens", 0),
+                latency_s=latency,
+            )
+        )
+        # Wall-clock is measured from process start, so a resumed run would
+        # otherwise report only this segment's GPU time.
+        tracker.prior_seconds += latency
+
+
 class UsageTracker:
     """Thread-safe accumulation of token usage, cost, and latency."""
 
@@ -72,6 +111,8 @@ class UsageTracker:
         self.errors = 0
         self.latencies: list[float] = []
         self.wall_start = time.time()
+        # Compute time carried over from a previous, interrupted run.
+        self.prior_seconds = 0.0
 
     def add(self, res) -> None:
         with self._lock:
@@ -85,7 +126,7 @@ class UsageTracker:
 
     def summary(self) -> dict:
         lat = sorted(self.latencies)
-        wall = time.time() - self.wall_start
+        wall = (time.time() - self.wall_start) + self.prior_seconds
         cost = self.backend.cost_usd(self.input_tokens, self.output_tokens)
         out = {
             "requests": self.requests,
@@ -150,16 +191,18 @@ def run_setting(
     )
 
     # Resume support: an interruption mid-sweep shouldn't cost a full rerun.
-    done_ids: set[str] = set()
-    if out_path.exists() and not args.overwrite:
-        done_ids = {r["id"] for r in read_jsonl(out_path)}
-        if done_ids:
-            print(f"  resuming: {len(done_ids)} already complete")
     if args.overwrite and out_path.exists():
         out_path.unlink()
 
-    todo = [r for r in records if r["id"] not in done_ids]
+    done_ids: set[str] = set() if args.overwrite else completed_ids(out_path)
     tracker = UsageTracker(backend)
+    if done_ids:
+        # Carry the earlier segment's tokens and latency forward, so the reported
+        # totals describe the whole setting rather than just this run.
+        prior_usage(out_path, tracker)
+        print(f"  resuming: {len(done_ids)} already complete")
+
+    todo = [r for r in records if r["id"] not in done_ids]
     write_lock = threading.Lock()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fh = out_path.open("a", encoding="utf-8")
