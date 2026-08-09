@@ -104,10 +104,10 @@ can't find is listed under "Not yet available" rather than guessed.
 | **0:00–0:45** | **Problem & setup** | `README.md` §1 on screen | The task is abstractive summarization on CNN/DailyMail, Apache-2.0, official splits. Every system is scored on the same 500-article held-out subset, drawn once before any modeling. |
 | **0:45–1:30** | **Pipeline is trustworthy** | `README.md` §2, the Lead-3 table | Before comparing anything, we validated the pipeline: our Lead-3 baseline scores 40.04 / 17.50 / 36.34 against See et al.'s published 40.34 / 17.70 / 36.57. That agreement is what makes the rest of the numbers believable. |
 | **1:30–2:45** | **The model** | `src/models/encoder.py`, `attention.py`, `decoder.py` — scroll, don't read | Embedding → BiLSTM encoder → Bahdanau attention with source masking → LSTM decoder with input feeding → tied output projection. 15.3M parameters, written against `nn.LSTM` and `nn.Embedding` only. Point out the attention mask and say why it matters. |
-| **2:45–4:15** | **Live demo — the payoff** | `python -m src.demo --example 3 --ablations` | Walk through: source, human reference, then the LSTM's summary with its ROUGE and diagnostics. Then the ablations on the *same* article. **Land on the no-attention output inventing "San Diego" for a Louisville fire** — 56% unsupported content. This is the fixed-vector bottleneck, visible in one example. |
-| **4:15–5:00** | **Interactive** | `python -m src.demo --interactive`, paste a news article of your own | Shows it generalizes beyond the test set. Have the article in your clipboard ready. |
+| **2:45–4:15** | **Live demo — the payoff** | `python -m src.demo --example 3 --ablations` | Source, reference, then the LSTM with its ROUGE and diagnostics, then the ablations on the *same* article. **Land on the no-attention output placing a Louisville fire in "San Diego"** — 56% unsupported content. Say plainly that the LSTM *beats* the LLM on this one example (36.9 vs 33.3) and that the aggregate (+6.35, p<0.0001) is what carries the claim. |
+| **4:15–5:00** | **Out-of-domain** | `python -m src.demo --file examples/demo_article_battery.txt` | Battery-chemistry article, nothing like 2015 news. The LSTM says *"have developed a battery"* and stops — `electrolyte`, `anode`, `graphite` and the researcher's name are all outside its 50k vocabulary. OOV 5.3% vs 1.83% in-domain. The LLM handles it. This is the transfer-learning story, live. |
 | **5:00–6:15** | **Results** | `reports/tables.md` | The ablation table: attention is worth 14 ROUGE-1 and collapses ROUGE-2 fourfold; trigram blocking is worth 5.4; a 100-token window costs only 1.0, which is the lead bias. Then the LSTM-vs-LLM gap and the two prompt variants. |
-| **6:15–7:15** | **Error analysis** | `results/qualitative.md` | Two or three contrasting examples: where the LSTM is fluent-but-wrong, where the LLM over-elaborates or drifts from the format. Emphasize the categories come from measured diagnostics, not assertion. |
+| **6:15–7:15** | **Error analysis** | `python -m src.demo --example 112`, then Appendix G | **Celtic vs Kilmarnock.** Four failures in two sentences: hat-trick then brace about the same player; near-duplicate structure (repetition evading the trigram filter); "to win a win"; nobody named, because the names are OOV. **ROUGE-2 exactly 0.0** — fluent English, zero shared bigrams. Then the reverse case (Sarah Stage): the LSTM scores 57.1, the LLM 26.3, and **the LLM is entirely correct** — it just chose different true facts. That's the metric critique. |
 | **7:15–8:00** | **Trade-offs & close** | Cost/latency table | 15.3M parameters and ~0.2 s per summary locally vs. an 8B model. State the honest conclusion: the LLM wins on quality, the LSTM wins on cost, latency, and controllability, and Lead-3 beating both is a caution about what ROUGE measures. |
 
 ### The three moments that matter
@@ -121,14 +121,17 @@ If you're short on time, protect these:
 ### Commands, copy-paste ready
 
 ```bash
-# Main demo shot
+# Main demo shot -- ablations, the San Diego hallucination
 python -m src.demo --example 3 --ablations
 
-# Interactive shot
-python -m src.demo --interactive
+# Out-of-domain shot -- the OOV failure, live
+python -m src.demo --file examples/demo_article_battery.txt
 
-# A different article if example 3 feels stale
-python -m src.demo --example 11 --ablations
+# Error-analysis shot -- fluent-but-wrong, ROUGE-2 of zero
+python -m src.demo --example 112
+
+# Interactive, if you would rather paste text live
+python -m src.demo --interactive
 
 # LSTM only, instant startup (no 4.5 GB model load)
 python -m src.demo --example 3 --no-llm

@@ -16,8 +16,8 @@ cd ~/lstm-vs-llm-summarization && source .venv/bin/activate
 # THE credibility check: reproduce a published baseline
 cat results/lead3_fulltest/results.md | head -8
 
-# Current standings
-cat results/partial/results.md 2>/dev/null | head -12 || cat results/lstm_only/results.md | head -12
+# Final standings, all systems
+sed -n '/## Overall/,/## Diagnostics/p' results/results.md
 
 # Confirm the collector refuses to invent numbers
 python scripts/collect_results.py | tail -20
