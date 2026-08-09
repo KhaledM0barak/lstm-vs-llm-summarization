@@ -1,0 +1,30 @@
+{
+  "checkpoint": "runs/base/best.pt",
+  "test_file": "data/processed/test_llm.jsonl",
+  "decode": "greedy",
+  "beam_size": null,
+  "length_penalty": 1.0,
+  "min_len": 25,
+  "max_len": 100,
+  "block_trigram": true,
+  "n_examples": 500,
+  "device": "mps",
+  "hardware": {
+    "platform": "macOS-15.4.1-arm64-arm-64bit-Mach-O",
+    "python": "3.13.1",
+    "torch": "2.13.0",
+    "processor": "arm",
+    "cpu_model": "Apple M4 Pro",
+    "ram_gb": 24,
+    "gpu": "Apple Silicon GPU (Metal / MPS)"
+  },
+  "total_seconds": 12.7,
+  "seconds_per_example": 0.0254,
+  "parameters": {
+    "total": 15347280,
+    "trainable": 15347280,
+    "embedding": 12800000,
+    "encoder": 14115328,
+    "decoder": 14031952
+  }
+}

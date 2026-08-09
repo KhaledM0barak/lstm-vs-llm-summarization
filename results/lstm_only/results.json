@@ -1,0 +1,1190 @@
+{
+  "test_file": "data/processed/test_llm.jsonl",
+  "n_test": 500,
+  "rouge_config": {
+    "types": [
+      "rouge1",
+      "rouge2",
+      "rougeLsum"
+    ],
+    "use_stemmer": true,
+    "bootstrap_n": 1000
+  },
+  "overall": {
+    "lstm_beam": {
+      "rouge1": {
+        "mean": 35.0,
+        "ci_low": 34.03,
+        "ci_high": 36.04
+      },
+      "rouge2": {
+        "mean": 13.75,
+        "ci_low": 12.85,
+        "ci_high": 14.64
+      },
+      "rougeLsum": {
+        "mean": 32.23,
+        "ci_low": 31.33,
+        "ci_high": 33.25
+      },
+      "length_tokens": 48.188,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.0796,
+      "unsupported_content_rate": 0.0152,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "lstm_greedy": {
+      "rouge1": {
+        "mean": 32.6,
+        "ci_low": 31.66,
+        "ci_high": 33.62
+      },
+      "rouge2": {
+        "mean": 12.05,
+        "ci_low": 11.25,
+        "ci_high": 12.85
+      },
+      "rougeLsum": {
+        "mean": 30.5,
+        "ci_low": 29.57,
+        "ci_high": 31.47
+      },
+      "length_tokens": 48.274,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.218,
+      "unsupported_content_rate": 0.0648,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "lstm_beam_norepeat": {
+      "rouge1": {
+        "mean": 29.65,
+        "ci_low": 28.69,
+        "ci_high": 30.71
+      },
+      "rouge2": {
+        "mean": 10.92,
+        "ci_low": 10.14,
+        "ci_high": 11.76
+      },
+      "rougeLsum": {
+        "mean": 26.98,
+        "ci_low": 26.06,
+        "ci_high": 28.02
+      },
+      "length_tokens": 51.838,
+      "dup_trigram_rate": 0.2817,
+      "novel_bigram_rate": 0.0614,
+      "unsupported_content_rate": 0.0075,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "no_attention": {
+      "rouge1": {
+        "mean": 20.97,
+        "ci_low": 20.32,
+        "ci_high": 21.67
+      },
+      "rouge2": {
+        "mean": 3.47,
+        "ci_low": 3.15,
+        "ci_high": 3.81
+      },
+      "rougeLsum": {
+        "mean": 19.36,
+        "ci_low": 18.8,
+        "ci_high": 19.97
+      },
+      "length_tokens": 38.222,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.704,
+      "unsupported_content_rate": 0.5297,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "unidirectional": {
+      "rouge1": {
+        "mean": 33.12,
+        "ci_low": 32.21,
+        "ci_high": 34.08
+      },
+      "rouge2": {
+        "mean": 12.64,
+        "ci_low": 11.84,
+        "ci_high": 13.49
+      },
+      "rougeLsum": {
+        "mean": 30.37,
+        "ci_low": 29.48,
+        "ci_high": 31.28
+      },
+      "length_tokens": 45.776,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.0876,
+      "unsupported_content_rate": 0.0242,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "short_context": {
+      "rouge1": {
+        "mean": 34.02,
+        "ci_low": 33.1,
+        "ci_high": 34.91
+      },
+      "rouge2": {
+        "mean": 13.44,
+        "ci_low": 12.59,
+        "ci_high": 14.29
+      },
+      "rougeLsum": {
+        "mean": 31.48,
+        "ci_low": 30.59,
+        "ci_high": 32.31
+      },
+      "length_tokens": 41.76,
+      "dup_trigram_rate": 0.0,
+      "novel_bigram_rate": 0.1501,
+      "unsupported_content_rate": 0.04,
+      "oov_rate": 0.0,
+      "empty": 0.0
+    },
+    "lead3_baseline": {
+      "rouge1": {
+        "mean": 39.75,
+        "ci_low": 38.74,
+        "ci_high": 40.79
+      },
+      "rouge2": {
+        "mean": 17.5,
+        "ci_low": 16.55,
+        "ci_high": 18.49
+      },
+      "rougeLsum": {
+        "mean": 36.2,
+        "ci_low": 35.19,
+        "ci_high": 37.19
+      },
+      "length_tokens": 86.296,
+      "dup_trigram_rate": 0.0113,
+      "novel_bigram_rate": 0.0,
+      "unsupported_content_rate": 0.0,
+      "oov_rate": 0.0225,
+      "empty": 0.0
+    }
+  },
+  "by_bucket": {
+    "length": {
+      "long (>834 tok)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 33.15,
+            "ci_low": 31.4,
+            "ci_high": 34.83
+          },
+          "rouge2": {
+            "mean": 12.5,
+            "ci_low": 11.19,
+            "ci_high": 13.97
+          },
+          "rougeLsum": {
+            "mean": 30.32,
+            "ci_low": 28.65,
+            "ci_high": 31.97
+          },
+          "length_tokens": 51.0659,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0764,
+          "unsupported_content_rate": 0.0151,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 30.47,
+            "ci_low": 28.87,
+            "ci_high": 32.0
+          },
+          "rouge2": {
+            "mean": 10.51,
+            "ci_low": 9.37,
+            "ci_high": 11.81
+          },
+          "rougeLsum": {
+            "mean": 28.47,
+            "ci_low": 27.02,
+            "ci_high": 29.91
+          },
+          "length_tokens": 50.8802,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2078,
+          "unsupported_content_rate": 0.0619,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 27.43,
+            "ci_low": 25.69,
+            "ci_high": 29.27
+          },
+          "rouge2": {
+            "mean": 9.55,
+            "ci_low": 8.41,
+            "ci_high": 10.84
+          },
+          "rougeLsum": {
+            "mean": 24.66,
+            "ci_low": 23.05,
+            "ci_high": 26.3
+          },
+          "length_tokens": 55.0479,
+          "dup_trigram_rate": 0.2905,
+          "novel_bigram_rate": 0.0575,
+          "unsupported_content_rate": 0.0076,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 20.81,
+            "ci_low": 19.74,
+            "ci_high": 21.86
+          },
+          "rouge2": {
+            "mean": 3.31,
+            "ci_low": 2.84,
+            "ci_high": 3.88
+          },
+          "rougeLsum": {
+            "mean": 18.94,
+            "ci_low": 17.96,
+            "ci_high": 19.95
+          },
+          "length_tokens": 40.4012,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.6453,
+          "unsupported_content_rate": 0.4792,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 30.75,
+            "ci_low": 29.15,
+            "ci_high": 32.41
+          },
+          "rouge2": {
+            "mean": 10.85,
+            "ci_low": 9.57,
+            "ci_high": 12.23
+          },
+          "rougeLsum": {
+            "mean": 28.28,
+            "ci_low": 26.81,
+            "ci_high": 29.87
+          },
+          "length_tokens": 46.7904,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0797,
+          "unsupported_content_rate": 0.0214,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 31.14,
+            "ci_low": 29.68,
+            "ci_high": 32.6
+          },
+          "rouge2": {
+            "mean": 11.74,
+            "ci_low": 10.57,
+            "ci_high": 13.07
+          },
+          "rougeLsum": {
+            "mean": 28.91,
+            "ci_low": 27.59,
+            "ci_high": 30.3
+          },
+          "length_tokens": 42.6287,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1548,
+          "unsupported_content_rate": 0.0383,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 36.86,
+            "ci_low": 35.09,
+            "ci_high": 38.59
+          },
+          "rouge2": {
+            "mean": 15.13,
+            "ci_low": 13.72,
+            "ci_high": 16.69
+          },
+          "rougeLsum": {
+            "mean": 33.71,
+            "ci_low": 31.99,
+            "ci_high": 35.43
+          },
+          "length_tokens": 92.2335,
+          "dup_trigram_rate": 0.0114,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0202,
+          "empty": 0.0
+        }
+      },
+      "medium (534-834 tok)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 36.16,
+            "ci_low": 34.48,
+            "ci_high": 37.91
+          },
+          "rouge2": {
+            "mean": 14.05,
+            "ci_low": 12.48,
+            "ci_high": 15.89
+          },
+          "rougeLsum": {
+            "mean": 33.38,
+            "ci_low": 31.69,
+            "ci_high": 35.09
+          },
+          "length_tokens": 49.759,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0783,
+          "unsupported_content_rate": 0.0146,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 32.54,
+            "ci_low": 30.87,
+            "ci_high": 34.14
+          },
+          "rouge2": {
+            "mean": 11.55,
+            "ci_low": 10.15,
+            "ci_high": 13.12
+          },
+          "rougeLsum": {
+            "mean": 30.32,
+            "ci_low": 28.71,
+            "ci_high": 31.99
+          },
+          "length_tokens": 49.1024,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2153,
+          "unsupported_content_rate": 0.064,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 31.01,
+            "ci_low": 29.26,
+            "ci_high": 32.71
+          },
+          "rouge2": {
+            "mean": 11.28,
+            "ci_low": 9.9,
+            "ci_high": 12.77
+          },
+          "rougeLsum": {
+            "mean": 28.35,
+            "ci_low": 26.65,
+            "ci_high": 30.06
+          },
+          "length_tokens": 53.1024,
+          "dup_trigram_rate": 0.2762,
+          "novel_bigram_rate": 0.0609,
+          "unsupported_content_rate": 0.0078,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 20.4,
+            "ci_low": 19.31,
+            "ci_high": 21.52
+          },
+          "rouge2": {
+            "mean": 2.68,
+            "ci_low": 2.25,
+            "ci_high": 3.17
+          },
+          "rougeLsum": {
+            "mean": 18.79,
+            "ci_low": 17.81,
+            "ci_high": 19.75
+          },
+          "length_tokens": 39.1867,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7145,
+          "unsupported_content_rate": 0.5292,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 33.96,
+            "ci_low": 32.44,
+            "ci_high": 35.57
+          },
+          "rouge2": {
+            "mean": 13.23,
+            "ci_low": 11.93,
+            "ci_high": 14.75
+          },
+          "rougeLsum": {
+            "mean": 31.03,
+            "ci_low": 29.61,
+            "ci_high": 32.55
+          },
+          "length_tokens": 46.4699,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0838,
+          "unsupported_content_rate": 0.021,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 35.37,
+            "ci_low": 33.97,
+            "ci_high": 36.88
+          },
+          "rouge2": {
+            "mean": 13.99,
+            "ci_low": 12.52,
+            "ci_high": 15.54
+          },
+          "rougeLsum": {
+            "mean": 32.79,
+            "ci_low": 31.33,
+            "ci_high": 34.25
+          },
+          "length_tokens": 42.5482,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.14,
+          "unsupported_content_rate": 0.0372,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 40.39,
+            "ci_low": 38.81,
+            "ci_high": 41.82
+          },
+          "rouge2": {
+            "mean": 17.58,
+            "ci_low": 16.09,
+            "ci_high": 19.13
+          },
+          "rougeLsum": {
+            "mean": 36.66,
+            "ci_low": 35.07,
+            "ci_high": 38.18
+          },
+          "length_tokens": 85.8193,
+          "dup_trigram_rate": 0.0136,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0235,
+          "empty": 0.0
+        }
+      },
+      "short (<=534 tok)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 35.69,
+            "ci_low": 34.11,
+            "ci_high": 37.39
+          },
+          "rouge2": {
+            "mean": 14.69,
+            "ci_low": 13.14,
+            "ci_high": 16.33
+          },
+          "rougeLsum": {
+            "mean": 33.01,
+            "ci_low": 31.49,
+            "ci_high": 34.63
+          },
+          "length_tokens": 43.7485,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0841,
+          "unsupported_content_rate": 0.0159,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 34.79,
+            "ci_low": 33.24,
+            "ci_high": 36.31
+          },
+          "rouge2": {
+            "mean": 14.09,
+            "ci_low": 12.69,
+            "ci_high": 15.58
+          },
+          "rougeLsum": {
+            "mean": 32.72,
+            "ci_low": 31.32,
+            "ci_high": 34.21
+          },
+          "length_tokens": 44.8443,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2309,
+          "unsupported_content_rate": 0.0684,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 30.52,
+            "ci_low": 28.92,
+            "ci_high": 32.19
+          },
+          "rouge2": {
+            "mean": 11.91,
+            "ci_low": 10.62,
+            "ci_high": 13.35
+          },
+          "rougeLsum": {
+            "mean": 27.92,
+            "ci_low": 26.43,
+            "ci_high": 29.55
+          },
+          "length_tokens": 47.3713,
+          "dup_trigram_rate": 0.2785,
+          "novel_bigram_rate": 0.0658,
+          "unsupported_content_rate": 0.0072,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 21.71,
+            "ci_low": 20.5,
+            "ci_high": 22.9
+          },
+          "rouge2": {
+            "mean": 4.41,
+            "ci_low": 3.71,
+            "ci_high": 5.11
+          },
+          "rougeLsum": {
+            "mean": 20.35,
+            "ci_low": 19.24,
+            "ci_high": 21.48
+          },
+          "length_tokens": 35.0838,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7521,
+          "unsupported_content_rate": 0.5809,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 34.67,
+            "ci_low": 33.07,
+            "ci_high": 36.32
+          },
+          "rouge2": {
+            "mean": 13.84,
+            "ci_low": 12.34,
+            "ci_high": 15.42
+          },
+          "rougeLsum": {
+            "mean": 31.79,
+            "ci_low": 30.21,
+            "ci_high": 33.42
+          },
+          "length_tokens": 44.0719,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0992,
+          "unsupported_content_rate": 0.0303,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 35.57,
+            "ci_low": 33.97,
+            "ci_high": 37.04
+          },
+          "rouge2": {
+            "mean": 14.59,
+            "ci_low": 13.09,
+            "ci_high": 16.09
+          },
+          "rougeLsum": {
+            "mean": 32.74,
+            "ci_low": 31.18,
+            "ci_high": 34.21
+          },
+          "length_tokens": 40.1078,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1555,
+          "unsupported_content_rate": 0.0445,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 41.99,
+            "ci_low": 40.09,
+            "ci_high": 43.83
+          },
+          "rouge2": {
+            "mean": 19.8,
+            "ci_low": 17.94,
+            "ci_high": 21.65
+          },
+          "rougeLsum": {
+            "mean": 38.25,
+            "ci_low": 36.38,
+            "ci_high": 40.03
+          },
+          "length_tokens": 80.8323,
+          "dup_trigram_rate": 0.0091,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0239,
+          "empty": 0.0
+        }
+      }
+    },
+    "abstractiveness": {
+      "abstractive (high novelty)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 30.52,
+            "ci_low": 29.11,
+            "ci_high": 31.95
+          },
+          "rouge2": {
+            "mean": 8.78,
+            "ci_low": 7.91,
+            "ci_high": 9.73
+          },
+          "rougeLsum": {
+            "mean": 27.7,
+            "ci_low": 26.35,
+            "ci_high": 29.03
+          },
+          "length_tokens": 46.1078,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0827,
+          "unsupported_content_rate": 0.0162,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 28.18,
+            "ci_low": 26.79,
+            "ci_high": 29.57
+          },
+          "rouge2": {
+            "mean": 7.81,
+            "ci_low": 7.02,
+            "ci_high": 8.65
+          },
+          "rougeLsum": {
+            "mean": 26.11,
+            "ci_low": 24.86,
+            "ci_high": 27.39
+          },
+          "length_tokens": 46.024,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.236,
+          "unsupported_content_rate": 0.08,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 26.71,
+            "ci_low": 25.39,
+            "ci_high": 28.25
+          },
+          "rouge2": {
+            "mean": 7.27,
+            "ci_low": 6.48,
+            "ci_high": 8.15
+          },
+          "rougeLsum": {
+            "mean": 24.09,
+            "ci_low": 22.85,
+            "ci_high": 25.53
+          },
+          "length_tokens": 49.4371,
+          "dup_trigram_rate": 0.2377,
+          "novel_bigram_rate": 0.0634,
+          "unsupported_content_rate": 0.0097,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 19.32,
+            "ci_low": 18.2,
+            "ci_high": 20.54
+          },
+          "rouge2": {
+            "mean": 3.12,
+            "ci_low": 2.6,
+            "ci_high": 3.72
+          },
+          "rougeLsum": {
+            "mean": 18.21,
+            "ci_low": 17.19,
+            "ci_high": 19.35
+          },
+          "length_tokens": 37.521,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7134,
+          "unsupported_content_rate": 0.5383,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 28.85,
+            "ci_low": 27.53,
+            "ci_high": 30.26
+          },
+          "rouge2": {
+            "mean": 7.86,
+            "ci_low": 7.03,
+            "ci_high": 8.78
+          },
+          "rougeLsum": {
+            "mean": 26.19,
+            "ci_low": 24.99,
+            "ci_high": 27.49
+          },
+          "length_tokens": 45.3533,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1025,
+          "unsupported_content_rate": 0.0321,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 30.71,
+            "ci_low": 29.34,
+            "ci_high": 32.24
+          },
+          "rouge2": {
+            "mean": 9.31,
+            "ci_low": 8.37,
+            "ci_high": 10.33
+          },
+          "rougeLsum": {
+            "mean": 28.18,
+            "ci_low": 26.92,
+            "ci_high": 29.53
+          },
+          "length_tokens": 40.7964,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1583,
+          "unsupported_content_rate": 0.044,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 34.57,
+            "ci_low": 33.01,
+            "ci_high": 36.0
+          },
+          "rouge2": {
+            "mean": 11.47,
+            "ci_low": 10.57,
+            "ci_high": 12.38
+          },
+          "rougeLsum": {
+            "mean": 30.77,
+            "ci_low": 29.44,
+            "ci_high": 32.07
+          },
+          "length_tokens": 86.6946,
+          "dup_trigram_rate": 0.0091,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0216,
+          "empty": 0.0
+        }
+      },
+      "extractive (low novelty)": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 40.04,
+            "ci_low": 38.18,
+            "ci_high": 41.71
+          },
+          "rouge2": {
+            "mean": 19.45,
+            "ci_low": 17.62,
+            "ci_high": 21.22
+          },
+          "rougeLsum": {
+            "mean": 37.29,
+            "ci_low": 35.43,
+            "ci_high": 38.94
+          },
+          "length_tokens": 49.4251,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0783,
+          "unsupported_content_rate": 0.0144,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 37.39,
+            "ci_low": 35.87,
+            "ci_high": 38.98
+          },
+          "rouge2": {
+            "mean": 17.21,
+            "ci_low": 15.71,
+            "ci_high": 18.75
+          },
+          "rougeLsum": {
+            "mean": 35.38,
+            "ci_low": 33.86,
+            "ci_high": 36.94
+          },
+          "length_tokens": 49.2814,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1934,
+          "unsupported_content_rate": 0.0571,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 33.52,
+            "ci_low": 31.7,
+            "ci_high": 35.18
+          },
+          "rouge2": {
+            "mean": 15.39,
+            "ci_low": 13.86,
+            "ci_high": 16.85
+          },
+          "rougeLsum": {
+            "mean": 30.93,
+            "ci_low": 29.17,
+            "ci_high": 32.59
+          },
+          "length_tokens": 53.0359,
+          "dup_trigram_rate": 0.3074,
+          "novel_bigram_rate": 0.06,
+          "unsupported_content_rate": 0.0072,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 22.15,
+            "ci_low": 21.15,
+            "ci_high": 23.13
+          },
+          "rouge2": {
+            "mean": 3.74,
+            "ci_low": 3.14,
+            "ci_high": 4.31
+          },
+          "rougeLsum": {
+            "mean": 20.04,
+            "ci_low": 19.12,
+            "ci_high": 20.95
+          },
+          "length_tokens": 38.4491,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.7006,
+          "unsupported_content_rate": 0.5207,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 37.38,
+            "ci_low": 35.8,
+            "ci_high": 38.9
+          },
+          "rouge2": {
+            "mean": 18.07,
+            "ci_low": 16.42,
+            "ci_high": 19.71
+          },
+          "rougeLsum": {
+            "mean": 34.8,
+            "ci_low": 33.23,
+            "ci_high": 36.35
+          },
+          "length_tokens": 45.2515,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0759,
+          "unsupported_content_rate": 0.0181,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 38.19,
+            "ci_low": 36.6,
+            "ci_high": 39.85
+          },
+          "rouge2": {
+            "mean": 18.84,
+            "ci_low": 17.01,
+            "ci_high": 20.63
+          },
+          "rougeLsum": {
+            "mean": 35.69,
+            "ci_low": 34.06,
+            "ci_high": 37.25
+          },
+          "length_tokens": 42.7844,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.1302,
+          "unsupported_content_rate": 0.0342,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 45.04,
+            "ci_low": 43.14,
+            "ci_high": 46.79
+          },
+          "rouge2": {
+            "mean": 24.76,
+            "ci_low": 22.77,
+            "ci_high": 26.81
+          },
+          "rougeLsum": {
+            "mean": 42.05,
+            "ci_low": 40.15,
+            "ci_high": 43.93
+          },
+          "length_tokens": 84.0539,
+          "dup_trigram_rate": 0.0106,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0231,
+          "empty": 0.0
+        }
+      },
+      "mixed": {
+        "lstm_beam": {
+          "rouge1": {
+            "mean": 34.44,
+            "ci_low": 32.78,
+            "ci_high": 36.04
+          },
+          "rouge2": {
+            "mean": 13.01,
+            "ci_low": 11.73,
+            "ci_high": 14.34
+          },
+          "rougeLsum": {
+            "mean": 31.71,
+            "ci_low": 30.2,
+            "ci_high": 33.16
+          },
+          "length_tokens": 49.0361,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0777,
+          "unsupported_content_rate": 0.015,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_greedy": {
+          "rouge1": {
+            "mean": 32.23,
+            "ci_low": 30.59,
+            "ci_high": 33.75
+          },
+          "rouge2": {
+            "mean": 11.13,
+            "ci_low": 9.95,
+            "ci_high": 12.33
+          },
+          "rougeLsum": {
+            "mean": 30.02,
+            "ci_low": 28.55,
+            "ci_high": 31.46
+          },
+          "length_tokens": 49.5241,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.2247,
+          "unsupported_content_rate": 0.0572,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lstm_beam_norepeat": {
+          "rouge1": {
+            "mean": 28.71,
+            "ci_low": 27.09,
+            "ci_high": 30.32
+          },
+          "rouge2": {
+            "mean": 10.08,
+            "ci_low": 8.89,
+            "ci_high": 11.2
+          },
+          "rougeLsum": {
+            "mean": 25.9,
+            "ci_low": 24.41,
+            "ci_high": 27.39
+          },
+          "length_tokens": 53.0482,
+          "dup_trigram_rate": 0.3001,
+          "novel_bigram_rate": 0.0608,
+          "unsupported_content_rate": 0.0057,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "no_attention": {
+          "rouge1": {
+            "mean": 21.46,
+            "ci_low": 20.31,
+            "ci_high": 22.68
+          },
+          "rouge2": {
+            "mean": 3.54,
+            "ci_low": 2.97,
+            "ci_high": 4.13
+          },
+          "rougeLsum": {
+            "mean": 19.83,
+            "ci_low": 18.78,
+            "ci_high": 20.95
+          },
+          "length_tokens": 38.6988,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.6978,
+          "unsupported_content_rate": 0.5303,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "unidirectional": {
+          "rouge1": {
+            "mean": 33.15,
+            "ci_low": 31.5,
+            "ci_high": 34.67
+          },
+          "rouge2": {
+            "mean": 11.97,
+            "ci_low": 10.68,
+            "ci_high": 13.21
+          },
+          "rougeLsum": {
+            "mean": 30.12,
+            "ci_low": 28.57,
+            "ci_high": 31.52
+          },
+          "length_tokens": 46.7289,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.0844,
+          "unsupported_content_rate": 0.0225,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "short_context": {
+          "rouge1": {
+            "mean": 33.16,
+            "ci_low": 31.72,
+            "ci_high": 34.61
+          },
+          "rouge2": {
+            "mean": 12.16,
+            "ci_low": 11.01,
+            "ci_high": 13.35
+          },
+          "rougeLsum": {
+            "mean": 30.55,
+            "ci_low": 29.12,
+            "ci_high": 31.93
+          },
+          "length_tokens": 41.6988,
+          "dup_trigram_rate": 0.0,
+          "novel_bigram_rate": 0.162,
+          "unsupported_content_rate": 0.042,
+          "oov_rate": 0.0,
+          "empty": 0.0
+        },
+        "lead3_baseline": {
+          "rouge1": {
+            "mean": 39.63,
+            "ci_low": 37.93,
+            "ci_high": 41.33
+          },
+          "rouge2": {
+            "mean": 16.27,
+            "ci_low": 14.85,
+            "ci_high": 17.67
+          },
+          "rougeLsum": {
+            "mean": 35.79,
+            "ci_low": 34.22,
+            "ci_high": 37.42
+          },
+          "length_tokens": 88.1506,
+          "dup_trigram_rate": 0.0144,
+          "novel_bigram_rate": 0.0,
+          "unsupported_content_rate": 0.0,
+          "oov_rate": 0.0229,
+          "empty": 0.0
+        }
+      }
+    }
+  },
+  "coverage": {
+    "lstm_beam": {
+      "scored": 500,
+      "expected": 500
+    },
+    "lstm_greedy": {
+      "scored": 500,
+      "expected": 500
+    },
+    "lstm_beam_norepeat": {
+      "scored": 500,
+      "expected": 500
+    },
+    "no_attention": {
+      "scored": 500,
+      "expected": 500
+    },
+    "unidirectional": {
+      "scored": 500,
+      "expected": 500
+    },
+    "short_context": {
+      "scored": 500,
+      "expected": 500
+    },
+    "lead3_baseline": {
+      "scored": 500,
+      "expected": 500
+    }
+  }
+}
