@@ -58,7 +58,7 @@ python -m src.demo --example 3 --no-llm
 ```bash
 python -m pytest tests/ -q
 ```
-**Expect:** `156 passed`. If anything fails, do not record — the failure is
+**Expect:** `170 passed`. If anything fails, do not record — the failure is
 either a real regression or a stale artifact.
 
 ### 7. The repository works from a clean clone
@@ -73,7 +73,7 @@ cd checkclone && python3 -m venv .venv
 .venv/bin/pip install -q -r requirements.txt
 .venv/bin/python -m pytest tests/ -q
 ```
-**Expect:** `155 passed, 1 skipped`. This caught a real bug — an unanchored
+**Expect:** `169 passed, 1 skipped`. This caught a real bug — an unanchored
 `.gitignore` rule had excluded the entire `src/data/` package from the
 repository, so the project ran perfectly here and did not import at all for
 anyone who cloned it.
@@ -105,6 +105,19 @@ shortens everything, `--pace 1.1` lengthens it, `--step` advances on Enter, and
 `--from N` starts at segment N if you're re-recording one part.
 **[`DEMO_SCRIPT.md`](DEMO_SCRIPT.md) is the segment-by-segment timeline** — read it
 before recording, and pass it to whoever is holding the camera.
+
+**Recording on a teammate's machine?** They don't need Apple silicon, the 4.5 GB
+LLM, or the 400 MB dataset — see *Recording on someone else's machine* in
+`DEMO_SCRIPT.md`. Short version:
+
+```bash
+git clone https://github.com/KhaledM0barak/lstm-vs-llm-summarization.git
+cd lstm-vs-llm-summarization
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-demo.txt
+bash scripts/fetch_demo_bundle.sh
+bash scripts/walkthrough.sh --fast     # rehearse, then drop --fast to record
+```
 
 **Option B — narrate it yourself** using the shot list below. Same content, but
 you speak over it and control the pace.

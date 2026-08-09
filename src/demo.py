@@ -24,6 +24,8 @@ protocol, so what you see on screen is the comparison the report describes.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import shutil
 import sys
 import textwrap
@@ -114,6 +116,8 @@ class LSTMSummarizer:
 
 
 class LLMSummarizer:
+    replayed = False
+
     def __init__(self, model: str, max_tokens: int = 200) -> None:
         from src.llm.backends import MLXBackend
 
@@ -130,6 +134,74 @@ class LLMSummarizer:
         t0 = time.time()
         res = self.backend.generate_one(variant.system, messages, self.max_tokens)
         return clean_output(res.text), time.time() - t0
+
+
+def cache_key(article: str) -> str:
+    """Key a cached LLM response by the exact text the model was shown.
+
+    Hashing the shown article -- not the test-set id -- means the cache covers
+    `--file` and `--text` inputs too, and it cannot silently return a response
+    generated from a different truncation window.
+    """
+    return hashlib.sha1(article.encode("utf-8")).hexdigest()
+
+
+class CachedLLM:
+    """Replays LLM responses recorded by `scripts/build_llm_cache.py`.
+
+    The live backend needs Apple silicon, mlx-lm, and a 4.5 GB model download.
+    The demo is a fixed set of articles, so a machine that only needs to *show*
+    the comparison can replay verbatim responses instead. Entries are produced
+    by the same code path as a live run, so the output is identical.
+    """
+
+    replayed = True
+
+    def __init__(self, path: str) -> None:
+        blob = json.loads(Path(path).read_text())
+        self.entries = blob["entries"]
+        self.name = blob["model"]
+        self.recorded = blob.get("recorded_on", "an earlier run")
+
+    def summarize(self, article: str) -> tuple[str, float]:
+        entry = self.entries.get(cache_key(article))
+        if entry is None:
+            raise KeyError(
+                "This article is not in the LLM cache. The cache covers the demo's "
+                "fixed examples; a new article needs the live backend "
+                "(Apple silicon + mlx-lm) or --no-llm."
+            )
+        return entry["prediction"], entry["latency_s"]
+
+
+def load_llm(args):
+    """Live backend if it works here, otherwise the recorded cache.
+
+    Returns (summarizer, note). Falling back silently would be wrong -- the demo
+    prints which one it used, so a recording never misrepresents replayed output
+    as live generation.
+    """
+    if args.no_llm:
+        return None, "skipped (--no-llm)"
+
+    cache_path = Path(args.llm_cache)
+
+    if not args.replay_llm:
+        try:
+            print(f"  LLM       : loading {args.llm_model} ...", flush=True)
+            return LLMSummarizer(args.llm_model), "loaded (4-bit, greedy)"
+        except Exception as exc:                       # ImportError, no MPS, no model
+            if not cache_path.exists():
+                raise SystemExit(
+                    f"\n  Could not start the local LLM ({type(exc).__name__}: {exc})\n"
+                    f"  and no cache at {cache_path}.\n"
+                    "  Run with --no-llm to see the LSTM side only."
+                ) from exc
+            print(DIM(f"  LLM       : live backend unavailable ({type(exc).__name__}); "
+                      "using recorded responses"))
+
+    llm = CachedLLM(str(cache_path))
+    return llm, f"replayed from cache, recorded {llm.recorded}"
 
 
 def score(prediction: str, reference: str):
@@ -196,7 +268,8 @@ def run_one(article: str, reference: str | None, lstm, llm, vocab, args, ablatio
 
     if llm is not None:
         pred_llm, secs_llm = llm.summarize(shown)
-        results.append((f"LLM ({llm.name.split('/')[-1]})", pred_llm, secs_llm, YELLOW))
+        tag = " · replayed" if getattr(llm, "replayed", False) else ""
+        results.append((f"LLM ({llm.name.split('/')[-1]}{tag})", pred_llm, secs_llm, YELLOW))
 
     rule("SUMMARIES")
     for label, pred, secs, color in results:
@@ -233,6 +306,10 @@ def main() -> None:
     ap.add_argument("--vocab-file", default="data/processed/vocab.json")
     ap.add_argument("--test-file", default="data/processed/test_llm.jsonl")
     ap.add_argument("--llm-model", default="mlx-community/Llama-3.1-8B-Instruct-4bit")
+    ap.add_argument("--llm-cache", default="examples/llm_cache.json",
+                    help="Recorded LLM responses, used when the live backend is unavailable.")
+    ap.add_argument("--replay-llm", action="store_true",
+                    help="Always replay from --llm-cache; never load the live model.")
     ap.add_argument("--no-llm", action="store_true", help="Skip the LLM (instant startup).")
     ap.add_argument("--ablations", action="store_true", help="Also show the ablated models.")
     ap.add_argument("--beam", type=int, default=4)
@@ -271,13 +348,8 @@ def main() -> None:
 
     print(f"  LSTM      : {lstm.params:,} parameters, beam {args.beam}, device {device}")
 
-    llm = None
-    if not args.no_llm:
-        print(f"  LLM       : loading {args.llm_model} ...")
-        llm = LLMSummarizer(args.llm_model)
-        print(f"  LLM       : loaded (4-bit, greedy)")
-    else:
-        print("  LLM       : skipped (--no-llm)")
+    llm, llm_note = load_llm(args)
+    print(f"  LLM       : {llm_note}")
 
     ablations = []
     if args.ablations:

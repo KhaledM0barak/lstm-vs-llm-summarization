@@ -1,0 +1,30 @@
+{
+  "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
+  "prompt_variant": "B (style-matched, zero-shot)",
+  "sampling": "greedy",
+  "max_src_words": 400,
+  "recorded_on": "2026-08-09",
+  "recorded_at_commit": "632d1bb",
+  "entries": {
+    "bf5a48c1a63031022910d660790a62e0ff31458e": {
+      "source": "test example 3",
+      "prediction": "A mammoth fire broke out Friday morning in a Kentucky industrial park. The blaze began shortly before 7 a.m. at the General Electric Appliance Park in Louisville. Firefighters took up positions around the affected buildings, spraying water from the periphery. The facility is large enough to fit 34 football fields in one of its warehouses.",
+      "latency_s": 2.276
+    },
+    "ec0c8e4582eeab0fd9e61731a14280412ec04c31": {
+      "source": "test example 4",
+      "prediction": "Twisted Sister's 2016 tour will be its last, according to a press release. Dee Snider posted on Facebook that it's official: farewell. The band will play with a new drummer, Mike Portnoy of Adrenaline Mob, replacing A.J. Pero who died on March 20. Twisted Sister will perform two shows in A.J. Pero's honor, one at the Hard Rock Hotel and Casino in Las Vegas and the other at the Starland Ballroom in Sayreville, New Jersey.",
+      "latency_s": 2.885
+    },
+    "59a457eec136a8059f7bf5d3a80894e09c157764": {
+      "source": "test example 112",
+      "prediction": "Leigh Griffiths scored a 19-minute hat-trick for Celtic against Kilmarnock. The treble-chasing Celtic came from a goal down to record a 4-1 victory. Darryl Westlake's deflected strike gave Kilmarnock a shock lead early in the second half. Celtic took an eight-point lead at the top of the Premiership with the win.",
+      "latency_s": 3.297
+    },
+    "055df71f8b8fb5fc294e2081bb72529c12942e06": {
+      "source": "examples/demo_article_battery.txt",
+      "prediction": "Researchers at the University of Toronto have developed a battery electrolyte that allows lithium-ion cells to charge to eighty percent capacity in under six minutes. The team, led by materials scientist Priya Raghunathan, published the findings in the journal Nature Energy on Tuesday. Cells built with the electrolyte retained ninety-two percent of their original capacity after a thousand fast-charge cycles. The University of Toronto has filed a provisional patent and is in discussions with two North American cell manufacturers.",
+      "latency_s": 2.934
+    }
+  }
+}

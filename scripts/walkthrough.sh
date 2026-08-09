@@ -9,6 +9,8 @@
 #   bash scripts/walkthrough.sh --fast       # no pauses, for rehearsing
 #   bash scripts/walkthrough.sh --step       # advance manually with Enter
 #   bash scripts/walkthrough.sh --from 4     # start at segment 4
+#   bash scripts/walkthrough.sh --replay     # replay recorded LLM responses
+#                                            # (no Apple silicon / no 4.5 GB model)
 #
 # Pacing is tuned so the whole run lands near 8:00 including the ~8s each demo
 # command takes. Use --fast first to check everything works, then record.
@@ -19,6 +21,7 @@ PY="${PY:-.venv/bin/python}"
 MODE="paced"
 START_AT=1
 PACE=1.0          # multiplier on every reading pause
+DEMO_ARGS=()      # extra flags passed to every src.demo invocation
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -26,6 +29,7 @@ while [[ $# -gt 0 ]]; do
         --step) MODE="step"; shift ;;
         --from) START_AT="$2"; shift 2 ;;
         --pace) PACE="$2"; shift 2 ;;
+        --replay) DEMO_ARGS+=(--replay-llm); shift ;;
         *) echo "unknown option: $1"; exit 1 ;;
     esac
 done
@@ -150,7 +154,7 @@ say "Live: one article through every system" \
   "" \
   "Watch the no-attention row."
 if ! skip; then
-    run $PY -m src.demo --example 3 --ablations
+    run $PY -m src.demo --example 3 --ablations ${DEMO_ARGS+"${DEMO_ARGS[@]}"}
     echo
     echo "  The no-attention model places a Louisville, Kentucky fire in SAN DIEGO."
     echo "  56% of its content words never appear in the article. That is the"
@@ -167,7 +171,7 @@ say "Live: text the model has never seen" \
   "A battery-chemistry article — nothing like 2015 news wire copy." \
   "The vocabulary is fixed at 50,000 types, built from the training split."
 if ! skip; then
-    run $PY -m src.demo --file examples/demo_article_battery.txt
+    run $PY -m src.demo --file examples/demo_article_battery.txt ${DEMO_ARGS+"${DEMO_ARGS[@]}"}
     echo
     echo "  The LSTM says 'have developed a battery' and stops."
     echo "  'electrolyte' is not in its vocabulary. Neither are 'anode',"
@@ -215,7 +219,7 @@ pause 30
 say "Error analysis — fluent, and completely wrong" \
   "A football match report. Read the LSTM output carefully."
 if ! skip; then
-    run $PY -m src.demo --example 112
+    run $PY -m src.demo --example 112 ${DEMO_ARGS+"${DEMO_ARGS[@]}"}
     echo
     echo "  Four failures in two sentences:"
     echo "    - 'a hat-trick' then 'a brace' — three goals, then two, same player"

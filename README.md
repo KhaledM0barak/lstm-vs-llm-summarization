@@ -83,8 +83,9 @@ pip install -r requirements.txt
 The LLM baseline runs a **local open-weights model** by default — no API key and
 no cost. The model (~4.5 GB) downloads automatically on first use.
 
-`mlx` and `mlx-lm` are Apple-silicon only. On other hardware, either drop them
-from `requirements.txt` and use the hosted-API backend:
+`mlx` and `mlx-lm` are Apple-silicon only; the requirement markers skip them
+elsewhere, so the install succeeds on any platform. To generate LLM summaries on
+other hardware, use the hosted-API backend:
 
 ```bash
 cp .env.example .env         # then set ANTHROPIC_API_KEY=sk-ant-...
@@ -93,6 +94,23 @@ python -m src.llm.baseline --all --backend anthropic
 
 `.env` is gitignored. Every step other than the first dataset download runs
 offline.
+
+### Just want to run the demo?
+
+You do not need the 400 MB dataset, 8.7 GPU-hours of training, or the 4.5 GB LLM.
+On any platform:
+
+```bash
+pip install -r requirements-demo.txt
+bash scripts/fetch_demo_bundle.sh    # 217 MB: trained checkpoints + the 500 test articles
+python -m src.demo --example 3 --ablations
+```
+
+The LSTM runs locally. The LLM side replays responses recorded in
+`examples/llm_cache.json` by `scripts/build_llm_cache.py` — produced through the
+same code path a live run uses, and labelled `· replayed` on screen so nothing is
+presented as live generation when it isn't. See
+[`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
 
 ---
 
@@ -320,6 +338,8 @@ scripts/
   collect_results.py    Assemble tables from run artifacts; never invents a number
   build_pdf.py          Render the report to PDF, flagging unfilled placeholders
   walkthrough.sh        Self-narrating 8-minute demo (see DEMO_SCRIPT.md)
+  fetch_demo_bundle.sh  Download checkpoints + test data needed to run the demo
+  build_llm_cache.py    Record LLM responses so the demo runs without the model
 tests/                  162 tests, run with `pytest -q`
 review/                 Per-component review packets, one per team member
 results/                Generated tables and analyses

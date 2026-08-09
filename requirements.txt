@@ -17,9 +17,11 @@ nltk==3.10.2            # required by rouge-score
 scipy==1.18.0
 
 # LLM baseline -- local open-weights model on Apple silicon (primary path).
-# mlx/mlx-lm are Apple-silicon only; on other hardware use --backend anthropic.
-mlx==0.32.0
-mlx-lm==0.31.3
+# The markers keep `pip install -r requirements.txt` working on other hardware,
+# where there is no mlx wheel: use --backend anthropic to generate, or
+# `python -m src.demo --replay-llm` to show the recorded responses.
+mlx==0.32.0; platform_machine == "arm64" and sys_platform == "darwin"
+mlx-lm==0.31.3; platform_machine == "arm64" and sys_platform == "darwin"
 
 # LLM baseline -- hosted API (alternative path, --backend anthropic)
 anthropic==0.121.0

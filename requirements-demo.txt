@@ -1,0 +1,23 @@
+# Minimal dependencies for running and recording the demo.
+#
+# Enough for `python -m src.demo` and `scripts/walkthrough.sh`, on any platform.
+# It deliberately leaves out the dataset-building stack (datasets, pyarrow,
+# pandas), the plotting stack, and mlx -- none of which a machine that only
+# needs to *show* the comparison has to install.
+#
+#   pip install -r requirements-demo.txt
+#   bash scripts/fetch_demo_bundle.sh
+#   python -m src.demo --example 3 --ablations
+#
+# To generate LLM responses live rather than replaying them, install the full
+# requirements.txt on Apple silicon instead.
+
+torch==2.13.0
+numpy==2.5.1
+
+rouge-score==0.1.2
+absl-py==2.5.0          # required by rouge-score
+nltk==3.10.2            # required by rouge-score
+
+PyYAML==6.0.3
+tqdm==4.70.0

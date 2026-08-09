@@ -250,3 +250,129 @@ def test_terminal_width_falls_back_when_there_is_no_terminal(monkeypatch):
     monkeypatch.setattr(_shutil, "get_terminal_size",
                         lambda fallback=(96, 24): __import__("os").terminal_size(fallback))
     assert terminal_width() == 94
+
+
+# ------------------------------------------------------------- LLM replay cache
+
+def make_cache(tmp_path, article="a news article about a fire", prediction="a fire happened"):
+    from src.demo import cache_key
+
+    p = tmp_path / "cache.json"
+    p.write_text(json.dumps({
+        "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
+        "recorded_on": "2026-08-09",
+        "entries": {cache_key(article): {"source": "test", "prediction": prediction,
+                                         "latency_s": 2.5}},
+    }))
+    return p
+
+
+def test_cache_key_is_sensitive_to_the_exact_shown_text():
+    """Keying on the shown window, not the article id, is what stops a cached
+    response recorded at one truncation being replayed at another."""
+    from src.demo import cache_key
+
+    assert cache_key("abc") == cache_key("abc")
+    assert cache_key("abc") != cache_key("abc ")
+
+
+def test_cached_llm_replays_the_recorded_response(tmp_path):
+    from src.demo import CachedLLM
+
+    llm = CachedLLM(str(make_cache(tmp_path)))
+    text, latency = llm.summarize("a news article about a fire")
+    assert text == "a fire happened"
+    assert latency == 2.5
+    assert llm.replayed is True
+
+
+def test_cached_llm_refuses_an_article_it_never_saw(tmp_path):
+    """Returning the nearest entry, or an empty string, would put a response on a
+    recorded demo that the model never produced for that article."""
+    from src.demo import CachedLLM
+
+    llm = CachedLLM(str(make_cache(tmp_path)))
+    with pytest.raises(KeyError, match="not in the LLM cache"):
+        llm.summarize("an article the cache does not contain")
+
+
+class _Args:
+    def __init__(self, **kw):
+        self.no_llm = False
+        self.replay_llm = False
+        self.llm_cache = ""
+        self.llm_model = "does-not-matter"
+        self.__dict__.update(kw)
+
+
+def test_load_llm_falls_back_to_the_cache_when_the_backend_fails(tmp_path, monkeypatch, capsys):
+    """Most teammates have no Apple silicon and no 4.5 GB model. The demo must
+    still run, and must say on screen that it is replaying."""
+    import src.demo as demo
+
+    def boom(*a, **k):
+        raise ImportError("No module named 'mlx'")
+
+    monkeypatch.setattr(demo, "LLMSummarizer", boom)
+    llm, note = demo.load_llm(_Args(llm_cache=str(make_cache(tmp_path))))
+
+    assert llm.replayed is True
+    assert "replayed" in note
+    assert "unavailable" in capsys.readouterr().out
+
+
+def test_load_llm_reports_clearly_when_there_is_no_backend_and_no_cache(tmp_path, monkeypatch):
+    import src.demo as demo
+
+    def boom(*a, **k):
+        raise ImportError("No module named 'mlx'")
+
+    monkeypatch.setattr(demo, "LLMSummarizer", boom)
+    with pytest.raises(SystemExit, match="--no-llm"):
+        demo.load_llm(_Args(llm_cache=str(tmp_path / "absent.json")))
+
+
+def test_replay_llm_never_loads_the_live_model(tmp_path, monkeypatch):
+    """--replay-llm is what a recording machine uses; loading 4.5 GB anyway would
+    defeat it."""
+    import src.demo as demo
+
+    def fail(*a, **k):
+        raise AssertionError("the live backend must not be constructed under --replay-llm")
+
+    monkeypatch.setattr(demo, "LLMSummarizer", fail)
+    llm, _ = demo.load_llm(_Args(replay_llm=True, llm_cache=str(make_cache(tmp_path))))
+    assert llm.replayed is True
+
+
+def test_no_llm_short_circuits_before_touching_the_cache(monkeypatch):
+    import src.demo as demo
+
+    llm, note = demo.load_llm(_Args(no_llm=True, llm_cache="/nonexistent"))
+    assert llm is None and "--no-llm" in note
+
+
+def test_shipped_cache_covers_every_article_the_walkthrough_shows():
+    """The walkthrough runs three demo commands. If any article is missing from
+    the cache, a teammate's recording dies partway through."""
+    from src.data.tokenizer import normalize
+    from src.demo import cache_key, truncate_words
+
+    cache_path = Path("examples/llm_cache.json")
+    if not cache_path.exists():
+        pytest.skip("cache not built")
+    entries = json.loads(cache_path.read_text())["entries"]
+
+    test_file = Path("data/processed/test_llm.jsonl")
+    if test_file.exists():
+        from src.data.dataset import read_jsonl
+
+        records = read_jsonl(test_file)
+        for i in (3, 4, 112):
+            key = cache_key(truncate_words(records[i]["article"], 400))
+            assert key in entries, f"test example {i} is missing from the LLM cache"
+
+    battery = Path("examples/demo_article_battery.txt")
+    if battery.exists():
+        key = cache_key(truncate_words(normalize(battery.read_text(encoding="utf-8")), 400))
+        assert key in entries, "the out-of-domain article is missing from the LLM cache"

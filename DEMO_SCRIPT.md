@@ -116,29 +116,57 @@ and re-run — do not record it.
 
 ---
 
-## ⚠ Recording on a different machine
+## Recording on someone else's machine
 
-**The repository alone is not enough to run the live demo.** Two things are
-deliberately not in git:
+Anything that runs Python works — Windows, Linux, Intel Mac, Apple silicon. Four
+commands, about ten minutes, most of it a download:
 
-| Not in the repo | Size | Why |
-|---|---|---|
-| `runs/*/best.pt` — trained checkpoints | ~295 MB | Binary artifacts; four of them |
-| `data/processed/` — the dataset | ~409 MB | CNN/DailyMail is Apache-2.0 but not ours to redistribute |
+```bash
+git clone https://github.com/KhaledM0barak/lstm-vs-llm-summarization.git
+cd lstm-vs-llm-summarization
+python3 -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+pip install -r requirements-demo.txt                   # ~2 min
+bash scripts/fetch_demo_bundle.sh                      # ~217 MB, checksummed
+```
 
-Plus the LLM baseline needs **Apple Silicon**, `mlx-lm`, and a ~4.5 GB 4-bit
-Llama 3.1 8B download.
+Then rehearse and record exactly as above:
 
-So if someone else is recording, pick one:
+```bash
+bash scripts/walkthrough.sh --fast     # 30 s check
+bash scripts/walkthrough.sh            # record this
+```
 
-1. **Record on Khaled's machine** — simplest and what we recommend. They sit at
-   the laptop (or drive it over a screen share) and run the one command. Nothing
-   to install.
-2. **Regenerate on their machine** — `python -m src.data.prepare` downloads and
-   rebuilds the dataset (~30 min), but the checkpoints still have to be copied
-   across, and training from scratch is 8.7 GPU-hours.
-3. **Copy the artifacts** — send `runs/` and `data/processed/` (~700 MB) by
-   AirDrop or a shared drive, dropped into a fresh clone at the same paths.
-   They still need Apple Silicon + `mlx-lm` for the LLM rows.
+**What gets downloaded and why.** The four trained checkpoints (232 MB) and the
+500 held-out test articles are not in git — binary artifacts, and we don't
+redistribute the full dataset. `fetch_demo_bundle.sh` pulls them from the
+[`demo-artifacts-v1`](https://github.com/KhaledM0barak/lstm-vs-llm-summarization/releases/tag/demo-artifacts-v1)
+release, verifies the SHA-256, and unpacks them to the paths the code expects.
+Re-running it is a no-op once the files are there.
 
-Option 1 unless there's a reason not to.
+**The LLM half is replayed, not generated.** Running Llama 3.1 8B live needs
+Apple silicon, `mlx-lm`, and a 4.5 GB download. On any other machine the demo
+falls back to `examples/llm_cache.json` — responses recorded by
+`scripts/build_llm_cache.py` through the *same* code path a live run uses, so the
+text and the ROUGE scores are identical. The demo says so on screen: the header
+prints `replayed from cache, recorded <date>`, and the output is labelled
+`LLM (Llama-3.1-8B-Instruct-4bit · replayed)`. Nothing on the recording claims to
+be live generation when it isn't.
+
+Force it on a machine that *could* run the model live (useful if you don't want
+to wait for the 4.5 GB download):
+
+```bash
+bash scripts/walkthrough.sh --replay
+```
+
+**What replay does not cover.** The cache holds the walkthrough's four fixed
+articles. `--interactive` and `--file yourown.txt` on a pasted article will raise
+a clear error on the LLM side — those need the live backend. The LSTM side works
+on any input anywhere, so `--no-llm` always works.
+
+To re-record the cache after changing a demo example, on an Apple silicon
+machine:
+
+```bash
+python -m scripts.build_llm_cache
+```
