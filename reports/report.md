@@ -92,45 +92,15 @@ repeated-trigram blocking; `<pad>` and `<unk>` are suppressed at inference, sinc
 an `<unk>` in a generated summary is a pure error. Greedy and no-blocking
 variants are reported as decoding ablations.
 
-**Three implementation details that mattered.** Each was found by measurement,
-and two of them were the difference between a run that finishes and one that does
-not.
-
-1. *Attention masking.* Padding is masked before the attention softmax. Without
-   it the decoder places probability mass on `<pad>` for every short article
-   batched with long ones — silently corrupting the context vector rather than
-   raising an error.
-
-2. *Chunked vocabulary projection.* Projecting decoder states to the 50k
-   vocabulary in one matmul materializes a `(B, T, V)` tensor: 1.28 GB in fp32 at
-   batch 64 and 100 steps, which a masked-index loss then copies twice more. Peak
-   memory drove the 24 GB machine 9.5 GB into swap and degraded throughput from
-   1.1 s/batch to 3.2 s/batch and worsening. Applying the projection in 16-step
-   chunks with `F.cross_entropy` (native label smoothing, `ignore_index`) holds
-   peak RSS at 1.15 GB.
-
-3. *Padded-shape quantization.* This was the dominant cost and the least
-   obvious. PyTorch's Metal (MPS) backend compiles a kernel per distinct tensor
-   shape, and length-bucketed batching produces a near-unique
-   `(batch, src_len, tgt_len)` triple almost every step. Training was therefore
-   spending most of its time in shader compilation — `MTLCompilerService` pinning
-   two cores — rather than in arithmetic. Rounding padded lengths up to multiples
-   of 64 (source) and 16 (target), and dropping each pool's ragged final batch to
-   fix the batch dimension, collapses thousands of shapes into a few dozen that
-   compile once and are reused:
-
-   | Configuration | Before | After | Speedup |
-   |---|---|---|---|
-   | Bahdanau + input feeding | 2537 s | 73.7 s | 34× |
-   | Multiplicative attention, batched | 2695 s | 49.1 s | 55× |
-
-   *(one epoch over 3,840 examples, batch 64, identical hardware)*
-
-   The cost is under 2% of training examples per epoch and a little extra
-   padding. This is a hardware-specific accelerator detail rather than anything
-   about summarization, but it is the single change that made the experiment
-   feasible on the available machine, and it is the kind of finding that only
-   appears if throughput is actually measured rather than assumed.
+**Implementation details that mattered.** Three, each found by measurement and
+two of them decisive for feasibility: padding is masked before the attention
+softmax (otherwise the decoder puts probability mass on `<pad>`); the vocabulary
+projection is applied in time-chunks rather than as one `(B, T, V)` tensor, which
+would be 1.28 GB in fp32 and drove the machine into swap; and padded sequence
+lengths are quantized so that the Metal backend stops recompiling a kernel per
+distinct tensor shape — worth a **34–55× speedup**, and the single change that
+made training feasible on the available hardware. Full accounts, with
+measurements, in **Appendix E**.
 
 ### 2.2 LLM baseline
 
@@ -441,3 +411,51 @@ with the exact prompts in Appendix A.
 - Code: https://github.com/KhaledM0barak/lstm-vs-llm-summarization
 - Demo video (8 min): `[[VIDEO URL]]`
 - Testing and recording runbook: `DEMO.md`
+
+## Appendix E — Implementation notes
+
+Three implementation details from §2.1, in full. Each was found by measuring
+rather than by reasoning about the code, and two of them were the difference
+between a run that finishes and one that does not.
+
+**1. Attention masking.** Padding is masked before the attention softmax. Without
+the mask the decoder places probability mass on `<pad>` for every short article
+batched with long ones, silently corrupting the context vector rather than
+raising an error.
+
+**2. Chunked vocabulary projection.** Projecting decoder states to the 50k
+vocabulary in a single matmul materializes a `(B, T, V)` tensor — 1.28 GB in fp32
+at batch 64 and 100 steps — which a mask-indexed loss then copies twice more.
+Peak memory drove the 24 GB machine 9.5 GB into swap and degraded throughput from
+1.1 s/batch to 3.2 s/batch and worsening. Applying the projection in 16-step
+chunks with `F.cross_entropy` (native label smoothing and `ignore_index`, so no
+masked copies are materialized) holds peak RSS at 1.15 GB.
+
+**3. Padded-shape quantization.** The dominant cost, and the least obvious.
+PyTorch's Metal (MPS) backend compiles a kernel per distinct tensor shape, and
+length-bucketed batching produces a near-unique `(batch, src_len, tgt_len)`
+triple almost every step. Training was therefore spending most of its wall-clock
+in shader compilation — `MTLCompilerService` pinning two cores — rather than in
+arithmetic. Rounding padded lengths up to multiples of 64 (source) and 16
+(target), and dropping each pool's ragged final batch to fix the batch dimension,
+collapses thousands of shapes into a few dozen that compile once and are reused:
+
+| Configuration | Before | After | Speedup |
+|---|---|---|---|
+| Bahdanau attention + input feeding | 2537 s | 73.7 s | **34×** |
+| Multiplicative attention, batched | 2695 s | 49.1 s | **55×** |
+
+*(one epoch over 3,840 examples, batch 64, identical hardware)*
+
+The cost is under 2% of training examples per epoch and a little extra padding.
+This is an accelerator-specific detail rather than anything about summarization,
+but it is the kind of finding that only appears if throughput is measured rather
+than assumed — and without it this project's four training runs would have taken
+an estimated 20+ hours instead of 8.7.
+
+**A related failure mode, found while building the demo.** The Metal backend does
+not raise when a command buffer runs out of GPU memory; it returns whatever was in
+the buffer. With a local LLM resident on the GPU, the LSTM silently produced empty
+or degenerate `the the the a the` output — indistinguishable from a broken model.
+`src/demo.py` therefore decodes a known article at startup, checks the output's
+unique-token ratio, and falls back to CPU with a warning if it looks degenerate.

@@ -31,18 +31,21 @@ CHROME_CANDIDATES = [
 ]
 
 CSS = """
-@page { size: letter; margin: 0.85in 0.9in; }
+/* Tuned to fit the 5-page body cap without looking cramped: 10pt serif at
+   1.32 line-height with 0.7in margins is a standard two-column-conference
+   density, applied to a single column. */
+@page { size: letter; margin: 0.7in 0.75in; }
 body {
   font-family: "Charter", "Georgia", "Times New Roman", serif;
-  font-size: 10.5pt; line-height: 1.45; color: #111;
+  font-size: 10pt; line-height: 1.32; color: #111;
   max-width: 100%; margin: 0;
 }
-h1 { font-size: 17pt; margin: 0 0 2pt 0; line-height: 1.25; }
-h2 { font-size: 13pt; margin: 16pt 0 5pt 0; padding-bottom: 2pt;
+h1 { font-size: 15pt; margin: 0 0 2pt 0; line-height: 1.2; }
+h2 { font-size: 11.5pt; margin: 11pt 0 4pt 0; padding-bottom: 1.5pt;
      border-bottom: 1px solid #bbb; page-break-after: avoid; }
-h3 { font-size: 11.5pt; margin: 11pt 0 3pt 0; page-break-after: avoid; }
-h4 { font-size: 10.5pt; margin: 9pt 0 2pt 0; page-break-after: avoid; }
-p  { margin: 0 0 6pt 0; text-align: justify; }
+h3 { font-size: 10.5pt; margin: 8pt 0 2pt 0; page-break-after: avoid; }
+h4 { font-size: 10pt; margin: 7pt 0 1pt 0; page-break-after: avoid; }
+p  { margin: 0 0 4.5pt 0; text-align: justify; }
 em.subtitle { color: #555; }
 ul, ol { margin: 0 0 6pt 0; padding-left: 18pt; }
 li { margin-bottom: 2pt; }
