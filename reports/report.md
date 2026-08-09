@@ -699,15 +699,21 @@ asserts both properties.
 
 ### G.4 The two systems fail in opposite directions
 
-**Largest LLM advantage** (ROUGE-1 11.3 → 53.6). The reference concerns a
-beauty-pageant dispute; the LSTM latches onto a prayer quoted mid-article and
-misses both principals, while the LLM identifies who said what.
+**Largest LLM advantage on a clean case** (ROUGE-1 10.5 → 43.1; test example
+112). A football match report. The LSTM's two sentences contain four distinct
+failures: it says the striker scored a **hat-trick** and then that the forward
+scored a **brace** — three goals, then two, about the same player; the two
+sentences are near-duplicates in structure, showing repetition evading the
+trigram filter by varying one word per slot; it ends "to win a win"; and it never
+names anyone, describing players by role because *Griffiths*, *Westlake* and
+*Commons* are unreachable. Its **ROUGE-2 is exactly 0.0** — fluent English
+sharing not one bigram with the reference.
 
-> **Reference:** indianara carvalho posted photo of body painted with image of virgin mary . runner-up claudia alende has branded winner an 'attention-seeking sl\*t' …
+> **Reference:** darryl westlake fired kilmarnock ahead in the 50th minute . kris commons levelled for the home side eight minutes later . sub leigh griffiths netted three goals in a remarkable 19-minute spell . celtic moved eight points clear …
 >
-> **LSTM (R1 11.3):** claudia james, 21, came second in last year's beauty pageant. she was accompanied with a prayer which including the words: 'good friday. lord, on this day i ask for peace, love, wisdom and strength'.
+> **LSTM (R1 10.5, R2 0.0):** the celtic striker scored a hat-trick to guide his team to a handsome 4-1 victory. the celtic forward scored a brace to guide their team to win a win.
 >
-> **LLM (R1 53.6):** Claudia Alende, 21, launched a scathing attack on Miss Bumbum winner Indianara Carvalho, calling her an 'attention-seeking sl\*t'. Indianara Carvalho, 23, posted a picture of her naked body painted with an image of the Virgin Mary on Good Friday…
+> **LLM (R1 43.1, R2 18.0):** Leigh Griffiths scored a 19-minute hat-trick for Celtic against Kilmarnock. The treble-chasing Celtic came from a goal down to record a 4-1 victory. Darryl Westlake's deflected strike gave Kilmarnock a shock lead early in the second half. Celtic took an eight-point lead at the top of the Premiership with the win.
 
 **LSTM beats the LLM** (57.1 vs. 26.3) — and the mechanism is instructive. The
 LSTM copies the reference's exact framing; the LLM writes a longer summary that

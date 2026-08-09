@@ -82,6 +82,29 @@ output as evidence, not as the answer.
 - **"Lead-3 beats your model. Isn't that a failure?"** — It's the well-known CNN/DailyMail result and it's a statement about the metric: references are editor-written highlights that foreground the lead, so extraction is rewarded. Reporting it is the honest choice; hiding it would be the failure.
 - *"What do your diagnostics actually measure?"* — duplicate-trigram (repetition), novel-bigram (abstractiveness), unsupported content (a lexical faithfulness proxy), OOV.
 
+## Demo examples used in the video
+
+Chosen so the walkthrough shows verified failure modes rather than a highlight
+reel, and so nothing objectionable appears on a submitted recording.
+
+**`--example 3`** (Kentucky fire) — the ablation shot. The no-attention model
+places the fire in *San Diego* (unsupported-content 0.56) for an article about
+Louisville, Kentucky. Note the LSTM *beats* the LLM here (36.9 vs 33.3): a single
+example never carries the claim, the aggregate does.
+
+**`--example 112`** (Celtic vs Kilmarnock) — the fluent-but-wrong shot. Four
+failures in two sentences: hat-trick then brace about the same player; near-
+duplicate sentence structure showing repetition evading the trigram filter;
+"to win a win"; and no player named at all, because the names are out of
+vocabulary. **ROUGE-2 exactly 0.0.**
+
+**`examples/demo_article_battery.txt`** — the out-of-domain shot. OOV rate 5.3%
+vs 1.83% in-domain; the model cannot emit *electrolyte*, so it stops the clause
+at "have developed a battery".
+
+Avoid test example 3's neighbours in the beauty-pageant story — the reference
+contains a censored slur.
+
 ---
 
 ## Sign-off
