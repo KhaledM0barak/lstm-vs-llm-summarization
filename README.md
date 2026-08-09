@@ -304,7 +304,8 @@ src/
     seq2seq.py          Full model, greedy and beam search
   llm/
     prompts.py          The two prompt variants, verbatim
-    baseline.py         Claude baseline runner: usage, latency, cost accounting
+    backends.py         MLX (local, default) and Anthropic API backends
+    baseline.py         LLM baseline runner: resume, usage, latency, cost accounting
   utils/
     seed.py             Deterministic seeding
     device.py           Device selection + hardware provenance
@@ -312,9 +313,21 @@ src/
   generate.py           Batch decoding from a checkpoint
   evaluate.py           ROUGE + bootstrap CIs + buckets + diagnostics
   qualitative.py        Behavior-selected side-by-side comparison
+  demo.py               Interactive side-by-side demo (LSTM vs LLM vs ablations)
+scripts/
+  train_all.sh          Train the base model and all three ablations
+  finish.sh             Score everything and regenerate results/ and reports/
+  collect_results.py    Assemble tables from run artifacts; never invents a number
+  build_pdf.py          Render the report to PDF, flagging unfilled placeholders
+  walkthrough.sh        Self-narrating 8-minute demo (see DEMO_SCRIPT.md)
+tests/                  162 tests, run with `pytest -q`
+review/                 Per-component review packets, one per team member
 results/                Generated tables and analyses
 runs/                   Checkpoints, training logs, predictions (checkpoints gitignored)
 ```
+
+Demo and recording: [`DEMO.md`](DEMO.md) (verification checklist + how to record),
+[`DEMO_SCRIPT.md`](DEMO_SCRIPT.md) (segment-by-segment timeline of the video).
 
 ## 7. Reproducibility
 

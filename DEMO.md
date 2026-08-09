@@ -90,6 +90,27 @@ can't find is listed under "Not yet available" rather than guessed.
 
 ## Part 2 — Recording the 8-minute demo
 
+There are two ways to record. Pick one.
+
+**Option A — the self-narrating walkthrough (recommended, no voice-over).**
+
+```bash
+bash scripts/walkthrough.sh --fast    # rehearse: 30 seconds, no pauses
+bash scripts/walkthrough.sh           # record this: ~7:05
+```
+
+It prints each explanation on screen, pauses long enough to read it, then runs the
+command. Start the recording, run it, don't touch the keyboard. `--pace 0.85`
+shortens everything, `--pace 1.1` lengthens it, `--step` advances on Enter, and
+`--from N` starts at segment N if you're re-recording one part.
+**[`DEMO_SCRIPT.md`](DEMO_SCRIPT.md) is the segment-by-segment timeline** — read it
+before recording, and pass it to whoever is holding the camera.
+
+**Option B — narrate it yourself** using the shot list below. Same content, but
+you speak over it and control the pace.
+
+---
+
 **Setup before you hit record**
 
 - Close the LLM sweep and any other GPU job (`pgrep -f src.llm.baseline`) — see the warning above.
