@@ -114,7 +114,7 @@ say "Before comparing anything: is the measurement trustworthy?" \
   "So we reproduced a published baseline first. Lead-3 — literally the article's" \
   "first three sentences — on the full 11,490-article test set:"
 if ! skip; then
-    run sed -n '/## Overall/,/^$/p' results/lead3_fulltest/results.md
+    run awk '/^## Overall/{f=1} /^## Diagnostics/{f=0} f' results/lead3_fulltest/results.md
     echo "  See et al. (2017) published:  40.34 / 17.70 / 36.57"
     echo
     echo "  Agreement to ~0.3 ROUGE. The tokenization, sentence splitting,"

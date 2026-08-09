@@ -58,7 +58,7 @@ python -m src.demo --example 3 --no-llm
 ```bash
 python -m pytest tests/ -q
 ```
-**Expect:** `170 passed`. If anything fails, do not record — the failure is
+**Expect:** `172 passed`. If anything fails, do not record — the failure is
 either a real regression or a stale artifact.
 
 ### 7. The repository works from a clean clone
@@ -73,7 +73,7 @@ cd checkclone && python3 -m venv .venv
 .venv/bin/pip install -q -r requirements.txt
 .venv/bin/python -m pytest tests/ -q
 ```
-**Expect:** `169 passed, 1 skipped`. This caught a real bug — an unanchored
+**Expect:** `171 passed, 1 skipped`. This caught a real bug — an unanchored
 `.gitignore` rule had excluded the entire `src/data/` package from the
 repository, so the project ran perfectly here and did not import at all for
 anyone who cloned it.

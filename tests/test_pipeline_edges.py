@@ -376,3 +376,55 @@ def test_shipped_cache_covers_every_article_the_walkthrough_shows():
     if battery.exists():
         key = cache_key(truncate_words(normalize(battery.read_text(encoding="utf-8")), 400))
         assert key in entries, "the out-of-domain article is missing from the LLM cache"
+
+
+# --------------------------------------------------- walkthrough display commands
+
+def walkthrough_extractions():
+    """The `run sed`/`run awk` lines in the walkthrough -- the ones that pull a
+    table out of a results file for the video."""
+    import re
+
+    script = Path("scripts/walkthrough.sh")
+    if not script.exists():
+        return []
+    return re.findall(r"^\s*run ((?:sed|awk|grep) .*)$", script.read_text(), re.M)
+
+
+def test_every_walkthrough_extraction_actually_prints_a_table():
+    """A range like /## Overall/,/^$/ ends at the blank line right after the
+    heading, so it prints the heading and nothing else -- silently, exit 0. That
+    emptied the Lead-3 segment, which is the credibility anchor of the whole
+    demo, and neither `bash -n` nor a smoke run caught it."""
+    import subprocess
+
+    commands = walkthrough_extractions()
+    assert commands, "no extraction commands found -- did the script change shape?"
+
+    for cmd in commands:
+        out = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True).stdout
+        body = [ln for ln in out.splitlines() if ln.strip()]
+        assert body, f"produced no output at all:\n  {cmd}"
+
+        # A command pulling a section out of a results file must reach the data,
+        # not stop at the heading. Other commands (the nn.* primitive count) just
+        # have to print something.
+        if "results/" in cmd:
+            rows = [ln for ln in body
+                    if ln.startswith("|") and not set(ln) <= set("|- ")]
+            assert rows, (f"reached no data rows -- the range probably ends too "
+                          f"early:\n  {cmd}\n  output was:\n{out}")
+
+
+def test_the_walkthrough_shows_the_published_lead3_comparison():
+    """The segment claims agreement with See et al. to ~0.3 ROUGE. If the number
+    on screen ever stops being 40.04, the claim beside it is wrong."""
+    import subprocess
+
+    for cmd in walkthrough_extractions():
+        if "lead3_fulltest" not in cmd:
+            continue
+        out = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True).stdout
+        assert "40.04" in out and "17.5" in out and "36.34" in out, out
+        return
+    pytest.skip("lead3 segment not present")

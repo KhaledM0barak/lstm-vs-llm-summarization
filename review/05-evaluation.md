@@ -14,7 +14,7 @@ every number in the report is wrong and nothing else matters.
 cd ~/lstm-vs-llm-summarization && source .venv/bin/activate
 
 # THE credibility check: reproduce a published baseline
-cat results/lead3_fulltest/results.md | head -8
+head -10 results/lead3_fulltest/results.md
 
 # Final standings, all systems
 sed -n '/## Overall/,/## Diagnostics/p' results/results.md
