@@ -1,0 +1,41 @@
+{
+  "setting": "B_fewshot",
+  "backend": "mlx",
+  "backend_kind": "local",
+  "model": "mlx-community/Llama-3.1-8B-Instruct-4bit",
+  "backend_details": {
+    "quantization": "4-bit",
+    "batch_size": 8,
+    "sampling": "greedy (temp=0.0)",
+    "framework": "mlx-lm"
+  },
+  "prompt_variant": "B",
+  "prompt_variant_name": "style-matched",
+  "prompt_description": "Specifies CNN/DailyMail highlight length, sentence count, and register.",
+  "shots": 4,
+  "input_condition": "truncated_400_words",
+  "max_tokens": 200,
+  "system_prompt": "You write summaries in the style of CNN/DailyMail article highlights: 3 to 4 short, declarative, self-contained sentences totalling roughly 55 words. Each sentence states one concrete fact from the article \u2014 a name, a number, a place, an action. You never editorialize, never add background the article does not contain, and never write an introductory clause such as 'This article discusses'.",
+  "user_template": "Write the highlights for the following news article. Output only the highlight sentences as a single paragraph, with no bullet points, no labels, and no preamble.\n\nArticle:\n{article}\n\nHighlights:",
+  "few_shot_exemplar_summaries": [
+    "grant minchion, 23, had the nunchucks in the glovebox of his ice cream van . they were discovered by police along with a lock knife in a draw with money . stanley knife and throwing knife also found during search, a court was told . he claimed knives were useful for opening stock including chocolate flakes . said that he was given throwing knife by a 'kid' in exchange for a cornetto . pleaded guilty to two counts of possessing offensive weapon and possessing bladed article in public place . no allegation that any of the weapons had been used to commit a crime .",
+    "15,000 people are killed trying to cross train tracks every year . a safety panel said almost half of the deaths were in mumbai . it said 'no civilized society can accept such massacre' . it blamed outdated technology and lack of infrastructure .",
+    "female soldier killed, four other troops wounded in roadside bombing . karine blais, 21, is second canadian female soldier killed in afghanistan . there have been 117 canadian troop deaths in the afghan war .",
+    "small toy expands to 400 times its size, posing an ingestion risk, consumer commission says . 8-month-old baby from texas needed surgery after ingesting marble-size water balz . consumer product safety commission urges consumers to stop using product . also recalled are growing skulls, h2o orbs and fabulous flowers ."
+  ],
+  "n_examples": 500,
+  "usage": {
+    "requests": 500,
+    "errors": 0,
+    "input_tokens": 1328087,
+    "output_tokens": 47914,
+    "wall_clock_s": 4590.6,
+    "latency_mean_s": 9.18,
+    "latency_p50_s": 9.05,
+    "latency_p95_s": 10.75,
+    "throughput_summaries_per_min": 6.5,
+    "cost_usd": 0.0,
+    "gpu_hours": 1.2752,
+    "gpu_hours_per_1k_summaries": 2.5503
+  }
+}

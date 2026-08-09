@@ -11,10 +11,13 @@ __pycache__/
 *.egg-info/
 .ipynb_checkpoints/
 
-# Data: regenerate with `python -m src.data.prepare` (see README).
+# Downloaded/processed dataset: regenerate with `python -m src.data.prepare`.
 # CNN/DailyMail is Apache-2.0 but ~400 MB processed; not redistributed here.
-data/
-!data/.gitkeep
+# The leading slash anchors this to the repository root -- an unanchored `data/`
+# also matches `src/data/`, which silently excluded the entire data-pipeline
+# package from the repository.
+/data/
+!/data/.gitkeep
 
 # Model checkpoints (~60 MB each). Training logs and metrics ARE committed.
 runs/**/*.pt
