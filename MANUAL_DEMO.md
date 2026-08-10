@@ -15,6 +15,28 @@ Two better options before you resort to typing:
 on — with none of the risk of a typo on camera. Use it unless you specifically
 want the audience to watch you type.
 
+### What typing costs you
+
+The walkthrough does not just run these commands — it prints **103 lines of
+explanation** around them: 13 framed segment headers and the commentary after
+each command ("See et al. published 40.34...", "the no-attention model places a
+Louisville fire in SAN DIEGO", "62.8% of the attention mass lands on PADDING").
+
+If you type the commands raw, **none of that appears.** The video becomes bare
+terminal output with your voice over it. That is a legitimate demo, but it
+changes two things:
+
+- **Narration stops being optional.** With the script, the video explains itself
+  in silence. Typed, the audio carries the entire argument — if the sound fails,
+  the recording is unusable.
+- **The cue times in `NARRATION.md` no longer apply.** They were measured from a
+  paced run of the script. Use the **Say:** lines below instead and ignore the
+  clock.
+
+`--step` keeps all 103 lines of on-screen explanation *and* gives you manual
+pacing. It is strictly better than typing unless you specifically want the
+commands typed on camera.
+
 If you do want to type, this is the list. Put it on your second monitor.
 
 ---

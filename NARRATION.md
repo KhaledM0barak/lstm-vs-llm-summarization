@@ -8,6 +8,12 @@ Cue times are measured from a real paced run of `scripts/walkthrough.sh`
 pace with room to breathe, so if you start a block when its cue appears you will
 finish before the next one.
 
+> **These cue times only apply to `bash scripts/walkthrough.sh`.** They were
+> measured from a paced run of that script. If you type the commands by hand
+> instead, the timing is entirely different and none of the timestamps below
+> hold — use the per-segment **Say:** lines in [`MANUAL_DEMO.md`](MANUAL_DEMO.md)
+> and ignore the clock.
+
 **How to use it:** put this on your phone or a second window, start playback,
 and read each block when its heading appears on screen. If you fall behind,
 skip to the next block at its cue rather than catching up — a short silence is
