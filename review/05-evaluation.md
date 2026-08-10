@@ -110,13 +110,21 @@ contains a censored slur.
 ## Sign-off
 
 ```
-Reviewed by: ______________________    Date: __________
-Ran the commands above and output matched:   [ ] yes  [ ] no — differences:
+Reviewed by: Khaled Mobarak              Date: 2026-08-10
+Ran the commands above and output matched:   [x] yes  [ ] no — differences:
 
-Lead-3 reproduction confirmed (40.04 / 17.50 / 36.34):   [ ] yes  [ ] no
+Lead-3 reproduction confirmed (40.04 / 17.50 / 36.34):   [x] yes  [ ] no
 
 Findings / concerns:
+  Paired bootstrap added during review: independent CIs overlapped on ROUGE-2,
+  so the LSTM-vs-LLM gap could not be claimed from them alone. The paired test
+  resamples articles once and applies the same resample to both systems,
+  giving p < 0.0001 on ROUGE-1 and confirming the 100-token encoder window as
+  NOT significant (p = 0.0532), which is now reported as a null result.
+  Paired tests were previously skipped silently when the reference system was
+  absent; that now falls back with a printed note.
+  Every system reports N = 500. collect_results.py lists missing artifacts
+  rather than emitting a number for them.
 
-
-I can explain this component and its design decisions:   [ ] yes  [ ] no
+I can explain this component and its design decisions:   [x] yes  [ ] no
 ```

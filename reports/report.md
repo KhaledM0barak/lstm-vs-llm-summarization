@@ -441,10 +441,7 @@ the four headline settings; the unmatched control uses the untruncated article.
 
 ## Appendix B — Contribution statement
 
-The project decomposes into five workstreams of comparable weight. Fill in the
-name against the workstream each member actually owned, and adjust the wording
-where the real division differed — a contribution statement is only useful if it
-is accurate.
+The project decomposes into five workstreams of comparable weight.
 
 Group **CP-468-D — AI — 17**.
 

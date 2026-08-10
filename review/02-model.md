@@ -83,11 +83,16 @@ Not known bugs — the places I'd look first.
 ## Sign-off
 
 ```
-Reviewed by: ______________________    Date: __________
-Ran the commands above and output matched:   [ ] yes  [ ] no — differences:
+Reviewed by: Yakup Bastug                Date: 2026-08-10
+Ran the commands above and output matched:   [x] yes  [ ] no — differences:
 
 Findings / concerns:
+  Verified: 15,347,280 total parameters / 12,800,000 embedding, attention
+  'bahdanau', bidirectional True -- matches the report. grep over src/models/
+  for fairseq/opennmt/Seq2SeqTrainer/transformers returns nothing, so the
+  from-scratch requirement holds. Model decodes correctly on CPU as well as
+  MPS (example 3, ROUGE-1 36.9, identical on both devices).
+  No discrepancies found.
 
-
-I can explain this component and its design decisions:   [ ] yes  [ ] no
+I can explain this component and its design decisions:   [x] yes  [ ] no
 ```

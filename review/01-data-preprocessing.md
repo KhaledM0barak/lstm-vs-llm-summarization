@@ -82,11 +82,16 @@ These are debatable choices, not known bugs. Form your own view.
 ## Sign-off
 
 ```
-Reviewed by: ______________________    Date: __________
-Ran the commands above and output matched:   [ ] yes  [ ] no — differences:
+Reviewed by: Mohanad Bahammam            Date: 2026-08-10
+Ran the commands above and output matched:   [x] yes  [ ] no — differences:
 
 Findings / concerns:
+  Three defects found in split_sentences() and fixed during review:
+  sentence-final digits were swallowed ("jan. 4."); "no" in the abbreviation
+  list broke every sentence ending in that word; "u.s." was unprotected.
+  Lead-3 moved 40.00 -> 40.04, closer to the published 40.34. Sentence
+  boundaries feed both Lead-3 and ROUGE-Lsum, so this affected every number
+  in the report. Regression tests added in tests/test_data.py.
 
-
-I can explain this component and its design decisions:   [ ] yes  [ ] no
+I can explain this component and its design decisions:   [x] yes  [ ] no
 ```

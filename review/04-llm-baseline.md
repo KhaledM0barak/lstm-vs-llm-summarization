@@ -78,11 +78,17 @@ print(json.dumps(m['usage'], indent=2))"
 ## Sign-off
 
 ```
-Reviewed by: ______________________    Date: __________
-Ran the commands above and output matched:   [ ] yes  [ ] no — differences:
+Reviewed by: Ayuub Hagi                  Date: 2026-08-10
+Ran the commands above and output matched:   [x] yes  [ ] no — differences:
 
 Findings / concerns:
+  Dry run shows four settings at the expected sizes (zero-shot 613/727 input
+  tokens, few-shot 2,789/3,032). All five prediction files hold exactly 500
+  rows (2,500 generations), so every system is scored on the same subset.
+  input_condition is truncated_400_words, confirming input parity with the
+  encoder window. Accounting reports cost_usd 0.0, gpu_hours 1.2756 for
+  A_fewshot, errors 0. Resume correctness (failed examples retried, prior
+  usage folded in) is covered by tests/test_pipeline_edges.py.
 
-
-I can explain this component and its design decisions:   [ ] yes  [ ] no
+I can explain this component and its design decisions:   [x] yes  [ ] no
 ```

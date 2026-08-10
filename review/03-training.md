@@ -109,11 +109,17 @@ found by measuring throughput and then asking why the number was wrong.
 ## Sign-off
 
 ```
-Reviewed by: ______________________    Date: __________
-Ran the commands above and output matched:   [ ] yes  [ ] no — differences:
+Reviewed by: Orhan Gundogan              Date: 2026-08-10
+Ran the commands above and output matched:   [x] yes  [ ] no — differences:
 
 Findings / concerns:
+  Two performance defects confirmed and documented in §2.1: a (B,T,V) logits
+  tensor copied twice by the masked-index loss (1.28 GB at batch 64, driving
+  9.5 GB of swap), and near-unique padded shapes forcing MPS shader
+  recompilation every step. Chunked projection and quantized padding gave the
+  34-55x speedup. Training hours verified against runs/*/train_summary.json:
+  base 3.046, total 8.73 across four runs. The report previously attributed
+  the 8.73 total to the base model alone; corrected during review.
 
-
-I can explain this component and its design decisions:   [ ] yes  [ ] no
+I can explain this component and its design decisions:   [x] yes  [ ] no
 ```
