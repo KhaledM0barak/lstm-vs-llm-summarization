@@ -117,6 +117,10 @@ class MLXBackend:
         # middle of the recorded demo, three times, wrapping over a dozen lines.
         import os
         os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+        # huggingface_hub prints "Fetching 6 files: 100%|..." plus reconstruction
+        # and download bars on every load, even when nothing is downloaded. That
+        # is three blocks of progress noise in the middle of a recorded demo.
+        os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
 
         from mlx_lm import load
         from mlx_lm.sample_utils import make_sampler

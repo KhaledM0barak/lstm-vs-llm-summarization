@@ -297,6 +297,6 @@ pause 40
 echo
 rule
 printf "%s  Code, report and tests: github.com/KhaledM0barak/lstm-vs-llm-summarization%s\n" "$BOLD" "$OFF"
-printf "  %s162 tests · full report in reports/report.pdf%s\n" "$DIM" "$OFF"
+printf "  %s178 tests · full report in reports/report.pdf%s\n" "$DIM" "$OFF"
 rule
 echo

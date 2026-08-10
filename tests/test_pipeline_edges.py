@@ -456,3 +456,27 @@ def test_demo_block_never_exceeds_the_window(cols, monkeypatch, capsys):
 
     monkeypatch.delenv("COLUMNS", raising=False)
     importlib.reload(demo)
+
+
+def test_walkthrough_banner_states_the_real_test_count():
+    """The closing frame of the recorded video asserts a test count. It went
+    stale at 162 while the suite grew to 177 -- a wrong number in the last thing
+    a marker sees, and nothing pointed at it."""
+    import re
+    import subprocess
+    import sys
+
+    script = Path("scripts/walkthrough.sh")
+    if not script.exists():
+        pytest.skip("no walkthrough script")
+
+    m = re.search(r"(\d+) tests · full report", script.read_text())
+    assert m, "the banner no longer states a test count -- update this test"
+    claimed = int(m.group(1))
+
+    out = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "--collect-only"],
+        capture_output=True, text=True,
+    ).stdout
+    actual = int(re.search(r"(\d+) tests? collected", out).group(1))
+    assert claimed == actual, f"banner says {claimed} tests, suite has {actual}"
