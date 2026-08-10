@@ -162,6 +162,11 @@ measured from a real run, each block written to fit its window at speaking pace.
 Record the screen first, then read the narration over playback; nothing has to
 be memorised.
 
+To drive the demo yourself rather than let the script run, use
+`--step` (same content, advances on Enter) or see
+[`MANUAL_DEMO.md`](MANUAL_DEMO.md) for every command typed out with the output
+to expect from each.
+
 | Flag | Use |
 |---|---|
 | `--fast` | Rehearsal. No pauses. |

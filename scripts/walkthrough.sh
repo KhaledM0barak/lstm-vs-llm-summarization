@@ -94,7 +94,7 @@ say "The task and the data" \
   "Abstractive summarization: a news article in, a short summary out." \
   "CNN/DailyMail 3.0.0 — Apache-2.0, official article-disjoint splits." \
   "" \
-  "80,000 training pairs. Every system in this project — the LSTM, all four" \
+  "80,000 training pairs. Every system in this project — the LSTM, its five" \
   "ablations, and all five LLM settings — is scored on the SAME 500 held-out" \
   "articles, drawn once with a fixed seed before any model was built."
 if ! skip; then
@@ -184,7 +184,8 @@ pause 32
 
 # ───────────────────────────────────────────────────────────────── 6. Results
 say "Results — and the finding we did not expect" \
-  "All eleven systems, scored on the same 500 articles."
+  "Twelve rows: eleven systems plus the Lead-3 baseline, all scored on the" \
+  "same 500 articles."
 if ! skip; then
     run sed -n '/## Overall/,/## Diagnostics/p' results/results.md
 fi

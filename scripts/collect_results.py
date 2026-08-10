@@ -126,6 +126,9 @@ def main() -> None:
         missing.append("runs/*/train_summary.json (run scripts/train_all.sh)")
 
     # ---------------------------------------------------------------- ROUGE
+    # Tables are numbered off a running counter so a section that does not get
+    # emitted (missing artifact) leaves no gap and no duplicate.
+    table_no = 3
     res = load_json(RESULTS / "results.json")
     if res:
         data["results"] = res
@@ -142,7 +145,8 @@ def main() -> None:
               f"{res['overall'][k]['length_tokens']:.1f}"] for k, label in present],
         ))
 
-        md.append("\n## Table 4 — Behavioral diagnostics (means)\n")
+        table_no += 1
+        md.append(f"\n## Table {table_no} — Behavioral diagnostics (means)\n")
         md.append(table(
             ["System", "Dup-trigram", "Novel-bigram", "Unsupported content", "OOV rate", "Empty"],
             [[label,
@@ -153,9 +157,12 @@ def main() -> None:
               f"{res['overall'][k]['empty']:.3f}"] for k, label in present],
         ))
 
+        # Numbered off a counter: there is one bucket table per bucket kind, so a
+        # hard-coded number gives every one of them the same label.
         for bucket_kind, buckets in res["by_bucket"].items():
             bnames = sorted(buckets)
-            md.append(f"\n## Table 5 — ROUGE-1 by {bucket_kind}\n")
+            table_no += 1
+            md.append(f"\n## Table {table_no} — ROUGE-1 by {bucket_kind}\n")
             md.append(table(
                 ["System"] + bnames,
                 [[label] + [
@@ -201,7 +208,8 @@ def main() -> None:
         is_local = cost.get("backend_kind") == "local"
         unit_col = "GPU-h / 1k summaries" if is_local else "$ / 1k summaries"
 
-        md.append("\n## Table 6 — LLM baseline compute and latency\n")
+        table_no += 1
+        md.append(f"\n## Table {table_no} — LLM baseline compute and latency\n")
         rows = []
         for s in sorted(cost["settings"], key=lambda x: x["setting"]):
             u = s["usage"]

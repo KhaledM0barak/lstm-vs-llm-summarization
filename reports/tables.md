@@ -79,7 +79,7 @@ Hardware: Apple M4 Pro, 24 GB RAM, GPU: Apple Silicon GPU (Metal / MPS); device 
 | LLM variant B (style-matched), few-shot k=4 | 38.23 | 40.07 | 43.12 |
 | LLM variant B, zero-shot, full article | 38.66 | 41.37 | 42.60 |
 
-## Table 5 — ROUGE-1 by abstractiveness
+## Table 6 — ROUGE-1 by abstractiveness
 
 | System | abstractive (high novelty) | extractive (low novelty) | mixed |
 |---|---|---|---|
@@ -100,7 +100,7 @@ Hardware: Apple M4 Pro, 24 GB RAM, GPU: Apple Silicon GPU (Metal / MPS); device 
 
 Best LLM setting is `llm_B_zeroshot`. Absolute ROUGE gap over the LSTM: R1 +6.35, R2 +4.32, R-Lsum +5.89. 95% CIs on ROUGE-1 do not overlap.
 
-## Table 6 — LLM baseline compute and latency
+## Table 7 — LLM baseline compute and latency
 
 | Setting | Shots | Input tok | Output tok | Wall-clock (min) | GPU-h / 1k summaries | Summaries/min | p50 latency (s) | Errors |
 |---|---|---|---|---|---|---|---|---|

@@ -99,10 +99,10 @@ actually say. The LLM handles it.
 
 ### 3:09 — 7. Results *(26 s)*
 
-All eleven systems, scored on the same five hundred articles, with bootstrap
-confidence intervals. The LLM's best prompt is at the top, our LSTM is in the
-middle — and Lead-3, which is pure copying with no model at all, is sitting
-above four of the five LLM settings.
+Twelve rows — eleven systems plus the Lead-3 baseline, all on the same five
+hundred articles, with bootstrap confidence intervals. The LLM's best prompt is
+at the top, our LSTM in the middle — and Lead-3, pure copying with no model at
+all, sitting above four of the five LLM settings.
 
 ---
 
