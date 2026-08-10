@@ -8,7 +8,9 @@ Measured runtime in paced mode: **7:05–7:10**, leaving ~50 s of headroom.
 (The spread is whether the LLM generates live or replays a recorded response.)
 
 Read this file before recording so you know what is coming and can stop the take
-early if something looks wrong.
+early if something looks wrong. If you would rather narrate,
+[`NARRATION.md`](NARRATION.md) has a spoken script keyed to these same cue
+times.
 
 ---
 

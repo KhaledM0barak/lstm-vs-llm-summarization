@@ -156,6 +156,12 @@ bash scripts/walkthrough.sh            # record this: 7:05-7:10
 5. Stop, check it is under 8:00 and legible at half size, upload, and paste the
    URL into Appendix D of the report.
 
+The video needs no voice-over — every explanation is on screen. If you want one
+anyway, [`NARRATION.md`](NARRATION.md) is a full spoken script with cue times
+measured from a real run, each block written to fit its window at speaking pace.
+Record the screen first, then read the narration over playback; nothing has to
+be memorised.
+
 | Flag | Use |
 |---|---|
 | `--fast` | Rehearsal. No pauses. |
