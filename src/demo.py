@@ -83,7 +83,16 @@ def rule(title: str = "", color=CYAN) -> None:
 
 def block(label: str, text: str, color=BOLD, meta: str = "") -> None:
     print()
-    print(color(label) + (DIM("  " + meta) if meta else ""))
+    # The LLM row carries a long model name plus five diagnostics -- 128 chars,
+    # which wraps at any terminal width a person would actually use, breaking a
+    # number across two lines and knocking the comparison rows out of alignment.
+    # Drop the diagnostics to their own line rather than let the terminal fold it.
+    if meta and len(label) + len(meta) + 2 > WIDTH:
+        print(color(label))
+        for m in textwrap.wrap(meta, WIDTH - 2) or [meta]:
+            print(DIM("  " + m))
+    else:
+        print(color(label) + (DIM("  " + meta) if meta else ""))
     for line in textwrap.wrap(text, WIDTH - 2) or ["(empty)"]:
         print("  " + line)
 

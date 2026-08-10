@@ -428,3 +428,31 @@ def test_the_walkthrough_shows_the_published_lead3_comparison():
         assert "40.04" in out and "17.5" in out and "36.34" in out, out
         return
     pytest.skip("lead3 segment not present")
+
+
+# ---------------------------------------------------- demo fits its window
+
+@pytest.mark.parametrize("cols", [80, 100, 105, 120, 140])
+def test_demo_block_never_exceeds_the_window(cols, monkeypatch, capsys):
+    """The LLM row is a long model name plus five diagnostics -- 128 characters.
+    Folded by the terminal it breaks a ROUGE score across two lines and the
+    comparison rows stop aligning, which is exactly what a recorded demo cannot
+    afford. Long metadata must move to its own line instead."""
+    import importlib
+
+    monkeypatch.setenv("COLUMNS", str(cols))
+    demo = importlib.reload(importlib.import_module("src.demo"))
+
+    demo.block(
+        "LLM (Llama-3.1-8B-Instruct-4bit · replayed)",
+        "A mammoth fire broke out Friday morning in a Kentucky industrial park. "
+        "The blaze began shortly before 7 a.m. at the General Electric Appliance Park.",
+        meta="2.28s   len=61  repeat=0.00  novel=0.15  unsupported=0.03   "
+             "R1=33.3 R2=18.4 RL=33.3",
+    )
+    out = capsys.readouterr().out
+    for line in out.splitlines():
+        assert len(line.rstrip()) <= cols, f"{len(line)} chars at COLUMNS={cols}: {line!r}"
+
+    monkeypatch.delenv("COLUMNS", raising=False)
+    importlib.reload(demo)

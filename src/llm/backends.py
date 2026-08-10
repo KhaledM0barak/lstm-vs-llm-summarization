@@ -111,6 +111,13 @@ class MLXBackend:
         batch_size: int = 8,
         temperature: float = 0.0,
     ) -> None:
+        # transformers emits a 400-character advisory about
+        # clean_up_tokenization_spaces every time this tokenizer is constructed.
+        # It is not actionable -- mlx-lm owns that call -- and it lands in the
+        # middle of the recorded demo, three times, wrapping over a dozen lines.
+        import os
+        os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+
         from mlx_lm import load
         from mlx_lm.sample_utils import make_sampler
 
