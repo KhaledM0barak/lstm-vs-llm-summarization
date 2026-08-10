@@ -266,7 +266,7 @@ rows = [
  ('',                    'LSTM + attention', 'Llama 3.1 8B (4-bit)'),
  ('parameters',          '15.3M',            '~8B'),
  ('size on disk',        '61 MB',            '~4.5 GB'),
- ('one-time training',   '8.73 GPU-hours',   'pretrained'),
+ ('one-time training',   '3.05 GPU-hours',   'pretrained'),
  ('per summary',         '0.231 s',          '2.85 s'),
  ('throughput',          '259 / min',        '21 / min'),
  ('monetary cost',       '\$0.00',            '\$0.00 (local)'),
@@ -279,7 +279,7 @@ pause 22
 
 say "What we conclude" \
   "The LLM wins by 6.35 ROUGE-1, p < 0.0001. Real — but 6 points, not an" \
-  "order of magnitude, against a model 500x smaller trained for 8.7 GPU-hours." \
+  "order of magnitude, against a model 500x smaller trained for 3 GPU-hours." \
   "" \
   "45% of that gap is prompt phrasing, not capability." \
   "Lead-3 beats four of the five LLM settings, which limits what ROUGE can" \
