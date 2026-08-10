@@ -201,14 +201,14 @@ The measured OOV rate is **0.000** for every LSTM system — an artifact, since
 `<unk>` is suppressed so the model *cannot* emit an OOV token (Lead-3, copying
 real text, shows the true rate of 0.023). The failure relocates to substitution
 and omission, and **67% of references contain at least one token the model cannot
-produce**: `fredric brandt` → `dr. frederic brandt` (an in-vocabulary misspelling
-of a real person, with no metric signature); `teamed up with golfbidder` →
-`teamed up with the to offer…` (entity dropped, sentence broken). Evidence in
-Appendix G.
+produce**: `fredric brandt` → `dr. frederic brandt`, an in-vocabulary misspelling
+of a real person with no metric signature. Evidence in Appendix G.
 
-**Fluent-but-wrong — confirmed, but only without attention.** The no-attention
-ablation, on a Louisville fire, generated *"the fire is the fire in the city of
-san diego."* The full model does not do this (1.5% unsupported content).
+**Fluent-but-wrong — confirmed, and not confined to the ablation.** The
+no-attention model, on a Louisville fire, generated *"the fire is the fire in the
+city of san diego."* The full model is far better (1.5% unsupported content) but
+not immune: two of thirteen qualitative examples contain invented content, one
+with **no lexical signature at all** (Appendix G.5).
 
 **"The LLM hallucinates" — refuted.** Unsupported-content is a *lexical* proxy:
 on constructed cases a faithful paraphrase scored 0.857 while a fabrication
@@ -696,6 +696,47 @@ context vector differs by 1.83 (L2). It also makes the model's output depend on
 *padding content* — i.e. on which other articles happen to share its batch — which
 is a correctness violation, not merely a quality loss. `tests/test_models.py`
 asserts both properties.
+
+### G.5 Two fabrications the diagnostics do not catch
+
+Assigning the error categories in `results/qualitative.md` meant checking each
+suspected fabrication against the full source article rather than the truncated
+display. Three were confirmed and one was refuted.
+
+**Lexical fabrication, partially visible.** On a Barcelona match report
+(`9ee69bc0`), the full model produced *"barcelona beat almeria on wednesday after
+a 1-0 defeat of atletico."* The token *atletico* does not occur in the article,
+and the source says Barcelona won **4-0**. Unsupported content is 0.150 here, so
+the metric registers something — but it flags the unseen word, not the wrong
+scoreline. The model also missed the story entirely, summarising the league-table
+footer instead of the trick shot the reference leads on.
+
+**Relational fabrication, wholly invisible.** On a funeral report (`9c616b0a`),
+the model produced *"isabelle was found in a migrant camp last week. her body was
+found at st peter's."* Isabelle Hyart is the **living mother** who attended the
+funeral; the victim is her nine-year-old daughter, and St Peter's is the church,
+not the discovery site. Unsupported content is **0.000**: every content word —
+*isabelle*, *body*, *migrant camp*, *st peter's* — appears in the article. Only
+the relations between them are invented, and no diagnostic we compute can see
+that.
+
+**A suspected hallucination, refuted.** The output selected as having the highest
+unsupported content of any LLM summary (0.230, `d40bdad8`) survives checking: the
+view count *374,551*, the caption *"boy loses best friend"* and the verb *shriek*
+all occur verbatim in the source. The score reflects paraphrase, not invention —
+the same conclusion as the constructed cases in G.2, reached on a real example.
+
+**Name substitution, confirmed.** On a pageant report (`b725b494`) the model
+wrote *"claudia james"* for *claudia alende*; *james* occurs nowhere in the
+1,088-word article. This is the OOV failure of G.1 surfacing as a plausible
+in-vocabulary substitute rather than as an OOV count.
+
+Two consequences. First, our faithfulness proxy has a floor: it detects unseen
+words, not false propositions built from seen ones. Establishing a real
+hallucination rate for either system needs human annotation, which we did not
+perform. Second, the fluent-but-wrong mode is not exclusive to the no-attention
+ablation as §5 might otherwise be read to imply — attention reduces it by an
+order of magnitude without eliminating it.
 
 ### G.4 The two systems fail in opposite directions
 

@@ -3,7 +3,15 @@
 13 test examples selected by behavior (not by score) to illustrate distinct phenomena. Diagnostics shown per output: `dup3` = duplicate-trigram rate, `novel2` = novel-bigram rate vs. the article, `unsup` = content words absent from the article, `oov` = tokens outside the LSTM's 50k vocabulary, `R1` = ROUGE-1 F1.
 
 
-> The **Error category** field is a hypothesis to verify against the text, not an automatic label.
+> **Categories below were assigned by reading each output against its full source article**, not
+> inferred from the diagnostics. Every claim of fabrication was checked by searching the source
+> text: three were confirmed (§3, §9, §11) and one suspected case was **refuted** (§8).
+>
+> Two patterns hold across all thirteen. `dup3` is **0.00 in every LSTM output**, including the one
+> selected as *most repetitive* — repeated-trigram blocking removes literal repetition entirely, so
+> what survives is incoherence rather than repetition (§6). And `oov` is **0.00 in every LSTM
+> output**, including the one selected as *highest OOV rate*, because `<unk>` is suppressed at
+> generation; the rare-word failure relocates to substitution (§3) and omission (§7, §13).
 
 
 ---
@@ -46,9 +54,9 @@
 > in at the Volksbank in Steglitz, Berlin, in January 2013. The London robbers stole jewels and cash from 72
 > boxes at the Hatton Garden safe deposit centre.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Extractive echo — faithful (unsup 0.00). Two reference sentences reproduced almost verbatim, which is why it scores 72.1. One defect: the opening clause stops at *"links between the hatton garden"*, dropping *heist and a berlin bank raid* — the object of the comparison is lost. Grammatical, not factual.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Content-selection mismatch, no factual error (unsup 0.00). Every claim is in the article; it leads on the German detectives and adds the Volksbank vault count and the 72 boxes, none of which the editor kept. 84 tokens against a ~40-token reference.
 
 
 ---
@@ -90,9 +98,9 @@
 > Smoother involves spreading fingers across the centre of the forehead and pulling down while pushing brows up
 > for 30 seconds. The Lip Lift requires a Joker smile that moves up and down an inch using visualisation.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Lead-bias miss + total entity omission. The output is the article's first-person opening aside, quoted verbatim, as if it were the summary. None of the reference's four points appears and no named entity survives — *sarah ivens*, *carole maggio* and *facercise* are all absent. R1 2.6 is the floor of the set.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Content-selection mismatch + over-length. Recovers two reference points (Maggio, Facercise, and both named exercises) but opens on the 1710 history the editor omitted. 95 tokens against ~50.
 
 
 ---
@@ -134,9 +142,9 @@
 > strength. Claudia Alende claimed she was asked to do the photoshoot but refused 'out of respect for God and
 > for my family'.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** **Entity fabrication — verified.** *"claudia james"* for *claudia alende*: the token *james* does not occur anywhere in the 1,088-word article. The main event — the Virgin Mary body paint — is dropped entirely. This is the substitution failure that the 0.000 OOV rate conceals.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Faithful and aligned. All three reference points covered, each traceable to the source. Mild over-length (92 tokens against ~45).
 
 
 ---
@@ -177,9 +185,9 @@
 > caption '10 days until we meet #babyjames.' The photo has been liked nearly 45,000 times and has earned nearly
 > 5,000 comments. Sarah Stage is due to give birth to her son, Baby James, in 10 days.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Extractive echo — faithful, and the clearest metric artefact in the set (novel-bigram 0.00). It reproduces the reference's first sentence nearly word for word and scores 57.1 while covering only half of it; the critics angle is omitted.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Content-selection mismatch — no error of fact. Every claim checks out; it reports the photo, the follower count and the due date rather than the criticism, and scores 26.3, **less than half the LSTM, for choosing different true facts**. This is §5's central example of what ROUGE rewards.
 
 
 ---
@@ -221,9 +229,9 @@
 > Only a third of firefighters at the branch have any medical training, consisting of a four-day course of basic
 > first aid. Fire engines are being turned into makeshift ambulances to ferry patients to A&E.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Extractive echo — faithful (novel-bigram 0.00, unsup 0.00). Two source sentences copied; three of the reference's four points covered. No error.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Content-selection mismatch + over-length. Accurate throughout, but the South Yorkshire detail, the *only a third trained* figure and the four-day course all fall outside the reference. 74 tokens.
 
 
 ---
@@ -266,9 +274,9 @@
 > peppers due to the drought. Fresh fruit prices are projected to rise between 2.5% and 3.5%, and vegetables
 > between 2% and 3%, this year.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** **Grammatical breakage + quote misattribution.** *"it's more than just one state's internal problem," one expert says* — that is the article's own opening line, not an expert quote. The second sentence splices two source fragments into something ungrammatical; the third conflates California with the drought itself. unsup is 0.00 and dup3 is 0.00: every word is sourced and nothing repeats, yet the output is incoherent. **Neither diagnostic detects this.**
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Content-selection mismatch. Accurate and well-formed; covers the produce-price point but neither the tourist-water nor the wine-harvest point the editor kept. 96 tokens.
 
 
 ---
@@ -310,9 +318,9 @@
 > Pattaya, resulted in the themed plane. The inaugural Thai Smile "Adventure Time" flight takes place on April
 > 4, heading from Bangkok to Phuket.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Lead-bias miss. The output is the cartoon's theme-song epigraph quoted verbatim, plus one scheduling detail. The actual story — Thai Smile's Adventure Time livery on an A320 — is absent, as are all four reference entities. Selected as *highest LSTM OOV rate*, yet that rate is 0.00: `<unk>` suppression means the rare-word failure surfaces as omission instead.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** **Format drift — the clearest case in the set.** Accurate and complete, but 110 tokens against a 58-token reference, nearly double. The LLM's characteristic failure here is not faithfulness but failing to infer an unstated length specification.
 
 
 ---
@@ -352,9 +360,9 @@
 > Kowen, visibly distraught, cradled the lifeless fish and kissed it repeatedly before dropping it down the
 > toilet. The boy's mother comforted him as he burst into tears, shrieking the name of his beloved pet, Top.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Extractive echo — faithful. Drops the surname (*brooke*, not *brooke geherman*) and the closing detail that the boy burst into tears; otherwise accurate.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** **Not hallucination — refuted by checking the source.** Selected as the highest unsupported-content output (0.23), but every specific is in the article: the *374,551* view count, the caption *boy loses best friend*, and *shriek* all occur verbatim. The score reflects paraphrase, not invention. This example is the evidence behind §5's refutation of the hallucination claim.
 
 
 ---
@@ -395,9 +403,9 @@
 > screens erected to show the ceremony for those who could not fit inside the packed church. Over 6,000 people
 > protested against migrant crime on Saturday, following the appalling crime that shocked the country.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** **Relational error — the most serious LSTM failure in the set, and invisible to every diagnostic.** *"isabelle was found in a migrant camp ... her body was found at st peter's"*: Isabelle Hyart is the **living mother** who attended the funeral; the victim is her nine-year-old daughter Chloe, and St Peter's is the church, not the discovery site. unsup is 0.00 because every content word does appear in the article — **the words are sourced and the relations between them are invented.** Confirms that unsupported-content is a lexical proxy that cannot see this class of error.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Content-selection mismatch. Accurate, including the attacker's name; adds the 6,000-strong protest the reference omits. 94 tokens.
 
 
 ---
@@ -430,9 +438,9 @@
 > across the world. The event is part of the build-up for the May 2 fight against Manny Pacquiao in Las Vegas.
 > The workout will take place at 12am UK time (7pm EDT).
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Extractive echo with a truncation defect. Near-verbatim, but the opening drops *the build-up for the blockbuster fight between*, leaving *"floyd mayweather and manny pacquiao in las vegas on may 2 steps up a gear"* — ungrammatical. The content is correct.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Faithful and aligned — the best length match in the set at 57 tokens. Its unsup of 0.23 is a **denominator artefact**: the source article is only 55 words, so ordinary paraphrase moves the rate sharply. A caution against reading this proxy on short inputs.
 
 
 ---
@@ -474,9 +482,9 @@
 > applauded and rushed to congratulate Montoya. Barcelona's relentless march towards reclaiming the La Liga
 > title moved closer with a 4-0 hammering of Almeria.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** **Topic miss + fabrication — verified.** It summarises the league-results footer instead of the story the reference leads on (Montoya's trick shot). *atletico* does not occur in the article, and Barcelona beat Almeria **4-0, not 1-0**; Real Madrid's 2-0 over Rayo Vallecano is correctly copied. Fluent, confident and wrong — **with attention present**, which qualifies §5's attribution of this mode to the no-attention ablation.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Faithful and aligned. Trick shot, distance, both named team-mates and the Almeria scoreline all correct. Misses the reference's Suarez/Messi point. 87 tokens.
 
 
 ---
@@ -522,9 +530,9 @@
 > America'. The couple does not even know for sure whether they are having a son, with Kseniya joking that her
 > husband thinks he's a psychic and can see through her belly.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Topic drift. Two sentences copied accurately, then a non-sequitur — *"he has been held by the highest and most honored officials and patriots of both the u.s. and the former soviet union"* — lifted from elsewhere in the article and attached to the wrong subject. unsup 0.00: sourced text, wrong place.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** **Format drift — the longest output in the set at 118 tokens**, against a ~70-token reference, despite variant B's explicit *3–4 sentences, ~55 words*. Content is accurate and covers three of the four reference points; the failure is specification adherence, not truth.
 
 
 ---
@@ -566,7 +574,7 @@
 > defensive co-ordinator Aden Durde, who spotted him and worked with him for six months. Efe Obada joins
 > compatriot Jack Crawford on the Cowboys roster.
 
-**Error category (LSTM):** _TODO — verify against the text_
+**Error category (LSTM):** Entity omission + temporal conflation. In 25 tokens — the shortest output in the set — it never names Efe Obada, and *"has been signed by the dallas cowboys next month"* merges a completed signing with next month's mini-camp. Both reference-critical entities (Obada, Aden Durde) are missing.
 
-**Error category (LLM):** _TODO — verify against the text_
+**Error category (LLM):** Faithful and aligned. Names every entity; *jack crawford* and *compatriot* are both verified present in the source. 66 tokens, close to the reference.
 
