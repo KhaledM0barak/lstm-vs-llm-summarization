@@ -63,7 +63,7 @@ def terminal_width(default: int = 96, minimum: int = 60, maximum: int = 140) -> 
     becomes hard to track across the line.
 
     `shutil.get_terminal_size` honours a `COLUMNS` override first, then queries
-    the terminal, then falls back — so piped output and screenshots stay at a
+    the terminal, then falls back, so piped output and screenshots stay at a
     consistent `default` width, and the value can be forced for a recording.
     """
     cols = shutil.get_terminal_size(fallback=(default, 24)).columns
@@ -296,7 +296,7 @@ def run_one(article: str, reference: str | None, lstm, llm, vocab, args, ablatio
             if reference:
                 s = score(pred_a, reference)
                 meta += DIM(f"   R1={s['rouge1']:.1f}")
-            block(f"— {abl.name}", pred_a, RED, meta)
+            block(f",  {abl.name}", pred_a, RED, meta)
 
     print()
     rule()
@@ -338,7 +338,7 @@ def main() -> None:
         )
 
     print()
-    rule("LSTM seq2seq vs. LLM — abstractive summarization demo")
+    rule("LSTM seq2seq vs. LLM, abstractive summarization demo")
     lstm = LSTMSummarizer(args.checkpoint, args.vocab_file, device)
 
     # Self-check: decode a known article and verify the output is sane. If the
@@ -350,7 +350,7 @@ def main() -> None:
         probe, _ = lstm.summarize(truncate_words(probe_records[3]["article"], args.max_src_words),
                                   beam=args.beam)
         if looks_degenerate(probe):
-            print(RED("  ! GPU produced degenerate output (likely out of memory —"))
+            print(RED("  ! GPU produced degenerate output (likely out of memory , "))
             print(RED("    another process may be holding the GPU). Falling back to CPU."))
             device = torch.device("cpu")
             lstm = LSTMSummarizer(args.checkpoint, args.vocab_file, device)

@@ -1,4 +1,4 @@
-# Review 2 — Model implementation
+# Review 2: Model implementation
 
 **Owner:** Yakup Bastug
 **Files:** `src/models/encoder.py` (84), `attention.py` (158), `decoder.py` (149), `seq2seq.py` (313)
@@ -37,16 +37,16 @@ python -m src.demo --example 3 --no-llm --device cpu
 
 ## Read these specifically
 
-- `encoder.py` → `Encoder.forward()` — the `pack_padded_sequence` call and the bridge (`bridge_h`/`bridge_c`)
-- `attention.py` → `BahdanauAttention.forward()` — **this is the line to know**: `scores.masked_fill(~mask, NEG_INF)`
-- `decoder.py` → `Decoder.forward()` — all three paths (input feeding, batched, per-step) and `Decoder.step()`
+- `encoder.py` → `Encoder.forward()`, the `pack_padded_sequence` call and the bridge (`bridge_h`/`bridge_c`)
+- `attention.py` → `BahdanauAttention.forward()`, **this is the line to know**: `scores.masked_fill(~mask, NEG_INF)`
+- `decoder.py` → `Decoder.forward()`, all three paths (input feeding, batched, per-step) and `Decoder.step()`
 - `seq2seq.py` → `generate_beam()` and `_block_repeat_trigrams()`
 
 ---
 
 ## Verify these claims
 
-- [ ] Only `nn.LSTM`, `nn.Embedding`, `nn.Linear`, and `nn.Dropout` are used — no prebuilt seq2seq anything
+- [ ] Only `nn.LSTM`, `nn.Embedding`, `nn.Linear`, and `nn.Dropout` are used, with no prebuilt seq2seq anything
 - [ ] The encoder is bidirectional and the two directions are **concatenated** before the bridge projection
 - [ ] Attention masks padding **before** the softmax, not after
 - [ ] The output projection is **weight-tied** to the embedding (`out_proj.weight = embedding.weight`)
@@ -57,11 +57,11 @@ python -m src.demo --example 3 --no-llm --device cpu
 
 ## Worth scrutinizing
 
-Not known bugs — the places I'd look first.
+Not known bugs, just the places I would look first.
 
 1. **Beam search re-padding.** In `generate_beam`, when a beam finishes, the survivors are padded back to `beam_size` by duplicating the last hypothesis with score `-inf`. Convince yourself this can't let a duplicate win, and that the `-inf` scores are actually excluded from the next `topk`.
 
-2. **Trigram blocking is O(T) per step.** `_block_repeat_trigrams` rebuilds its `seen` dictionary from scratch on every decoding step. Correct but wasteful. Does it block the right thing — the token that would *complete* a repeated trigram, not the trigram itself?
+2. **Trigram blocking is O(T) per step.** `_block_repeat_trigrams` rebuilds its `seen` dictionary from scratch on every decoding step. Correct but wasteful. Does it block the right thing, the token that would *complete* a repeated trigram, not the trigram itself?
 
 3. **Input feeding forces a Python loop.** The decoder can't run as one fused LSTM call when input feeding is on, which is why training is slower than the batched path. Read the three branches in `Decoder.forward()` and be able to say why the additive score can't be batched over decoder steps (hint: the intermediate tensor would be `(B, T, S, attn_size)` ≈ 330 GB at our sizes).
 
@@ -73,10 +73,10 @@ Not known bugs — the places I'd look first.
 
 ## Be ready to answer
 
-- **"Show me your attention mechanism."** — open `attention.py`, walk the additive score `v·tanh(W_dec h + W_enc m)`, then point at the `masked_fill` and explain *why*: without it the decoder puts probability mass on `<pad>` for every short article batched with long ones, quietly corrupting the context vector.
-- *"Why suppress `<unk>` at inference?"* — an `<unk>` in a generated summary is never useful output; it's a pure error. Note the consequence: our OOV rate is 0.000 by construction, so the OOV failure shows up as **substitution**, not as visible `<unk>`.
-- *"What does input feeding do?"* — feeds the previous step's attentional vector into the current input, so the decoder knows what it already attended to.
-- *"Why tie the output projection to the embedding?"* — saves 12.8M parameters and regularizes; requires `hidden_size == emb_dim`.
+- **"Show me your attention mechanism.":** open `attention.py`, walk the additive score `v·tanh(W_dec h + W_enc m)`, then point at the `masked_fill` and explain *why*: without it the decoder puts probability mass on `<pad>` for every short article batched with long ones, quietly corrupting the context vector.
+- *"Why suppress `<unk>` at inference?"* An `<unk>` in a generated summary is never useful output; it's a pure error. Note the consequence: our OOV rate is 0.000 by construction, so the OOV failure shows up as **substitution**, not as visible `<unk>`.
+- *"What does input feeding do?"* Feeds the previous step's attentional vector into the current input, so the decoder knows what it already attended to.
+- *"Why tie the output projection to the embedding?"* Saves 12.8M parameters and regularizes; requires `hidden_size == emb_dim`.
 
 ---
 
@@ -84,7 +84,7 @@ Not known bugs — the places I'd look first.
 
 ```
 Reviewed by: Yakup Bastug                Date: 2026-08-10
-Ran the commands above and output matched:   [x] yes  [ ] no — differences:
+Ran the commands above and output matched:   [x] yes  [ ] no, differences:
 
 Findings / concerns:
   Verified: 15,347,280 total parameters / 12,800,000 embedding, attention

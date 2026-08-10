@@ -1,4 +1,4 @@
-# Review 1 — Data & preprocessing
+# Review 1: Data & preprocessing
 
 **Owner:** Mohanad Bahammam
 **Files:** `src/data/prepare.py` (166), `tokenizer.py` (91), `vocab.py` (93), `build_vocab.py` (53), `dataset.py` (199)
@@ -32,7 +32,7 @@ print('sentences :', split_sentences(normalize(s)))
 ```
 
 **Expect:** Apache-2.0; 79,996 / 3,000 / 11,490 / 500; coverage 0.9817, OOV 0.01831.
-The sentence splitter must return **2** sentences, not 5 — it must not break on
+The sentence splitter must return **2** sentences, not 5, it must not break on
 "U.S.", "Mr.", or "Jan.".
 
 ---
@@ -40,7 +40,7 @@ The sentence splitter must return **2** sentences, not 5 — it must not break o
 ## Read these specifically
 
 - `tokenizer.py` → `normalize()`, `_PREAMBLE_RE`, `split_sentences()` and `_ABBREVIATIONS`
-- `vocab.py` → `Vocab.build()` — note the tie-breaking sort
+- `vocab.py` → `Vocab.build()`, note the tie-breaking sort
 - `prepare.py` → `_clean_summary()`, `_to_record()`, and the split logic in `main()`
 - `dataset.py` → `collate_batch()` and `BucketBatchSampler`
 
@@ -52,7 +52,7 @@ The sentence splitter must return **2** sentences, not 5 — it must not break o
 - [ ] The 500-article shared set is drawn from the **processed test split** with a fixed seed, and its indices are saved in `dataset_meta.json`
 - [ ] Sorting in `Vocab.build()` breaks ties **alphabetically**, so the vocabulary is byte-identical across machines
 - [ ] Articles shorter than 30 tokens or summaries shorter than 5 are dropped (`_to_record`)
-- [ ] `collate_batch` builds `src_mask` from `src.ne(PAD_ID)` — the mask the attention depends on
+- [ ] `collate_batch` builds `src_mask` from `src.ne(PAD_ID)`, the mask the attention depends on
 
 ---
 
@@ -64,7 +64,7 @@ These are debatable choices, not known bugs. Form your own view.
 
 2. **`_PREAMBLE_RE` doesn't catch everything.** It strips a leading `(cnn)` but not `los angeles (cnn)`, so some articles keep a dateline glued to the first word (`"(cnn)it's"`). Check how often this happens and whether it matters after tokenization.
 
-3. **Shape quantization loses data.** `collate_batch` rounds padding up to multiples of 64/16, and the training sampler drops each pool's ragged final batch — under 2% of examples per epoch. Confirm the reshuffle means a *different* remainder is dropped each epoch (`BucketBatchSampler.set_epoch`), so no example is permanently excluded.
+3. **Shape quantization loses data.** `collate_batch` rounds padding up to multiples of 64/16, and the training sampler drops each pool's ragged final batch, under 2% of examples per epoch. Confirm the reshuffle means a *different* remainder is dropped each epoch (`BucketBatchSampler.set_epoch`), so no example is permanently excluded.
 
 4. **Lowercasing is irreversible.** We lowercase everything, so the model can never produce a capital letter and `detokenize()` is only a best-effort inverse. Is that acceptable for the summaries we generate? What does it cost us on named entities?
 
@@ -73,7 +73,7 @@ These are debatable choices, not known bugs. Form your own view.
 ## Be ready to answer
 
 - *"How do you know there's no train/test leakage?"*
-- *"Why a word-level tokenizer instead of subwords like BPE?"* (the real answer is about making OOV **observable** — a subword vocabulary hides it by construction)
+- *"Why a word-level tokenizer instead of subwords like BPE?"* (the real answer is about making OOV **observable:** a subword vocabulary hides it by construction)
 - *"Your vocabulary covers 98.17% of tokens. What happens to the other 1.83%?"*
 - *"Why truncate the source to 400 tokens when the mean article is 785?"*
 
@@ -83,7 +83,7 @@ These are debatable choices, not known bugs. Form your own view.
 
 ```
 Reviewed by: Mohanad Bahammam            Date: 2026-08-10
-Ran the commands above and output matched:   [x] yes  [ ] no — differences:
+Ran the commands above and output matched:   [x] yes  [ ] no, differences:
 
 Findings / concerns:
   Three defects found in split_sentences() and fixed during review:

@@ -25,7 +25,7 @@ wc -l runs/llm/*.jsonl          # each setting counts up to 500
 tail -c 300 finish.log | tr '\r' '\n' | tail -2
 ```
 
-**Even if it does die, nothing is lost.** The runner is resumable — it reads the
+**Even if it does die, nothing is lost.** The runner is resumable, it reads the
 existing output file, skips every example already completed, and continues:
 
 ```bash
@@ -48,7 +48,7 @@ cd ~
 claude --resume
 ```
 
-That opens a picker listing recent conversations — choose from the list.
+That opens a picker listing recent conversations, choose from the list.
 
 To jump straight back into the most recent one instead of picking:
 
@@ -57,7 +57,7 @@ cd ~
 claude --continue
 ```
 
-**Sessions started elsewhere** — `--resume` only lists conversations for the
+**Sessions started elsewhere:** `--resume` only lists conversations for the
 directory you're in, so `cd` there first:
 
 ```bash

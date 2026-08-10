@@ -120,7 +120,7 @@ def main() -> None:
             shown += " [...]"
 
         lines.append(f"\n---\n\n## {n}. {label}\n")
-        lines.append(f"**Example id:** `{ex_id}` — source length {rec['src_len']} tokens\n")
+        lines.append(f"**Example id:** `{ex_id}`, source length {rec['src_len']} tokens\n")
         lines.append("**Source (truncated for display):**\n")
         lines.append("> " + textwrap.fill(shown, 110).replace("\n", "\n> ") + "\n")
         lines.append("**Reference:**\n")
@@ -128,7 +128,7 @@ def main() -> None:
 
         for sys_name, row in ((lstm_name, lstm), (llm_name, llm)):
             pred = systems.get(sys_name, {}).get(ex_id, "(missing)")
-            lines.append(f"**{sys_name}** — ")
+            lines.append(f"**{sys_name}:** ")
             lines.append(
                 f"`R1={row['rouge1']*100:.1f}` "
                 f"`dup3={row['dup_trigram_rate']:.2f}` "
@@ -149,8 +149,8 @@ def main() -> None:
                 + "\n"
             )
 
-        lines.append("**Error category (LSTM):** _TODO — verify against the text_\n")
-        lines.append("**Error category (LLM):** _TODO — verify against the text_\n")
+        lines.append("**Error category (LSTM):** _TODO, verify against the text_\n")
+        lines.append("**Error category (LLM):** _TODO, verify against the text_\n")
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -1,6 +1,6 @@
 """Data pipeline: tokenization, vocabulary, batching, masking.
 
-These target the places where a bug is silent — a wrong mask or a misaligned
+These target the places where a bug is silent, a wrong mask or a misaligned
 target shifts every number in the report without raising anything.
 """
 

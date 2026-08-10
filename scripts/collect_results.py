@@ -27,9 +27,9 @@ SYSTEM_ORDER = [
     ("lstm_beam", "LSTM + attention (beam 4)"),
     ("lstm_greedy", "LSTM + attention (greedy)"),
     ("lstm_beam_norepeat", "LSTM + attention (beam, no trigram block)"),
-    ("no_attention", "— ablation: no attention"),
-    ("unidirectional", "— ablation: unidirectional encoder"),
-    ("short_context", "— ablation: 100-token encoder window"),
+    ("no_attention", ",  ablation: no attention"),
+    ("unidirectional", ",  ablation: unidirectional encoder"),
+    ("short_context", ",  ablation: 100-token encoder window"),
     ("llm_A_zeroshot", "LLM variant A (plain), zero-shot"),
     ("llm_A_fewshot", "LLM variant A (plain), few-shot k=4"),
     ("llm_B_zeroshot", "LLM variant B (style-matched), zero-shot"),
@@ -69,7 +69,7 @@ def main() -> None:
     vstats = load_json(DATA / "vocab.stats.json")
     if meta:
         data["dataset"] = {k: v for k, v in meta.items() if k != "test_llm_indices"}
-        md.append("\n## Table 1 — Dataset\n")
+        md.append("\n## Table 1, Dataset\n")
         rows = [
             [name, f"{s['n']:,}", s["mean_src_tokens"], s["mean_tgt_tokens"]]
             for name, s in meta["splits"].items()
@@ -110,7 +110,7 @@ def main() -> None:
             f"{min((h['val_ppl'] for h in s['history']), default=float('nan')):.1f}",
         ])
     if train_rows:
-        md.append("\n## Table 2 — Training runs\n")
+        md.append("\n## Table 2, Training runs\n")
         md.append(table(
             ["Run", "Parameters", "Epochs run", "Train hours", "Best val loss", "Best val PPL"],
             train_rows,
@@ -135,7 +135,7 @@ def main() -> None:
         present = [(k, label) for k, label in SYSTEM_ORDER if k in res["overall"]]
         present += [(k, k) for k in res["overall"] if k not in dict(SYSTEM_ORDER)]
 
-        md.append(f"\n## Table 3 — Main results (ROUGE F1 x100, 95% bootstrap CI, n={res['n_test']})\n")
+        md.append(f"\n## Table 3, Main results (ROUGE F1 x100, 95% bootstrap CI, n={res['n_test']})\n")
         md.append(table(
             ["System", "ROUGE-1", "ROUGE-2", "ROUGE-Lsum", "Mean length"],
             [[label,
@@ -146,7 +146,7 @@ def main() -> None:
         ))
 
         table_no += 1
-        md.append(f"\n## Table {table_no} — Behavioral diagnostics (means)\n")
+        md.append(f"\n## Table {table_no}, Behavioral diagnostics (means)\n")
         md.append(table(
             ["System", "Dup-trigram", "Novel-bigram", "Unsupported content", "OOV rate", "Empty"],
             [[label,
@@ -162,7 +162,7 @@ def main() -> None:
         for bucket_kind, buckets in res["by_bucket"].items():
             bnames = sorted(buckets)
             table_no += 1
-            md.append(f"\n## Table {table_no} — ROUGE-1 by {bucket_kind}\n")
+            md.append(f"\n## Table {table_no}, ROUGE-1 by {bucket_kind}\n")
             md.append(table(
                 ["System"] + bnames,
                 [[label] + [
@@ -209,7 +209,7 @@ def main() -> None:
         unit_col = "GPU-h / 1k summaries" if is_local else "$ / 1k summaries"
 
         table_no += 1
-        md.append(f"\n## Table {table_no} — LLM baseline compute and latency\n")
+        md.append(f"\n## Table {table_no}, LLM baseline compute and latency\n")
         rows = []
         for s in sorted(cost["settings"], key=lambda x: x["setting"]):
             u = s["usage"]
@@ -233,7 +233,7 @@ def main() -> None:
         if is_local:
             d = cost.get("backend_details", {})
             md.append(
-                f"\nBackend: **local open-weights** — `{cost['model']}` "
+                f"\nBackend: **local open-weights:** `{cost['model']}` "
                 f"({d.get('quantization', '?')}, {d.get('sampling', '?')}) via "
                 f"{d.get('framework', 'mlx-lm')} on the Apple silicon GPU. "
                 f"Monetary cost **$0.00**; total compute "
@@ -242,23 +242,23 @@ def main() -> None:
             )
         else:
             md.append(
-                f"\nBackend: **hosted API** — `{cost['model']}` at "
+                f"\nBackend: **hosted API:** `{cost['model']}` at "
                 f"${cost.get('price_per_mtok_input_usd', 0):.2f}/MTok input, "
                 f"${cost.get('price_per_mtok_output_usd', 0):.2f}/MTok output. "
                 f"**Total measured cost: ${cost['total_cost_usd']:.4f}** over "
                 f"{cost['total_requests']:,} requests."
             )
 
-        md.append("\n## Appendix A — Exact prompts\n")
+        md.append("\n## Appendix A, Exact prompts\n")
         for s in cost["settings"]:
             # Tolerate entries written by an earlier version of the runner:
             # cost_summary.json merges settings across runs, so a stale entry
             # must degrade the appendix, not crash the whole collector.
             if not s.get("system_prompt"):
-                md.append(f"\n### {s['setting']} — prompt not recorded in this run's metadata\n")
+                md.append(f"\n### {s['setting']}, prompt not recorded in this run's metadata\n")
                 continue
             md.append(
-                f"\n### {s['setting']} (variant {s.get('prompt_variant', '?')} — "
+                f"\n### {s['setting']} (variant {s.get('prompt_variant', '?')}, "
                 f"{s.get('prompt_variant_name', '?')}, {s.get('shots', '?')}-shot, "
                 f"{s.get('input_condition', '?')})\n"
             )

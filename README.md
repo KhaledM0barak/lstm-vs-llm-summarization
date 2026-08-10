@@ -1,15 +1,16 @@
 # LSTM seq2seq vs. LLM on abstractive summarization
 
-Course project: a from-scratch LSTM encoder–decoder with attention, trained on
+Course project: a from-scratch LSTM encoder-decoder with attention, trained on
 CNN/DailyMail, compared against a locally-run open-weights LLM baseline
 (Llama 3.1 8B Instruct) on an identical test set.
 
-The LSTM is implemented directly in PyTorch — `nn.LSTM` and `nn.Embedding` only.
+The LSTM is implemented directly in PyTorch using `nn.LSTM` and `nn.Embedding`
+only.
 No prebuilt seq2seq pipeline (Fairseq, OpenNMT, HuggingFace `Seq2SeqTrainer`) is
 used anywhere in the model, training loop, or decoding.
 
 > **Running or recording the demo? Go straight to
-> [§4 — The demo and the 8-minute video](#4-the-demo-and-the-8-minute-video).**
+> [§4: The demo and the 8-minute video](#4-the-demo-and-the-8-minute-video).**
 > Four commands on any machine; no training, no dataset, no LLM download.
 
 ---
@@ -36,8 +37,8 @@ as-is; the only addition is deterministic, seeded subsampling for tractability:
 |---|---|---|
 | `train.jsonl` | 79,996 | Model training (subsampled from 287,113 with `--seed 1234`) |
 | `validation.jsonl` | 3,000 | Early stopping and LR scheduling |
-| `test.jsonl` | 11,490 | Full test set — LSTM headline number |
-| `test_llm.jsonl` | 500 | **The shared head-to-head set.** Every system — LSTM, every ablation, and all five LLM settings — is scored on exactly this file. |
+| `test.jsonl` | 11,490 | Full test set, used for the LSTM headline number |
+| `test_llm.jsonl` | 500 | **The shared head-to-head set.** Every system, LSTM, every ablation, and all five LLM settings, is scored on exactly this file. |
 
 `test_llm.jsonl` bounds the cost of the head-to-head comparison: generating
 summaries for all 11,490 test articles across five LLM settings would take
@@ -84,8 +85,8 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-The LLM baseline runs a **local open-weights model** by default — no API key and
-no cost. The model (~4.5 GB) downloads automatically on first use.
+The LLM baseline runs a **local open-weights model** by default, so there is no
+API key and no cost. The model (~4.5 GB) downloads automatically on first use.
 
 `mlx` and `mlx-lm` are Apple-silicon only; the requirement markers skip them
 elsewhere, so the install succeeds on any platform. To generate LLM summaries on
@@ -133,7 +134,7 @@ python -m src.demo --example 3 --ablations
 ```
 
 You should see the article, the reference summary, the LSTM's summary at
-**ROUGE-1 36.9**, the LLM's at **33.3**, and the three ablations — including the
+**ROUGE-1 36.9**, the LLM's at **33.3**, and the three ablations, including the
 no-attention model placing a Louisville fire in *San Diego*.
 
 ### 4.2 Record the video
@@ -147,16 +148,16 @@ bash scripts/walkthrough.sh            # record this: 7:05-7:10
 ```
 
 1. Rehearse with `--fast` first. If anything errors, fix it before recording.
-2. Full-screen the terminal, 100–120 columns (`tput cols`), large font, dark
+2. Full-screen the terminal, 100-120 columns (`tput cols`), large font, dark
    theme. The demo adapts its width to the window.
-3. Start the screen recording — macOS `Cmd+Shift+5`, or QuickTime → New Screen
+3. Start the screen recording, macOS `Cmd+Shift+5`, or QuickTime → New Screen
    Recording.
 4. Run `bash scripts/walkthrough.sh` and **do not touch the keyboard** until the
    closing rule prints.
 5. Stop, check it is under 8:00 and legible at half size, upload, and paste the
    URL into Appendix D of the report.
 
-The video needs no voice-over — every explanation is on screen. If you want one
+The video needs no voice-over, every explanation is on screen. If you want one
 anyway, [`NARRATION.md`](NARRATION.md) is a full spoken script with cue times
 measured from a real run, each block written to fit its window at speaking pace.
 Record the screen first, then read the narration over playback; nothing has to
@@ -171,7 +172,7 @@ to expect from each.
 |---|---|
 | `--fast` | Rehearsal. No pauses. |
 | `--pace 0.85` | Shorter, ~6:10. `--pace 1.1` → ~7:50. |
-| `--step` | Advance manually with Enter — use this if you want to narrate. |
+| `--step` | Advance manually with Enter, use this if you want to narrate. |
 | `--from N` | Start at segment N, for re-recording one part. |
 | `--replay` | Force recorded LLM responses instead of loading the model. |
 
@@ -183,17 +184,17 @@ verification checklist.
 
 | Mark | # | Segment |
 |---|---|---|
-| 0:00 | — | Title, group, repo |
-| 0:08 | 1 | Task and data — official splits, the same 500 articles for all systems |
-| 0:32 | 2 | Lead-3 reproduced against See et al. (2017) — the credibility anchor |
+| 0:00 | | Title, group, repo |
+| 0:08 | 1 | Task and data, official splits, the same 500 articles for all systems |
+| 0:32 | 2 | Lead-3 reproduced against See et al. (2017), the credibility anchor |
 | 0:58 | 3 | The model, built from `nn.*` primitives, no framework |
-| 1:20 | 4 | The attention mask — 62.8% of attention lands on padding without it |
+| 1:20 | 4 | The attention mask, 62.8% of attention lands on padding without it |
 | 1:46 | 5 | **Live:** one article through the LSTM, the LLM, and three ablations |
 | 2:30 | 6 | **Live:** out-of-domain text the vocabulary cannot express |
 | 3:10 | 7 | Results, all systems |
-| 3:36 | 8 | Three numbers: −14.02, +2.83, 39.89 |
+| 3:36 | 8 | Three numbers: -14.02, +2.83, 39.89 |
 | 4:10 | 9 | Paired bootstrap, including a result reported as *not* significant |
-| 4:40 | 10 | **Live:** error analysis — fluent output at ROUGE-2 exactly 0.0 |
+| 4:40 | 10 | **Live:** error analysis, fluent output at ROUGE-2 exactly 0.0 |
 | 5:16 | 11 | The reverse case: a correct LLM summary scoring less than half |
 | 6:00 | 12 | The engineering trade-off |
 | 6:22 | 13 | Conclusion |
@@ -203,7 +204,7 @@ verification checklist.
 Running Llama 3.1 8B live needs Apple silicon, `mlx-lm`, and a 4.5 GB download.
 Everywhere else the demo replays responses from `examples/llm_cache.json`,
 recorded by `scripts/build_llm_cache.py` through the *same* code path a live run
-uses — verified to produce identical text and identical ROUGE.
+uses, verified to produce identical text and identical ROUGE.
 
 The screen says which one it used: the header prints `replayed from cache,
 recorded <date>` and the output is labelled `· replayed`. A recording should
@@ -220,7 +221,7 @@ LSTM side alone and works anywhere.
 All commands are run from the repository root, with the virtualenv active. Every
 step is seeded with `1234`.
 
-### Step 1 — Build the dataset (~2 min + download)
+### Step 1: Build the dataset (~2 min + download)
 
 ```bash
 python -m src.data.prepare \
@@ -232,7 +233,7 @@ Writes `train.jsonl`, `validation.jsonl`, `test.jsonl`, `test_llm.jsonl`, and
 `dataset_meta.json` (which records split sizes, license, and the exact indices of
 the head-to-head subset).
 
-### Step 2 — Build the vocabulary (~1 min)
+### Step 2: Build the vocabulary (~1 min)
 
 ```bash
 python -m src.data.build_vocab \
@@ -243,7 +244,7 @@ python -m src.data.build_vocab \
 Produces a 50,000-type shared vocabulary covering **98.17%** of training tokens
 (1.83% OOV).
 
-### Step 3 — Train the model and the ablations
+### Step 3: Train the model and the ablations
 
 ```bash
 python -m src.train --config configs/base.yaml
@@ -260,7 +261,7 @@ description). A fast end-to-end check of the whole pipeline:
 python -m src.train --config configs/smoke.yaml     # ~30 s
 ```
 
-### Step 4 — Generate LSTM summaries on the shared test set
+### Step 4: Generate LSTM summaries on the shared test set
 
 ```bash
 python -m src.generate --checkpoint runs/base/best.pt \
@@ -280,10 +281,10 @@ python -m src.generate --checkpoint runs/base/best.pt \
     --out runs/base/preds_beam_norepeat.jsonl --decode beam --no-block-trigram
 ```
 
-### Step 5 — Run the LLM baseline
+### Step 5: Run the LLM baseline
 
 Llama 3.1 8B Instruct (4-bit) run locally via MLX, greedy decoding. Two prompt
-variants × {zero-shot, few-shot k=4} = four settings, all on the same 500
+variants x {zero-shot, few-shot k=4} = four settings, all on the same 500
 articles. Inspect the exact prompts first (loads nothing):
 
 ```bash
@@ -310,7 +311,7 @@ and measured compute (GPU-hours locally, USD via the API backend).
 `runs/llm/cost_summary.json` aggregates across settings. The runner is
 resumable: rerunning after an interruption skips completed examples.
 
-### Step 6 — Score everything
+### Step 6: Score everything
 
 ```bash
 python -m src.evaluate \
@@ -333,7 +334,7 @@ confidence intervals, the same metrics bucketed by input length and by reference
 abstractiveness, and diagnostic rates (repetition, OOV, unsupported content).
 A Lead-3 baseline is added automatically.
 
-### Step 7 — Build the qualitative comparison
+### Step 7: Build the qualitative comparison
 
 ```bash
 python -m src.qualitative \
@@ -343,9 +344,9 @@ python -m src.qualitative \
     --out results/qualitative.md
 ```
 
-Selects test examples by *behavior* — most repetitive LSTM output, highest
+Selects test examples by *behavior*, most repetitive LSTM output, highest
 unsupported-content LLM output, largest and smallest gaps, longest and shortest
-articles — rather than by score, and emits them side by side with the measured
+articles, rather than by score, and emits them side by side with the measured
 diagnostics attached.
 
 ---
@@ -357,7 +358,7 @@ pip install pytest
 python -m pytest tests/ -q          # 156 tests, ~70 s
 ```
 
-The suite covers the places where a bug would be **silent** — a wrong attention
+The suite covers the places where a bug would be **silent:** a wrong attention
 mask, a misaligned target shift, or a miscounted diagnostic changes every
 reported number without raising anything. Notable checks:
 
@@ -368,7 +369,7 @@ reported number without raising anything. Notable checks:
 | `test_chunked_loss_matches_unchunked_reference` | The chunked projection (a memory optimization) must be numerically identical to projecting at once |
 | `test_collate_target_shift_is_correct` | An off-by-one in the `<bos>`/`<eos>` shift trains the model to predict the wrong token |
 | `test_bucket_sampler_covers_every_example_exactly_once` | Guards against silently losing or duplicating training data |
-| `test_split_sentences_boundaries` | Asserts split *positions*, not just counts — this caught two real bugs |
+| `test_split_sentences_boundaries` | Asserts split *positions*, not just counts, this caught two real bugs |
 | `test_paired_bootstrap_beats_independent_cis_on_correlated_data` | Demonstrates the case the paired test exists for |
 | `tests/test_integration.py` | Full pipeline on a synthetic corpus: vocab → train → generate → evaluate → qualitative |
 
@@ -378,7 +379,7 @@ history and in Appendix E of the report.
 ## 6. Model
 
 ```
-tokens → Embedding(50k × 256, shared)
+tokens → Embedding(50k x 256, shared)
        → BiLSTM encoder (256 hidden/direction, 1 layer)
        → bridge: tanh(W·[h_fwd; h_bwd]) → decoder initial state
        → Bahdanau (additive) attention, masked over padding
@@ -400,8 +401,8 @@ Implementation notes worth knowing:
 - Padding is masked before the attention softmax; without it the decoder puts
   probability mass on `<pad>` for every short article in a batch of long ones.
 - The output projection is applied once to the stacked `(B, T, H)` decoder
-  states rather than once per step — one large GEMM instead of 100 small ones,
-  worth roughly a 3× speedup on MPS.
+  states rather than once per step, one large GEMM instead of 100 small ones,
+  worth roughly a 3x speedup on MPS.
 - `<unk>` and `<pad>` are suppressed at inference: an `<unk>` in a generated
   summary is a pure error rather than a useful token.
 

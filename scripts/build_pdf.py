@@ -154,7 +154,7 @@ def main() -> None:
     if pages:
         print(
             "\nThe appendices start on their own page (forced break before Appendix A),\n"
-            "so the body page count is that page number minus one — check it in a\n"
+            "so the body page count is that page number minus one, check it in a\n"
             "viewer. The 5-page cap applies to the body only; references and\n"
             "appendices are excluded."
         )

@@ -126,7 +126,7 @@ def paired_bootstrap(
     per-example scores are strongly correlated across systems (a hard article is
     hard for everyone). Comparing two independent confidence intervals throws
     that pairing away: non-overlapping intervals do imply a real difference, but
-    overlapping intervals do **not** imply the absence of one — the usual case
+    overlapping intervals do **not** imply the absence of one, the usual case
     where an independent-CI reading is too conservative.
 
     This resamples article indices once per replicate and applies the same

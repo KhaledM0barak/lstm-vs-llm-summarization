@@ -11,13 +11,13 @@ Two better options before you resort to typing:
 | `bash scripts/walkthrough.sh` | Runs itself, paced for recording. 7:11. |
 | `bash scripts/walkthrough.sh --step` | Same commands, same on-screen text, but **waits for Enter** between segments. You control the pace without typing anything. |
 
-`--step` gives you everything manual typing gives you — control over when to move
-on — with none of the risk of a typo on camera. Use it unless you specifically
+`--step` gives you everything manual typing gives you, control over when to move
+on, with none of the risk of a typo on camera. Use it unless you specifically
 want the audience to watch you type.
 
 ### What typing costs you
 
-The walkthrough does not just run these commands — it prints **103 lines of
+The walkthrough does not just run these commands, it prints **103 lines of
 explanation** around them: 13 framed segment headers and the commentary after
 each command ("See et al. published 40.34...", "the no-attention model places a
 Louisville fire in SAN DIEGO", "62.8% of the attention mass lands on PADDING").
@@ -27,7 +27,7 @@ terminal output with your voice over it. That is a legitimate demo, but it
 changes two things:
 
 - **Narration stops being optional.** With the script, the video explains itself
-  in silence. Typed, the audio carries the entire argument — if the sound fails,
+  in silence. Typed, the audio carries the entire argument, so if the sound fails,
   the recording is unusable.
 - **The cue times in `NARRATION.md` no longer apply.** They were measured from a
   paced run of the script. Use the **Say:** lines below instead and ignore the
@@ -80,13 +80,13 @@ held-out articles.
 awk '/^## Overall/{f=1} /^## Diagnostics/{f=0} f' results/lead3_fulltest/results.md
 ```
 
-**Look for:** one row — `lead3_baseline | 11490 | 40.04 ... 17.5 ... 36.34`.
+**Look for:** one row, `lead3_baseline | 11490 | 40.04 ... 17.5 ... 36.34`.
 
 **Say:** See et al. (2017) published 40.34 / 17.70 / 36.57. Agreement to ~0.3
 ROUGE is what makes every other number believable.
 
 > If this prints only the heading and no table, you have an older copy of the
-> repo — `git pull`. That exact bug was fixed on 2026-08-09.
+> repo, `git pull`. That exact bug was fixed on 2026-08-09.
 
 **Move on when:** the row is on screen. Instant.
 
@@ -98,7 +98,7 @@ ROUGE is what makes every other number believable.
 grep -rho "nn\.[A-Za-z]*" src/models/*.py | sort | uniq -c | sort -rn | head -6
 ```
 
-**Look for:** counts of `nn.Linear`, `nn.Module`, `nn.LSTM`, `nn.Embedding` —
+**Look for:** counts of `nn.Linear`, `nn.Module`, `nn.LSTM`, `nn.Embedding`,
 and nothing resembling a framework.
 
 **Say:** no Fairseq, no OpenNMT, no HuggingFace trainer. 15,347,280 parameters.
@@ -113,7 +113,7 @@ and nothing resembling a framework.
 grep -n "masked_fill" src/models/attention.py
 ```
 
-**Look for:** three hits — lines 48, 82 and 95 of `attention.py`. Bahdanau,
+**Look for:** three hits, lines 48, 82 and 95 of `attention.py`. Bahdanau,
 Luong and the batched path each mask independently; point at line 48.
 
 **Say:** without it, 62.8% of the attention mass lands on padding, and it never
@@ -135,18 +135,18 @@ python -m src.demo --example 3 --ablations
 |---|---|
 | `LSTM + attention` | `R1=36.9 R2=22.2` |
 | `LLM (Llama-3.1-8B-Instruct-4bit)` | `R1=33.3 R2=18.4` |
-| `— no_attention` | `R1=17.5`, `unsupported=0.56`, and the text says **San Diego** |
-| `— unidirectional` | `R1=44.0` |
-| `— short_context` | `R1=44.0` |
+| `,  no_attention` | `R1=17.5`, `unsupported=0.56`, and the text says **San Diego** |
+| `,  unidirectional` | `R1=44.0` |
+| `,  short_context` | `R1=44.0` |
 
-**Say:** the no-attention model relocates a Louisville fire to San Diego — the
+**Say:** the no-attention model relocates a Louisville fire to San Diego, the
 fixed-vector bottleneck. And that the LSTM beats the LLM on *this* example,
 which is why one example never carries a claim.
 
 **Move on when:** all five rows have printed. ~10 s.
 
 > If any output is repeated words (`the the the a the`) the GPU is out of memory.
-> The demo detects this and falls back to CPU with a warning — stop and re-run
+> The demo detects this and falls back to CPU with a warning, stop and re-run
 > rather than record it.
 
 ---
@@ -158,7 +158,7 @@ python -m src.demo --file examples/demo_article_battery.txt
 ```
 
 **Look for:** the LSTM output ending at *"have developed a battery"*, and the LLM
-producing a full technical summary. No reference summary or ROUGE here — this
+producing a full technical summary. No reference summary or ROUGE here, this
 article has no gold answer.
 
 **Say:** `electrolyte`, `anode`, `graphite` and the researcher's name are all
@@ -174,16 +174,16 @@ outside the 50k vocabulary. OOV 5.3% here vs 1.83% in domain.
 sed -n '/## Overall/,/## Diagnostics/p' results/results.md
 ```
 
-**Look for:** 12 rows — 11 systems plus `lead3_baseline` — with bootstrap CIs. `llm_B_zeroshot` top at 41.35,
-`lstm_beam` at 35.00, `lead3_baseline` at 39.89 — above four of five LLM rows.
+**Look for:** 12 rows, 11 systems plus `lead3_baseline`, with bootstrap CIs. `llm_B_zeroshot` top at 41.35,
+`lstm_beam` at 35.00, `lead3_baseline` at 39.89, above four of five LLM rows.
 
 **Move on when:** the whole table is up. Instant.
 
 ---
 
-## 8. Three numbers *(nothing to type — talk over the table above)*
+## 8. Three numbers *(nothing to type: talk over the table above)*
 
-−14.02 · +2.83 · 39.89. See `NARRATION.md`.
+-14.02 · +2.83 · 39.89. See `NARRATION.md`.
 
 ---
 
@@ -193,7 +193,7 @@ sed -n '/## Overall/,/## Diagnostics/p' results/results.md
 sed -n '/## Paired bootstrap/,/## ROUGE-1 by/p' results/results.md | head -20
 ```
 
-**Look for:** the `Δ ROUGE-1 [95% CI]` and `p` columns. `no_attention` at −14.02,
+**Look for:** the `Δ ROUGE-1 [95% CI]` and `p` columns. `no_attention` at -14.02,
 `llm_B_zeroshot` at +6.35, and `short_context` at **0.0532 (n.s.)**.
 
 **Say:** the 100-token encoder window is the one we report as *not* significant.
@@ -208,7 +208,7 @@ sed -n '/## Paired bootstrap/,/## ROUGE-1 by/p' results/results.md | head -20
 python -m src.demo --example 112
 ```
 
-**Look for:** `LSTM + attention ... R1=10.5 R2=0.0` — ROUGE-2 exactly zero — and
+**Look for:** `LSTM + attention ... R1=10.5 R2=0.0`, ROUGE-2 exactly zero, and
 an output naming nobody, saying both "hat-trick" and "brace", ending "to win a
 win".
 
@@ -237,7 +237,7 @@ line stating **$0.00** and 4.07 GPU-hours total.
 against 2.85 s.
 
 > The walkthrough script builds a cleaner side-by-side table here with an inline
-> Python snippet. It is not worth typing on camera — this table carries the same
+> Python snippet. It is not worth typing on camera, this table carries the same
 > point.
 
 **Move on when:** the table is up. Instant.
@@ -252,10 +252,10 @@ See `NARRATION.md`. Then stop the recording.
 
 ## Time budget
 
-The typed path has almost no dead air — the three live commands are ~28 s total
+The typed path has almost no dead air, the three live commands are ~28 s total
 and everything else is instant. That means **you are talking continuously for
 about seven minutes**, with no pauses built in. The walkthrough script exists
 precisely to give you those pauses.
 
-If you type it manually, rehearse once with a timer. Target 7:00–7:45; do not
+If you type it manually, rehearse once with a timer. Target 7:00-7:45; do not
 exceed 8:00.
