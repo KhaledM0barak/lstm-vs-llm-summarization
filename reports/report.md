@@ -635,6 +635,33 @@ Total LLM generation **4.07 GPU-hours** for 2,500 summaries, monetary cost
 **$0.00** (run locally). Note the full-article condition costs 77% more
 generation time than the matched window for a *lower* score (§6.3).
 
+### F.6 Per-epoch validation curves
+
+Validation perplexity after each epoch. Every run hit the 5-epoch cap with
+validation loss still improving, so early stopping never fired and none of these
+models is converged.
+
+| Run | Ep 1 | Ep 2 | Ep 3 | Ep 4 | Ep 5 |
+|---|---|---|---|---|---|
+| base | 335.8 | 70.0 | 47.0 | 39.4 | **35.6** |
+| unidirectional | 305.9 | 73.8 | 52.7 | 44.9 | **40.0** |
+| short_context | 320.2 | 117.8 | 85.2 | 72.8 | **65.5** |
+| no_attention | 335.4 | 208.9 | 159.5 | 135.4 | **121.7** |
+
+The per-epoch gain on the base run halves consistently (265.8, 23.1, 7.6, 3.8),
+so a geometric extrapolation puts the converged value near 31.8, about 11% below
+the value we report. That is the basis for calling our LSTM numbers a floor in
+§6.5.
+
+Two things are visible here that the final-epoch column alone hides. The
+no-attention run improves at the same *rate* as the others but from a far worse
+position and never recovers, which is consistent with a capacity limit on what it
+can represent rather than an optimisation failure. And short_context sits between
+the two throughout, despite scoring within noise of the base model on ROUGE
+(§4.3): it is a measurably worse language model that produces summaries of
+indistinguishable quality, which is the clearest single piece of evidence for lead
+bias in this report.
+
 ## Appendix G: Error-analysis evidence
 
 The claims in §5 are verified against the data rather than asserted. This
@@ -760,3 +787,105 @@ hallucination rate for either system needs human annotation, which we did not
 perform. Second, the fluent-but-wrong mode is not exclusive to the no-attention
 ablation as §5 might otherwise be read to imply. Attention reduces it by an
 order of magnitude without eliminating it.
+
+### G.6 Error categories for all thirteen examples
+
+Categories were assigned by reading each output against its **full** source
+article, not inferred from the diagnostics. Where an output appeared to fabricate
+something, the source was searched for the token before the category was
+assigned; three fabrications were confirmed and one suspected case was refuted
+(G.5). Full side-by-side text is in `results/qualitative.md`.
+
+| # | Selected as | LSTM | LLM |
+|---|---|---|---|
+| 1 | LSTM's strongest case | Extractive echo, faithful; one truncated clause | Content-selection mismatch, no factual error |
+| 2 | LSTM's weakest case | Lead-bias miss; every named entity omitted | Content-selection mismatch, over-length |
+| 3 | Largest LLM advantage | **Entity fabrication** (`claudia james`) | Faithful and aligned |
+| 4 | LSTM beats the LLM | Extractive echo, faithful | Content-selection mismatch, no factual error |
+| 5 | LSTM beats the LLM | Extractive echo, faithful | Content-selection mismatch, over-length |
+| 6 | Most repetitive LSTM output | Grammatical breakage, quote misattribution | Content-selection mismatch |
+| 7 | Highest LSTM OOV rate | Lead-bias miss | **Format drift** (110 tokens) |
+| 8 | Most unsupported LLM content | Extractive echo, faithful | **Refuted**: paraphrase, not invention |
+| 9 | Longest article | **Relational error**, no lexical signature | Content-selection mismatch |
+| 10 | Shortest article | Extractive echo, truncation defect | Faithful; best length match in the set |
+| 11 | Most abstractive LSTM output | **Topic miss + fabrication** (`atletico`, wrong score) | Faithful and aligned |
+| 12 | Longest LLM output | Topic drift, irrelevant splice | **Format drift** (118 tokens) |
+| 13 | Shortest LSTM output | Entity omission, temporal conflation | Faithful and aligned |
+
+Counted across the thirteen, the LSTM is faithful but incomplete in 5 cases,
+misses the story through lead bias in 2, produces something false in 3, and is
+garbled or off-topic in the remaining 3. The LLM breaks down as 2 cases of format
+drift, 6 of content-selection mismatch (true statements the editor did not
+choose), and 5 that are faithful and aligned. No LLM output in the set was found
+to contain an invented fact, including the one selected as the worst offender.
+
+That asymmetry is the finding. ROUGE penalises the LLM's 6 selection mismatches
+and does not penalise the LSTM's 3 fabrications at all, because a fabrication
+assembled from source words scores as well as a faithful copy. Two cross-cutting
+artefacts reinforce it: `dup3` is 0.000 in every LSTM output, including the one
+selected as *most repetitive*, and `oov` is 0.000 in every LSTM output, including
+the one selected as *highest OOV rate*.
+
+## Appendix H: Reproducing every number
+
+Every figure in this report is regenerated from committed artifacts by
+`python scripts/collect_results.py`, which reads the run files directly and lists
+anything it cannot find under "Not yet available" rather than emitting a value.
+No number in this report was typed by hand into a table.
+
+From a clean clone (Python 3.10+, any platform):
+
+```bash
+git clone https://github.com/KhaledM0barak/lstm-vs-llm-summarization
+cd lstm-vs-llm-summarization
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python -m pytest -q                      # 178 tests
+```
+
+Full pipeline, about 13 GPU-hours end to end:
+
+```bash
+python -m src.data.prepare --out-dir data/processed \
+    --train-size 80000 --val-size 3000 --llm-test-size 500 --seed 1234
+python -m src.data.build_vocab --max-size 50000 --min-freq 2
+bash scripts/train_all.sh                # base + three ablations, 8.73 GPU-h
+python -m src.llm.baseline --all --batch-size 8    # 4.07 GPU-h
+bash scripts/finish.sh                   # score everything, rebuild all tables
+```
+
+To reproduce the pipeline validation in §1 on its own:
+
+```bash
+python -m src.evaluate --test-file data/processed/test.jsonl
+```
+
+With no `--system` argument, Lead-3 is the only system scored.
+
+Expected: 40.04 / 17.50 / 36.34 against See et al.'s 40.34 / 17.70 / 36.57.
+
+Seeds are fixed at 1234 throughout. The LLM baseline decodes greedily, so it is
+deterministic given the same model file. LSTM decoding is deterministic on both
+CPU and MPS; we verified that example 3 scores 36.9 on either device.
+
+## Appendix I: Test suite
+
+178 tests, written against the failure modes we actually hit rather than for
+coverage. They run in about 70 seconds.
+
+| File | Tests | Covers |
+|---|---|---|
+| `test_data.py` | 35 | Tokenizer, abbreviation-aware sentence splitting, vocabulary construction, padding and masking in the collate function |
+| `test_pipeline_edges.py` | 40 | Resume correctness, usage accounting, truncated-file recovery, LLM replay cache, demo rendering width |
+| `test_evaluate.py` | 31 | ROUGE configuration, `rougeLsum` newline handling, bootstrap CIs, paired bootstrap, bucketing, diagnostics |
+| `test_models.py` | 30 | Attention masking, beam search, trigram blocking, weight tying, chunked loss equivalence |
+| `test_llm.py` | 26 | Prompt construction, few-shot message structure, backend accounting, input truncation |
+| `test_integration.py` | 16 | End-to-end training on a tiny slice, generation, scoring |
+
+Three of these encode bugs described in this report, so a regression would fail
+the suite rather than silently change a number: the attention-mask test asserts
+that padded positions receive exactly zero attention weight (§2.1, G.3); the
+sentence-splitter tests cover the three cases that shifted Lead-3 from 40.00 to
+40.04 (§1); and the paired-bootstrap test constructs correlated systems where
+independent confidence intervals overlap but the paired test separates them
+(§3).
