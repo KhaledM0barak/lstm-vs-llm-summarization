@@ -367,8 +367,6 @@ pretraining bought.
 
 ---
 
----
-
 ## Appendix A: Exact prompts
 
 Reproduced verbatim from `src/llm/prompts.py` and the per-run `.meta.json` files.
@@ -690,6 +688,38 @@ context vector differs by 1.83 (L2). It also makes the model's output depend on
 is a correctness violation, not merely a quality loss. `tests/test_models.py`
 asserts both properties.
 
+### G.4 The two systems fail in opposite directions
+
+**Largest LLM advantage on a clean case** (ROUGE-1 10.5 → 43.1; test example
+112). A football match report. The LSTM's two sentences contain four distinct
+failures: it says the striker scored a **hat-trick** and then that the forward
+scored a **brace**, meaning three goals and then two, about the same player; the two
+sentences are near-duplicates in structure, showing repetition evading the
+trigram filter by varying one word per slot; it ends "to win a win"; and it never
+names anyone, describing players by role because *Griffiths*, *Westlake* and
+*Commons* are unreachable. Its **ROUGE-2 is exactly 0.0**: fluent English
+sharing not one bigram with the reference.
+
+> **Reference:** darryl westlake fired kilmarnock ahead in the 50th minute . kris commons levelled for the home side eight minutes later . sub leigh griffiths netted three goals in a remarkable 19-minute spell . celtic moved eight points clear …
+>
+> **LSTM (R1 10.5, R2 0.0):** the celtic striker scored a hat-trick to guide his team to a handsome 4-1 victory. the celtic forward scored a brace to guide their team to win a win.
+>
+> **LLM (R1 43.1, R2 18.0):** Leigh Griffiths scored a 19-minute hat-trick for Celtic against Kilmarnock. The treble-chasing Celtic came from a goal down to record a 4-1 victory. Darryl Westlake's deflected strike gave Kilmarnock a shock lead early in the second half. Celtic took an eight-point lead at the top of the Premiership with the win.
+
+**LSTM beats the LLM** (57.1 vs. 26.3), and the mechanism is instructive. The
+LSTM copies the reference's exact framing; the LLM writes a longer summary that
+is **entirely true** but reports different facts (follower counts, likes, due
+date) than the reference chose.
+
+> **Reference:** sarah stage, 30, has documented her changing figure via her instagram page throughout her pregnancy …
+>
+> **LSTM (R1 57.1, 28 tokens):** sarah stage, a 30-year-old underwear model and animal rights activist from los angeles, has documented her changing figure via her instagram page throughout her pregnancy.
+>
+> **LLM (R1 26.3, 85 tokens):** Sarah Stage, a 30-year-old underwear model, has shared a photo of her barely-there baby bump 10 days before her due date. The model, who has 1.5 million Instagram followers, posted the picture on Monday…
+
+Neither output is wrong. The LSTM scores twice as high because it happened to
+select the same facts the editor did, which is what ROUGE measures.
+
 ### G.5 Two fabrications the diagnostics do not catch
 
 Assigning the error categories in `results/qualitative.md` meant checking each
@@ -730,35 +760,3 @@ hallucination rate for either system needs human annotation, which we did not
 perform. Second, the fluent-but-wrong mode is not exclusive to the no-attention
 ablation as §5 might otherwise be read to imply. Attention reduces it by an
 order of magnitude without eliminating it.
-
-### G.4 The two systems fail in opposite directions
-
-**Largest LLM advantage on a clean case** (ROUGE-1 10.5 → 43.1; test example
-112). A football match report. The LSTM's two sentences contain four distinct
-failures: it says the striker scored a **hat-trick** and then that the forward
-scored a **brace**, meaning three goals and then two, about the same player; the two
-sentences are near-duplicates in structure, showing repetition evading the
-trigram filter by varying one word per slot; it ends "to win a win"; and it never
-names anyone, describing players by role because *Griffiths*, *Westlake* and
-*Commons* are unreachable. Its **ROUGE-2 is exactly 0.0**: fluent English
-sharing not one bigram with the reference.
-
-> **Reference:** darryl westlake fired kilmarnock ahead in the 50th minute . kris commons levelled for the home side eight minutes later . sub leigh griffiths netted three goals in a remarkable 19-minute spell . celtic moved eight points clear …
->
-> **LSTM (R1 10.5, R2 0.0):** the celtic striker scored a hat-trick to guide his team to a handsome 4-1 victory. the celtic forward scored a brace to guide their team to win a win.
->
-> **LLM (R1 43.1, R2 18.0):** Leigh Griffiths scored a 19-minute hat-trick for Celtic against Kilmarnock. The treble-chasing Celtic came from a goal down to record a 4-1 victory. Darryl Westlake's deflected strike gave Kilmarnock a shock lead early in the second half. Celtic took an eight-point lead at the top of the Premiership with the win.
-
-**LSTM beats the LLM** (57.1 vs. 26.3), and the mechanism is instructive. The
-LSTM copies the reference's exact framing; the LLM writes a longer summary that
-is **entirely true** but reports different facts (follower counts, likes, due
-date) than the reference chose.
-
-> **Reference:** sarah stage, 30, has documented her changing figure via her instagram page throughout her pregnancy …
->
-> **LSTM (R1 57.1, 28 tokens):** sarah stage, a 30-year-old underwear model and animal rights activist from los angeles, has documented her changing figure via her instagram page throughout her pregnancy.
->
-> **LLM (R1 26.3, 85 tokens):** Sarah Stage, a 30-year-old underwear model, has shared a photo of her barely-there baby bump 10 days before her due date. The model, who has 1.5 million Instagram followers, posted the picture on Monday…
-
-Neither output is wrong. The LSTM scores twice as high because it happened to
-select the same facts the editor did, which is what ROUGE measures.
