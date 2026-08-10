@@ -5,18 +5,18 @@
 ## 1. Task and dataset
 
 Abstractive single-document summarization on **CNN/DailyMail 3.0.0**
-(`abisee/cnn_dailymail`, **Apache-2.0**; Hermann et al., 2015; See et al., 2017).
-The official splits are article-disjoint; we use them unchanged, adding only
-seeded subsampling for tractability: **79,996** train, **3,000** validation,
-**11,490** test (mean article 785 tokens, mean summary 55).
+(`abisee/cnn_dailymail`, **Apache-2.0**; Hermann et al., 2015; See et al.,
+2017). The official splits are article-disjoint; we use them unchanged, adding
+only seeded subsampling for tractability: **79,996** train, **3,000**
+validation, **11,490** test (mean article 785 tokens, mean summary 55).
 
 Every system is scored on the same 500-article subset of test, drawn once with
 seed 1234 before any model development, with indices recorded in
 `dataset_meta.json`.
 
 We verified leakage rather than assuming it: article-ID overlap between splits
-is exactly zero, the 500-article set is a subset of test disjoint from
-train, and the four few-shot exemplars sent to the LLM come from train.
+is exactly zero, the 500-article set is a subset of test disjoint from train,
+and the four few-shot exemplars sent to the LLM come from train.
 
 **Pipeline validation.** Before comparing anything we reproduced a published
 baseline. Our Lead-3 scores **40.04 / 17.50 / 36.34** (ROUGE-1/2/Lsum) on the
@@ -413,8 +413,7 @@ You write summaries in the style of CNN/DailyMail article highlights: 3 to 4 sho
 ```
 Write the highlights for the following news article. Output only the highlight sentences as a single paragraph, with no bullet points, no labels, and no preamble.
 
-Article:
-{article}
+Article: {article}
 
 Highlights:
 ```
