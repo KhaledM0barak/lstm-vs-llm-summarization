@@ -182,7 +182,7 @@ this is strong evidence of lead bias — and why Lead-3 stays competitive.
 ### 4.4 Cost, latency, and compute
 
 Measured on the same machine (full table in Appendix F). The LSTM is **15.3M
-parameters / 61 MB** against ~8B / ~4.5 GB, cost **8.73 GPU-hours** to train once,
+parameters / 61 MB** against ~8B / ~4.5 GB, cost **3.05 GPU-hours** to train once,
 and generates a summary in **0.231 s** (259/min). The LLM needs **2.85 s**
 zero-shot (21/min) and 9.2 s few-shot (6.5/min): the LSTM is **12× faster per
 summary** than the fastest LLM setting — against a quantized 8B model on the
@@ -287,8 +287,8 @@ supervision. Our results predict it would close most of the gap, receiving both.
 **Latency:** 0.231 s vs. 2.85 s — 12×, against a quantized 8B model on the same
 GPU with no network hop; any sub-second interactive budget excludes the LLM
 before cost is considered. **Throughput:** 259 vs. 21 summaries/min — at a million
-documents, ~2.7 GPU-days versus 33, with the 8.73-hour training cost repaid after
-~40,000 documents. **Deployment:** 61 MB versus 4.5 GB — commodity CPU, embedded
+documents, ~2.7 GPU-days versus 33, with the 3.05-hour training cost repaid after
+~4,200 documents. **Deployment:** 61 MB versus 4.5 GB — commodity CPU, embedded
 hardware, or an air-gapped network. **Controllability:** our failure modes are
 bounded and fixable at decoding (repetition eliminated, length governed by the
 GNMT penalty, `<unk>` suppressed), whereas the LLM ignored an explicit length
@@ -329,13 +329,14 @@ remain the publishers' property and are not redistributed.
 Its numbers should be read as an upper bound on genuinely held-out performance.
 Our few-shot exemplars come from train, which controls the leakage we can.
 
-**Compute.** 8.73 GPU-hours of training plus 4.07 of generation — small
+**Compute.** 8.73 GPU-hours of training across all four runs (3.05 for the
+model itself) plus 4.07 of generation — small
 absolutely, but the LLM's pretraining cost is amortized across all users and
 invisible here, a real asymmetry when comparing "compute used".
 
 ## 7. Conclusion
 
-A 15.3M-parameter LSTM with attention, trained from scratch for 8.73 GPU-hours on
+A 15.3M-parameter LSTM with attention, trained from scratch for 3.05 GPU-hours on
 80k pairs, reaches **35.00 ROUGE-1**. A 4-bit Llama 3.1 8B, given the same
 400-word window and no training on this dataset, reaches **41.35**. The gap is
 real (p < 0.0001) and it is **6.35 points, not an order of magnitude**.
