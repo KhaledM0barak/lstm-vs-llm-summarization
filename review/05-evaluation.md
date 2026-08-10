@@ -62,17 +62,21 @@ ever stops matching, stop and investigate before trusting anything else.
 
 ---
 
-## Your other job: the qualitative error categories
+## The qualitative error categories — completed
 
-`results/qualitative.md` generates ~13 side-by-side examples with each error
-category marked `TODO — verify against the text`. **These were deliberately left
-unlabelled.** The assignment says:
+`results/qualitative.md` holds 13 side-by-side examples. All 26 error categories
+are now filled in, assigned by reading each output against its **full** source
+article rather than inferred from the diagnostics, per the assignment:
 
 > *"Categorize errors ... Verify against your data — do not just assert this."*
 
-Filling these in by reading the actual outputs is the difference between an error
-analysis and a recitation of the textbook. Use the diagnostics next to each
-output as evidence, not as the answer.
+Every suspected fabrication was checked by searching the source text. Three were
+confirmed (`claudia james` for *claudia alende*; an invented *atletico* with a
+misstated scoreline; and a mother/daughter inversion carrying **no** lexical
+signature) and one was refuted — the highest-unsupported LLM output turns out to
+quote the source verbatim. That last finding contradicted §5's claim that the
+full model does not produce fluent-but-wrong output; the report was corrected and
+the evidence is in Appendix G.5.
 
 ---
 
