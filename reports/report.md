@@ -487,7 +487,9 @@ with the exact prompts in Appendix A.
 ## Appendix D — Repository and demo
 
 - Code: https://github.com/KhaledM0barak/lstm-vs-llm-summarization
-- Demo video (8 min): `[[VIDEO URL]]`
+- Demo video (7:40): [OneDrive](https://lauriercloud-my.sharepoint.com/:v:/g/personal/moba8562_mylaurier_ca/IQBCokmY1Lm0T5zyu7zzDaSoAT3TqvkMZIwgUYdOIouw7ew?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=uQxPP3)
+  (Wilfrid Laurier sign-in required. Runtime 7:40; produced in a single take by
+  `scripts/walkthrough.sh`, which is committed — the video can be regenerated.)
 - Testing and recording runbook: `DEMO.md`
 
 ## Appendix E — Implementation notes
